@@ -1,0 +1,19 @@
+<?php
+/**
+ * Copyright © 2016 CardGate.
+ * All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+/**
+ * This file is used in the email order summary.
+ * @var $block \Magento\OfflinePayments\Block\Info\Purchaseorder
+ */
+// YYY: TODO: REMOVE CRAP
+?>
+<dl class="payment-method purchase order">
+	<dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?> by CURO Payments</dt>
+	<dd class="content">
+		<strong><?php echo $block->escapeHtml(__('Transaction ID')) ?></strong>
+		<span class="number"><?php echo $block->escapeHtml($block->getInfo()->getCardgateTransaction()) ?></span>
+	</dd>
+</dl>
