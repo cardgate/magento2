@@ -18,11 +18,6 @@
 			<argument name="masterConfig" xsi:type="object">Cardgate\Payment\Model\Config\Master</argument>
 		</arguments>
 	</type>
-	<type name="Cardgate\Payment\Model\Config\AppConfigPlugin">
-		<arguments>
-			<argument name="masterConfig" xsi:type="object">Cardgate\Payment\Model\Config\Master</argument>
-		</arguments>
-	</type>
 	<type name="Cardgate\Payment\Model\PaymentMethods">
 		<arguments>
 			<argument name="masterConfig" xsi:type="object">Cardgate\Payment\Model\Config\Master</argument>

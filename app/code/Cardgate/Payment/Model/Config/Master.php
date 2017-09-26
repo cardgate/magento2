@@ -7,6 +7,7 @@
 namespace Cardgate\Payment\Model\Config;
 
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\Filesystem\DirectoryList;
 
 /**
  *
@@ -33,6 +34,11 @@ class Master {
 	 */
 	private $cache;
 
+	/**
+	 * @var \Magento\Framework\Filesystem
+	 */
+	private $filesystem;
+
 	const CACHEKEY = "cgAllPM";
 
 	/**
@@ -41,8 +47,9 @@ class Master {
 	 */
 	private $config;
 
-	public function __construct ( \Magento\Framework\App\Cache\Type\Collection $cache ) {
+	public function __construct ( \Magento\Framework\App\Cache\Type\Collection $cache, \Magento\Framework\Filesystem $filesystem ) {
 		$this->cache = $cache;
+		$this->filesystem = $filesystem;
 		if ( $this->cache->test( self::CACHEKEY ) !== false ) {
 			try {
 				$cachedPMs = unserialize( $this->cache->load( self::CACHEKEY ) );
@@ -135,7 +142,12 @@ class Master {
 	 */
 	private function ensurePaymentClass ( $paymentMethodCode ) {
 		if ( ! \class_exists( $this->getPMClassByCode( $paymentMethodCode ) ) ) {
-			eval( "namespace Cardgate\\Payment\\Model\\PaymentMethod; class " . $this->getPMClassByCode( $paymentMethodCode, false ) . " extends \\Cardgate\\Payment\\Model\\PaymentMethod\\nonexistent {}" );
+			/** @var \Magento\Framework\Filesystem\Directory\Write $directory */
+			$directory = $this->filesystem->getDirectoryWrite( DirectoryList::TMP );
+			if ( ! $directory->isFile( 'paymentmethod_' . $paymentMethodCode ) ) {
+				$directory->writeFile( 'paymentmethod_' . $paymentMethodCode, "<?php namespace Cardgate\\Payment\\Model\\PaymentMethod; class " . $this->getPMClassByCode( $paymentMethodCode, false ) . " extends \\Cardgate\\Payment\\Model\\PaymentMethod\\nonexistent {}" );
+			}
+			include $directory->getAbsolutePath( 'paymentmethod_' . $paymentMethodCode );
 		}
 	}
 

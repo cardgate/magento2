@@ -24,7 +24,6 @@ define(
 				);
 			}
 		}
-		console.log(window.checkoutConfig);
 		/** Add view logic here if needed */
 		return Component.extend({});
 	}

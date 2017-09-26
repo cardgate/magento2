@@ -8,6 +8,7 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
+use Magento\Framework\Controller\ResultFactory;
 
 /**
  * Callback handler action
@@ -78,10 +79,13 @@ class Callback extends \Magento\Framework\App\Action\Action {
 
 		$pmId = ( ! empty( $pt ) ? $pt : 'unknown' );
 
+		$result = $this->resultFactory->create( ResultFactory::TYPE_RAW );
+
 		// Hash validation
 		if ( ! $this->_cardgateClient->validateHash( $hash, $testmode,
 			$transactionId, $currency, $amount, $reference, $code ) ) {
-			die( 'Hash verification failure' );
+			$result->setContents( 'Hash verification failure' );
+			return $result;
 		}
 
 		/**
@@ -99,7 +103,8 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				$order->save();
 			}
 		} catch ( \Exception $e ) {
-			exit( __("Error processing callback")." (1)\n\n" . $e->getMessage() );
+			$result->setContents( __("Error processing callback")." (1)\n\n" . $e->getMessage() );
+			return $result;
 		}
 
 		try {
@@ -110,9 +115,11 @@ class Callback extends \Magento\Framework\App\Action\Action {
 			$paymentMethod = $this->_cardgateConfig->getPMInstanceByCode( $this->_cardgateConfig->getPMCodeById( $pmId ), true );
 			$paymentMethod->processTransactionStatus( $order, $this->getRequest()
 				->getParams() );
-			exit( $transactionId . '.' . $code );
+			$result->setContents( $transactionId . '.' . $code );
+			return $result;
 		} catch ( \Exception $e ) {
-			exit( __("Error processing callback")." (2)\n\n" . $e->getMessage() );
+			$result->setContents( __("Error processing callback")." (2)\n\n" . $e->getMessage() );
+			return $result;
 		}
 	}
 }
