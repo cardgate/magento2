@@ -2,7 +2,7 @@
 /**
  * This is the client class that handles the communication with the CURO Payments platform.
  * An instance of a curopayments\api\Client is used with every class that needs communication.
- * 
+ *
  * @license     Berkeley Software Distribution License (BSD-License 2) http://www.opensource.org/licenses/bsd-license.php
  * @author      DBS B.V. <info@curopayments.com>
  * @copyright   DBS B.V.
@@ -16,9 +16,9 @@ use curopayments\api\Exception;
 
 class Client {
 
-	const URL_PRODUCTION	= 'https://secure.curopayments.net/rest/v1/curo/';
-	const URL_STAGING		= 'https://secure-staging.curopayments.net/rest/v1/curo/';
-	
+	const URL_PRODUCTION	= 'https://bob.secure.curopayments.dev/rest/v1/curo/';
+	const URL_STAGING		= 'https://bob.secure.curopayments.dev/rest/v1/curo/';
+
 	use Singleton;
 
 	/**
@@ -102,7 +102,7 @@ class Client {
 	public function getTestmode() {
 		return $this->_bTestmode;
 	}
-	
+
 	/**
 	 * Set the Merchant ID to use for this transaction
 	 * @param integer $iMerchantId_ Merchant ID
@@ -118,7 +118,7 @@ class Client {
 		) {
 			throw new Exception( 'Client.Merchant.Invalid', 'Invalid merchant: ' . $iMerchantId_ );
 		}
-	
+
 		$this->_iMerchantId = $iMerchantId_;
 		return $this;
 	}
@@ -131,7 +131,7 @@ class Client {
 	public function getMerchantId() {
 		return $this->_iMerchantId;
 	}
-	
+
 	/**
 	 * Set the Merchant name to use for this transaction
 	 * @param string $sMerchantId_ Merchant name
@@ -146,7 +146,7 @@ class Client {
 		) {
 			throw new Exception( 'Client.Merchant.Invalid', 'Invalid merchant name: ' . $sMerchantName_ );
 		}
-	
+
 		$this->_iMerchantName = $sMerchantName_;
 		return $this;
 	}
@@ -200,7 +200,7 @@ class Client {
 		$sUsername = '';
 		if ( empty( $this->_iMerchantId ) ) {
 			if ( empty( $this->_iMerchantName ) ) {
-				throw new Exception( 'Client.Curl.Error', 'Invalid username' );	
+				throw new Exception( 'Client.Curl.Error', 'Invalid username' );
 			} else {
 				$sUsername = $this->_iMerchantName;
 			}
@@ -230,7 +230,7 @@ class Client {
 
 		curl_setopt( $rCh, CURLOPT_POST, TRUE );
 		curl_setopt( $rCh, CURLOPT_POSTFIELDS, json_encode( $aData_ ) );
-		
+
 		// YYY: Temp patch
 		curl_setopt( $rCh, CURLOPT_SSL_VERIFYPEER, FALSE ); // verify SSL peer
 		curl_setopt( $rCh, CURLOPT_SSL_VERIFYHOST, FALSE );
@@ -257,7 +257,7 @@ class Client {
 
 		return $oResults;
 	}
-	
+
 	/**
 	 * Send a GET request to the CURO API
 	 * @param string $sResource_
@@ -266,19 +266,19 @@ class Client {
 	 * @throws curopayments\api\Exception
 	 */
 	public function getRequest( $sResource_, $aData_ = NULL ) {
-		
-		
+
+
 	    $sUsername = '';
 		if ( empty( $this->_iMerchantId ) ) {
 			if ( empty( $this->_iMerchantName ) ) {
-				throw new Exception( 'Client.Curl.Error', 'Invalid username' );	
+				throw new Exception( 'Client.Curl.Error', 'Invalid username' );
 			} else {
 				$sUsername = $this->_iMerchantName;
 			}
 		} else {
 			$sUsername = $this->_iMerchantId;
 		}
-		
+
 		$sUrl = $this->getUrl();
 		if ( ! is_null( $aData_ ) ) {
 			$sDelim = ( FALSE === strchr( $sUrl, '?' ) ? '?' : '&' );
@@ -296,13 +296,13 @@ class Client {
 			'Content-Type: application/json',
 			'Accept: application/json'
 		] );
-		
+
 		// YYY: Temp patch
 		curl_setopt( $rCh, CURLOPT_SSL_VERIFYPEER, FALSE ); // verify SSL peer
 		curl_setopt( $rCh, CURLOPT_SSL_VERIFYHOST, FALSE ); // check for valid common name and verify host
 		//curl_setopt( $rCh, CURLOPT_SSL_VERIFYPEER, TRUE ); // verify SSL peer
 		//curl_setopt( $rCh, CURLOPT_SSL_VERIFYHOST, 2 ); // check for valid common name and verify host
-		
+
 		$sResults = curl_exec( $rCh );
 
 		if ( FALSE == $sResults ) {
@@ -310,7 +310,7 @@ class Client {
 			$this->_sErrorMessage = curl_error( $rCh );
 			throw new Exception( 'Client.Curl.Error.' . $this->_iErrorNo, $this->_sErrorMessage );
 		}
-		
+
 		curl_close( $rCh );
 
 		if ( NULL === ( $oResults = json_decode( $sResults ) ) ) {

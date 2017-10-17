@@ -114,6 +114,16 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	protected $_canReviewPayment = true;
 
 	/**
+	 * @var boolean
+	 */
+	protected $_canRefund = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $_canRefundInvoicePartial = true;
+
+	/**
 	 *
 	 * @var OrderSender
 	 */
@@ -476,4 +486,32 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 			throw new \Exception( $triggerError );
 		}
 	}
+
+	public function refund( InfoInterface $payment, $amount ) {
+		$order = $payment->getOrder();
+		$data = [
+			'transaction_id' => $payment->getCardgateTransaction(),
+			'amount'         => $amount * 100
+		];
+		$gatewayClient = ObjectManager::getInstance()->get( "Cardgate\\Payment\\Model\\GatewayClient" );
+		$gatewayResult = $gatewayClient->postRequest( 'refund/', $data );
+
+		if ( ! is_object( $gatewayResult ) ) {
+			$order->addStatusHistoryComment( __( 'Error occurred while communicating with the payment service provider' ) );
+			throw new \Exception( __( 'Error occurred while communicating with the payment service provider' ) );
+		} elseif (
+			! isset( $gatewayResult->success ) ||
+			$gatewayResult->success != true
+		) {
+			$sDetails = "Unknown";
+			if ( ! empty( $gatewayResult->message ) ) {
+				$sDetails = $gatewayResult->message;
+			}
+			$order->addStatusHistoryComment( __( 'Error occurred while registering the refund (%1)', $sDetails ) );
+			throw new \Exception( __( 'Error occurred while registering the refund (%1)', $sDetails ) );
+		}
+
+		return $this;
+	}
+
 }

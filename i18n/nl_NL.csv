@@ -60,6 +60,7 @@
 "Payment not completed","Betaling niet voltooid"
 "Error occurred while communicating with the payment service provider","Fout opgetreden tijdens communicatie met de betaaldienst provider"
 "Error occurred while registering the transaction","Fout opgetreden tijdens registratie van de transactie"
+"Error occurred while registering the refund (%1)","Fout opgetreden tijdens registratie van de refund (%1)"
 "Transaction registered. Transaction ID %1","Transactie geregistreerd. Transactie ID %1"
 "Update for transaction %1. Received status code %2.","Update voor transactie %1. Ontvangen statuscode %2."
 "Transaction already processed.","Transactie is al verwerkt."

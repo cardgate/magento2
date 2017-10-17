@@ -277,7 +277,10 @@ class Start extends \Magento\Framework\App\Action\Action {
 			// YYY: log error here
 		//}
 
-		if ( ! is_object( $gatewayResult ) ) {
+		if (
+			! isset( $gatewayResult )
+			|| ! is_object( $gatewayResult )
+		) {
 			$this->messageManager->addErrorMessage( __( 'Error occurred while communicating with the payment service provider' ) );
 			$order->registerCancellation( 'Error occurred while communicating with the payment service provider' );
 			$order->save();
