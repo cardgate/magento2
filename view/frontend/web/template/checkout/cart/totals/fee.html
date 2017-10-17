@@ -1,0 +1,28 @@
+<!--
+/**
+ * Copyright © 2016 CardGate.
+ * All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+/**
+ * Checkout Quote CardGate Fee totals
+ */
+-->
+<!-- ko if: quoteIsVirtual == 0 -->
+	<!-- ko if: isExcludingDisplayed() -->
+	<tr class="totals cardgatefee excl">
+		<th class="mark" colspan="1" scope="row" data-bind="text: title"></th>
+		<td class="amount">
+			<span class="price" data-bind="text: getValue()"></span>
+		</td>
+	</tr>
+	<!-- /ko -->
+	<!-- ko if: isIncludingDisplayed() -->
+	<tr class="totals cardgatefee incl">
+		<th class="mark" colspan="1" scope="row" data-bind="text: title"></th>
+		<td class="amount">
+			<span class="price" data-bind="text: getIncludingValue()"></span>
+		</td>
+	</tr>
+	<!-- /ko -->
+<!-- /ko -->
