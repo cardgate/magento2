@@ -83,8 +83,16 @@ class Start extends \Magento\Framework\App\Action\Action {
 	 * @param \Magento\Checkout\Model\Session $checkoutSession
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
 	 */
-	public function __construct ( \Magento\Framework\App\Action\Context $context, \Magento\Customer\Model\Session $customerSession, \Magento\Checkout\Model\Session $checkoutSession,
-			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, PaymentHelper $paymentHelper, GatewayClient $gatewayClient, Config $cardgateConfig, Master $masterConfig ) {
+	public function __construct(
+		\Magento\Framework\App\Action\Context $context,
+		\Magento\Customer\Model\Session $customerSession,
+		\Magento\Checkout\Model\Session $checkoutSession,
+		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+		PaymentHelper $paymentHelper,
+		GatewayClient $gatewayClient,
+		Config $cardgateConfig,
+		Master $masterConfig
+	) {
 		// $this->_logger = $logger;
 		// $this->_logger->addDebug('some text or variable');
 		$this->customerSession = $customerSession;
@@ -156,12 +164,14 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 		$cartitems = [];
 
+		$stockItem = ObjectManager::getInstance()->get( 'Magento\CatalogInventory\Model\Stock\StockItemRepository' );
+
 		/**
 		 * @var \Magento\Sales\Api\Data\OrderItemInterface $item
 		 */
 		foreach ( $order->getAllVisibleItems() as $item ) {
 			$itemQty = ( int ) ( $item->getQtyOrdered() ? $item->getQtyOrdered() : $item->getQty() );
-			$cartitems[] = [
+			$cartitem = [
 				'sku' => $item->getSku(),
 				'name' => $item->getName(),
 				'quantity' => $itemQty,
@@ -169,8 +179,20 @@ class Start extends \Magento\Framework\App\Action\Action {
 				'vat' => round( $item->getTaxPercent(), 0 ),
 				'price' => round( $item->getPriceInclTax() * 100, 0 ),
 				'vat_inc' => 1,
-				'type' => 1
+				'type' => 1,
 			];
+
+			$productStock = $stockItem->get( $item->getProduct()->getId() )->getData();
+			if ( !!$productStock['manage_stock'] ) {
+				if ( $productStock['qty'] <= -1 ) { // happens when backorders are allowed
+					$cartitem['stock'] = 0;
+				} else {
+					// The stock qty has already been lowered with the purchased quantity.
+					$cartitem['stock'] = $itemQty + $productStock['qty'];
+				}
+			}
+
+			$cartitems[] = $cartitem;
 			$calculatedGrandTotal += $item->getPriceInclTax() * $itemQty;
 			$calculatedVatTotal += $item->getTaxAmount();
 		}
