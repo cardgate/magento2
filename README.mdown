@@ -9,7 +9,7 @@
 ## Preparation
 
 The usage of this module requires that you have obtained CardGate RESTful API credentials.
-Please visit [my.cardgate.com](https://my.cardgate.com/) and retrieve your RESTful API username and password, or contact your accountmanager.
+Please visit [My Cardgate](https://my.cardgate.com/) and retrieve your RESTful API username and password, or contact your accountmanager.
 
 ## Installation
 
@@ -28,7 +28,7 @@ The CardGate Module for Magento 2 is installed via [Composer](http://getcomposer
 3. Enter following commands to enable module:
 
    ```
-   php bin/magento module:enable CardGate_Payment
+   php bin/magento module:enable Cardgate_Payment
    php bin/magento setup:upgrade
    php bin/magento setup:di:compile
    php bin/magento cache:clean
@@ -44,12 +44,11 @@ The CardGate Module for Magento 2 is installed via [Composer](http://getcomposer
 
 - Open the Magento Admin panel and view the CardGate plugin-configuration:
   - Stores > Configuration
-  - Sales > Payment Methods > CardGate
-- Fill in for "CardGate configuration" section
-- Save Config
-- To refesh the active paymentmethods, click:
-  - "CardGate information" section
-  - Paymentmethods
-  - Refresh active paymentmethods button
+  - Sales > CardGate
+- Fill in the *CardGate configuration* section using the API credentials obtained earlier.
+- Save config.
+- Refresh the active payment methods:
+  - *CardGate information* section
+  - Paymentmethods > Refresh active paymentmethods
   - Check the output
-- After the paymentmethods are refreshed successfully, all active Paymentmethod-sections can be edited.
+- After the paymentmethods are refreshed successfully, all active *Paymentmethod sections* can be enabled and edited.
