@@ -16,8 +16,8 @@ use curopayments\api\Exception;
 
 class Client {
 
-	const URL_PRODUCTION	= 'https://bob.secure.curopayments.dev/rest/v1/curo/';
-	const URL_STAGING		= 'https://bob.secure.curopayments.dev/rest/v1/curo/';
+	const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
+	const URL_STAGING    = 'https://secure-staging.curopayments.net/rest/v1/curo/';
 
 	use Singleton;
 
