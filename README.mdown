@@ -1,10 +1,14 @@
 ![CardGate](https://cdn.curopayments.net/thumb/200/logos/cardgate.png)
 
-# CardGate module for Magento 2.1.x (2.2.0 support coming soon!)
+# CardGate module for Magento 2
 
 [![Total Downloads](https://img.shields.io/packagist/dt/cardgate/magento2.svg)](https://packagist.org/packages/cardgate/magento2)
 [![Latest Version](https://img.shields.io/packagist/v/cardgate/magento2.svg)](https://github.com/cardgate/magento2/releases)
 [![Build Status](https://travis-ci.org/cardgate/magento2.svg?branch=master)](https://travis-ci.org/cardgate/magento2)
+
+## Support
+
+This plugin supports Magento 2 up to version *2.2.0*. It might work on more recent versions, but we cannot make any guarantees.
 
 ## Preparation
 
