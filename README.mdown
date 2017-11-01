@@ -6,6 +6,10 @@
 [![Latest Version](https://img.shields.io/packagist/v/cardgate/magento2.svg)](https://github.com/cardgate/magento2/releases)
 [![Build Status](https://travis-ci.org/cardgate/magento2.svg?branch=master)](https://travis-ci.org/cardgate/magento2)
 
+## Support
+
+This plugin supports Magento 2 up to version **2.2.0**. It might work on more recent versions, but we cannot make any guarantees.
+
 ## Preparation
 
 The usage of this module requires that you have obtained CardGate RESTful API credentials.
