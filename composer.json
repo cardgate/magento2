@@ -1,22 +1,24 @@
 {
 	"name": "cardgate/magento2",
 	"description": "CardGate Module for Magento 2",
-	"version": "2.0.3",
+	"homepage": "https://www.cardgate.com",
+	"version": "2.0.4",
+	"keywords": [ "cardgate", "ideal", "bancontact", "creditcard", "magento" ],
 	"require": {
 		"php": "~5.6.0|~7.0.0|~7.1.0",
 		"cardgate/cardgate-clientlib-php": "~1.0.0"
 	},
-	"type" : "magento2-module",
-	"license" : [
+	"type": "magento2-module",
+	"license": [
 		"OSL-3.0",
 		"AFL-3.0"
 	],
-	"autoload" : {
-		"files" : [
+	"autoload": {
+		"files": [
 			"registration.php"
 		],
-		"psr-4" : {
-			"Cardgate\\Payment\\" : ""
+		"psr-4": {
+			"Cardgate\\Payment\\": ""
 		}
 	}
 }
