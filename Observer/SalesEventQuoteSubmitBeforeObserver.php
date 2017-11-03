@@ -16,7 +16,7 @@ use Magento\Payment\Observer\AbstractDataAssignObserver;
  * @package Magento2
  *
  */
-class SalesEventQuoteSubmit‌​BeforeObserver extends AbstractDataAssignObserver {
+class SalesEventQuoteSubmitBeforeObserver extends AbstractDataAssignObserver {
 
 	/**
 	 *
