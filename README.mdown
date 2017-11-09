@@ -19,7 +19,7 @@ Please visit [My Cardgate](https://my.cardgate.com/) and retrieve your RESTful A
 
 The CardGate Module for Magento 2 is installed via [Composer](http://getcomposer.org/).
 
-1. Go to Magento 2 root folder
+1. Go to Magento 2 root folder.
 
 2. Enter following commands to install module:
 
@@ -56,3 +56,13 @@ The CardGate Module for Magento 2 is installed via [Composer](http://getcomposer
   - Paymentmethods > Refresh active paymentmethods
   - Check the output
 - After the paymentmethods are refreshed successfully, all active *Paymentmethod sections* can be enabled and edited.
+
+## Requirements
+
+This extension requires the [CardGate API client library for PHP.](https://github.com/cardgate/cardgate-clientlib-php)
+
+When using composer this will be installed automatically. To install manually, enter the following command in your Magento 2 root folder:
+
+```
+composer require cardgate/cardgate-clientlib-php
+```
