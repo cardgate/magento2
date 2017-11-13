@@ -16,7 +16,10 @@ define(
 	) {
 		'use strict';
 		for ( var i in window.checkoutConfig.payment ) {
-			if ( i.substr( 0, 9 ) == "cardgate_" ) {
+			if (
+				i.substr( 0, 9 ) == "cardgate_" &&
+				window.checkoutConfig.payment[i] != undefined
+			) {
 				rendererList.push({
 						type: i,
 						component: 'Cardgate_Payment/js/view/payment/method-renderer/' + window.checkoutConfig.payment[i].renderer
