@@ -191,7 +191,12 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		) {
 
 		// compose payment_code
-		$this->_code = substr( \get_called_class(), strrpos( \get_called_class(), '\\' ) + 1 );
+		// NOTE as of v2.2.1 of Magento the class name includes Interceptor which needs to be stripped off.
+		$sClass = get_called_class();
+		if ( 'Interceptor' == substr( $sClass, -11 ) ) {
+			$sClass = substr( $sClass, 0, -12 );
+		}
+		$this->_code = substr( $sClass, strrpos( $sClass, '\\' ) + 1 );
 
 		// YYY: .. nah ..
 		if ( $this->_code == 'PaymentMethods' ) {
