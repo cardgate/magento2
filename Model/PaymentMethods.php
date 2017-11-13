@@ -281,7 +281,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		}
 		$info = $this->getInfoInstance();
 		foreach ( $additional as $key => $value ) {
-			$info->setAdditionalInformation( $key, $value );
+			if ( is_scalar( $value ) ) {
+				$info->setAdditionalInformation( $key, $value );
+			}
 		}
 		return $this;
 	}
