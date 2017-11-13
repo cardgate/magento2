@@ -8,7 +8,7 @@
 
 ## Support
 
-This plugin supports Magento 2 up to version **2.2.0**. It might work on more recent versions, but we cannot make any guarantees.
+This plugin supports Magento 2 up to version **2.2.1**. It might work on more recent versions, but we cannot make any guarantees.
 
 ## Preparation
 
