@@ -6,7 +6,7 @@
 	"keywords": [ "cardgate", "ideal", "bancontact", "creditcard", "magento" ],
 	"require": {
 		"php": "~5.6.0|~7.0.0|~7.1.0",
-		"cardgate/cardgate-clientlib-php": "~1.0.0"
+		"cardgate/cardgate-clientlib-php": "~1.1.0"
 	},
 	"type": "magento2-module",
 	"license": [
