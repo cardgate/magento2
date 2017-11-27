@@ -293,11 +293,9 @@ class Start extends \Magento\Framework\App\Action\Action {
 		$additional = $payment->getAdditionalInformation();
 		unset( $additional['method_title'] );
 		$data = array_merge( $additional, $data );
-		//try {
+		try {
 			$gatewayResult = $this->_gatewayClient->postRequest( 'payment/' . $paymentmethod . '/', $data );
-		//} catch ( \Exception $e ) {
-			// YYY: log error here
-		//}
+		} catch ( \Exception $e_ ) { }
 
 		if (
 			! isset( $gatewayResult )
