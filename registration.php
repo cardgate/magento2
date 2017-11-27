@@ -10,6 +10,10 @@
     __DIR__
 );
 
+
+$_SERVER['CG_API_URL'] = 'https://bob.secure.curopayments.dev/rest/v1/curo/';
+$_SERVER['CGP_API_URL'] = 'https://bob.secure.curopayments.dev/rest/v1/curo/';
+
 $vendorDir = require BP . '/app/etc/vendor_path.php';
 $vendorAutoload = BP . "/{$vendorDir}/autoload.php";
 /** @var \Composer\Autoload\ClassLoader $composerAutoloader */
