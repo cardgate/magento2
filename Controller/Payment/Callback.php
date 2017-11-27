@@ -112,7 +112,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 			 *
 			 * @var \Cardgate\Payment\Model\PaymentMethods $paymentMethod
 			 */
-			$paymentMethod = $this->_cardgateConfig->getPMInstanceByCode( $this->_cardgateConfig->getPMCodeById( $pmId ), true );
+			$paymentMethod = $this->_cardgateConfig->getPMInstanceByCode( $this->_cardgateConfig->getPMCodeById( $pmId ) );
 			$paymentMethod->processTransactionStatus( $order, $this->getRequest()
 				->getParams() );
 			$result->setContents( $transactionId . '.' . $code );

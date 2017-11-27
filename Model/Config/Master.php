@@ -65,7 +65,6 @@ class Master {
 		$this->paymentMethodCodes = [];
 		foreach ( $this->paymentMethodIds as $paymentMethod => $paymentMethodName ) {
 			$this->paymentMethodCodes["cardgate_{$paymentMethod}"] = $paymentMethodName;
-			$this->ensurePaymentClass( "cardgate_{$paymentMethod}" );
 		}
 	}
 
@@ -94,13 +93,9 @@ class Master {
 	 * $force can be set to ensure class exists (or create it if not exists)
 	 *
 	 * @param string $paymentMethodCode
-	 * @param string $force
 	 * @return \Cardgate\Payment\Model\PaymentMethods
 	 */
-	public function getPMInstanceByCode ( $paymentMethodCode, $force = false ) {
-		if ( $force ) {
-			$this->ensurePaymentClass( $paymentMethodCode );
-		}
+	public function getPMInstanceByCode ( $paymentMethodCode ) {
 		return ObjectManager::getInstance()->get( $this->getPMClassByCode( $paymentMethodCode ) );
 	}
 
@@ -132,23 +127,6 @@ class Master {
 	 */
 	public function getPMCodeById ( $paymentMethodId ) {
 		return 'cardgate_' . $paymentMethodId;
-	}
-
-	/**
-	 * Create Paymentmethod Class if not exists.
-	 *
-	 * @param unknown $paymentMethodCode
-	 * @return void
-	 */
-	private function ensurePaymentClass ( $paymentMethodCode ) {
-		if ( ! \class_exists( $this->getPMClassByCode( $paymentMethodCode ) ) ) {
-			/** @var \Magento\Framework\Filesystem\Directory\Write $directory */
-			$directory = $this->filesystem->getDirectoryWrite( DirectoryList::TMP );
-			if ( ! $directory->isFile( 'paymentmethod_' . $paymentMethodCode ) ) {
-				$directory->writeFile( 'paymentmethod_' . $paymentMethodCode, "<?php namespace Cardgate\\Payment\\Model\\PaymentMethod; class " . $this->getPMClassByCode( $paymentMethodCode, false ) . " extends \\Cardgate\\Payment\\Model\\PaymentMethod\\nonexistent {}" );
-			}
-			include $directory->getAbsolutePath( 'paymentmethod_' . $paymentMethodCode );
-		}
 	}
 
 	/**
