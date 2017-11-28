@@ -48,22 +48,15 @@ class ConfigProvider implements ConfigProviderInterface {
 
 	/**
 	 *
-	 * @var GatewayClient
-	 */
-	private $cardgateClient;
-
-	/**
-	 *
 	 * @param PaymentHelper $paymentHelper
 	 * @param Escaper $escaper
 	 * @param MasterConfig $masterConfig
 	 */
-	public function __construct ( PaymentHelper $paymentHelper, Escaper $escaper, MasterConfig $masterConfig, Config $config, GatewayClient $cardgateClient, \Magento\Framework\App\Cache\Type\Collection $cache ) {
+	public function __construct ( PaymentHelper $paymentHelper, Escaper $escaper, MasterConfig $masterConfig, Config $config, \Magento\Framework\App\Cache\Type\Collection $cache ) {
 		$this->escaper = $escaper;
 		$this->config = $config;
 		$this->cache = $cache;
 		$this->masterConfig = $masterConfig;
-		$this->cardgateClient = $cardgateClient;
 	}
 
 	/**
@@ -108,20 +101,22 @@ class ConfigProvider implements ConfigProviderInterface {
 	 * @return string|boolean|stdClass[id,name,list]
 	 */
 	public function getIDealIssuers () {
-		$testmode = boolval( $this->cardgateClient->getTestmode() );
-		$cacheID = "cgIDealIssuers" . ( $testmode ? 'test' : 'live' );
-		if ( $this->cache->test( $cacheID ) !== false ) {
-			try {
-				$issuers = unserialize( $this->cache->load( $cacheID ) );
-				if ( count( $issuers ) > 0 ) {
-					return $issuers;
-				}
-			} catch ( \Exception $e ) {
-				// ignore
-			}
-		}
 		try {
-			$ideal = new \curopayments\api\Payment\Request\iDeal( $this->cardgateClient );
+			$gatewayClient = ObjectManager::getInstance()->get( "Cardgate\\Payment\\Model\\GatewayClient" );
+			$testmode = boolval( $gatewayClient->getTestmode() );
+			$cacheID = "cgIDealIssuers" . ( $testmode ? 'test' : 'live' );
+			if ( $this->cache->test( $cacheID ) !== false ) {
+				try {
+					$issuers = unserialize( $this->cache->load( $cacheID ) );
+					if ( count( $issuers ) > 0 ) {
+						return $issuers;
+					}
+				} catch ( \Exception $e ) {
+					// ignore
+				}
+			}
+
+			$ideal = new \curopayments\api\Payment\Request\iDeal( $gatewayClient );
 			$issuers = $ideal->getIssuers()->getList();
 			$this->cache->save( serialize( $issuers ), $cacheID, [], 7200 );
 		} catch ( \Exception $e ) {
