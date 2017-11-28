@@ -48,7 +48,7 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field {
 			] );
 			return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>".__("Refresh active paymentmethods")."</span></button>";
 		} else {
-			return __('Please enter api-username, api-password and site-id first');
+			return __("Please enter Site Id, Hash key, Merchant Id and API key first");
 		}
 	}
 
