@@ -7,6 +7,7 @@
 namespace Cardgate\Payment\Controller\Payment;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\App\ObjectManager;
 
 /**
  * Client redirect after payment action
@@ -24,7 +25,6 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 
 	public function __construct ( \Magento\Framework\App\Action\Context $context, Session $checkoutSession ) {
 		$this->_checkoutSession = $checkoutSession;
-
 		parent::__construct( $context );
 	}
 
@@ -35,49 +35,45 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 	 * @see \Magento\Framework\App\ActionInterface::execute()
 	 */
 	public function execute () {
-		$orderid = $this->getRequest()->getParam( 'reference' );
+		$orderId = $this->getRequest()->getParam( 'reference' );
 		$status = $this->getRequest()->getParam( 'status' );
-		$transactionId = $this->getRequest()->getParam( 'status' );
+		$transactionId = $this->getRequest()->getParam( 'transaction' );
 
 		$resultRedirect = $this->resultRedirectFactory->create();
 
-		if ( empty( $orderid ) || empty( $transactionId ) ) {
-			$this->_checkoutSession->restoreQuote();
-			$this->messageManager->addNotice( __( 'Wrong parameters supplied' ) );
-			$resultRedirect->setPath( 'checkout/cart' );
-			return $resultRedirect;
-		}
-
-		/**
-		 *
-		 * @var Magento\Sales\Model\Order $order
-		 */
-		$order = $this->_objectManager->create( 'Magento\Sales\Model\Order' )->loadByIncrementId( $orderid );
-
-		if ( $order::STATE_NEW == $order->getState() ) {
-			try {
-				$data = $order->getPayment()
-					->getMethodInstance()
-					->refreshTransactionStatus( $transactionId );
-				$order->getPayment()
-					->getMethodInstance()
-					->processTransactionStatus( $order, $data );
-			} catch ( \Exception $e ) {
-				// ignore
+		try {
+			if (
+				empty( $orderId )
+				|| empty( $status )
+				|| empty( $transactionId )
+			) {
+				throw new \Exception( 'wrong parameters supplied' );
 			}
-			if ( isset( $data['status'] ) ) {
-				$status = $data['status'];
-			}
-		}
 
-		if ( $status == 'success' || $status == 'pending' ) {
-			$this->_checkoutSession->start();
-			$resultRedirect->setPath( 'checkout/onepage/success' );
-		} else {
+			// If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
+			// of relying on the provided status in the url.
+			$order = ObjectManager::getInstance()->create( \Magento\Sales\Model\Order::class )->loadByIncrementId( $orderId );
+			if ( \Magento\Sales\Model\Order::STATE_NEW == $order->getState() ) {
+				$gatewayClient = ObjectManager::getInstance()->get( \Cardgate\Payment\Model\GatewayClient::class );
+				$status = $gatewayClient->transactions()->status( $transactionId );
+			}
+
+			if (
+				'success' == $status
+				|| 'pending' == $status
+			) {
+				$this->_checkoutSession->start();
+				$resultRedirect->setPath( 'checkout/onepage/success' );
+			} else {
+				throw new \Exception( 'payment not completed' );
+			}
+		} catch ( \Exception $e ) {
 			$this->_checkoutSession->restoreQuote();
-			$this->messageManager->addNotice( __( 'Payment not completed' ) );
+			$this->messageManager->addErrorMessage( __( $e->getMessage() ) );
 			$resultRedirect->setPath( 'checkout/cart' );
 		}
+
 		return $resultRedirect;
 	}
+
 }

@@ -115,9 +115,7 @@ class ConfigProvider implements ConfigProviderInterface {
 					// ignore
 				}
 			}
-
-			$ideal = new \curopayments\api\Payment\Request\iDeal( $gatewayClient );
-			$issuers = $ideal->getIssuers()->getList();
+			$issuers = $gatewayClient->methods()->get( \cardgate\api\Method::IDEAL )->getIssuers();
 			$this->cache->save( serialize( $issuers ), $cacheID, [], 7200 );
 		} catch ( \Exception $e ) {
 			// YYY: Log error here

@@ -44,7 +44,7 @@ class TestGateway extends \Magento\Config\Block\System\Config\Form\Field {
 			] );
 			return "<button onclick='window.open(\"{$testGatewayUrl}\");return false;'><span>".__("Test Gateway communication")."</span></button>";
 		} else {
-			return __("Please enter api-username & api-password first");
+			return __("Please enter Site Id, Hash key, Merchant Id and API key first");
 		}
 	}
 

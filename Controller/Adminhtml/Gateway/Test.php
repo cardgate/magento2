@@ -6,57 +6,22 @@
  */
 namespace Cardgate\Payment\Controller\Adminhtml\Gateway;
 
-use Magento\Backend\App\Action;
-use Magento\Framework\Controller\ResultFactory;
-use Cardgate\Payment\Model\GatewayClient;
-use Magento\Framework\App\ObjectManager;
+use \Magento\Framework\App\ObjectManager;
 
 /**
- * Test gateway connectivity Adminhtml action
- *
- * @author DBS B.V.
- * @package Magento2
+ * Test gateway connectivity Adminhtml action.
  */
-class Test extends Action {
+class Test extends \Cardgate\Payment\Controller\Adminhtml\Gateway\FetchPM {
 
 	/**
-	 *
-	 * @var GatewayClient
+	 * @return \Magento\Framework\Controller\Result\Raw\Interceptor
 	 */
-	private $gatewayclient;
-
-	/**
-	 *
-	 * @param \Magento\Backend\App\Action\Context $context
-	 * @param \Magento\Customer\Model\Session $customerSession
-	 * @param \Magento\Checkout\Model\Session $checkoutSession
-	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-	 */
-	public function __construct ( \Magento\Backend\App\Action\Context $context ) {
-		parent::__construct( $context );
-		$this->gatewayclient = ObjectManager::getInstance()->get( GatewayClient::class );
+	public function execute() {
+		$sTestResult = "Testing CardGate gateway communication...\n";
+		self::_fetch( $sTestResult );
+		$sResult = $this->resultFactory->create( \Magento\Framework\Controller\ResultFactory::TYPE_RAW );
+		$sResult->setContents( '<pre>' . $sTestResult . "Completed.<pre>" );
+		return $sResult;
 	}
 
-	/**
-	 *
-	 * {@inheritdoc}
-	 *
-	 * @see \Magento\Framework\App\ActionInterface::execute()
-	 */
-	public function execute () {
-		$status = $this->getRequest()->getParam( 'section' );
-		$result = $this->resultFactory->create( ResultFactory::TYPE_RAW );
-		$testResult = "Testing Cardgate gateway communication...\n\n";
-		try {
-			$pmResult = $this->gatewayclient->postRequest( 'options/' . $this->gatewayclient->getSiteId() );
-			$testResult .= "Gateway request for site #" . $this->gatewayclient->getSiteId() . " completed...\n\nFound paymentmethods:\n";
-			foreach ( $pmResult->options as $pmId => $pmRecord ) {
-				$testResult .= "  {$pmRecord->name}\n";
-			}
-		} catch ( \Exception $e ) {
-			$testResult .= "Error occurred : " . $e->getMessage();
-		}
-		$result->setContents( "<pre>" . $testResult . "\n\nCompleted.<pre>" );
-		return $result;
-	}
 }

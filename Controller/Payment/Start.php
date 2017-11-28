@@ -13,6 +13,7 @@ use Cardgate\Payment\Model\Config\Master;
 use Cardgate\Payment\Model\PaymentMethods;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Sales\Model\Order\Address;
 
 /**
  * Start payment action
@@ -106,229 +107,213 @@ class Start extends \Magento\Framework\App\Action\Action {
 	}
 
 	public function execute () {
-
-		try {
-			$modList = ObjectManager::getInstance()->get( ModuleListInterface::class );
-			$version = $modList->getOne( 'Cardgate_Payment' )['setup_version'];
-		} catch ( \Exception $e ) {
-			$version = __("UNKOWN");
-		}
-
 		$order = $this->checkoutSession->getLastRealOrder();
 		$orderid = $order->getIncrementId();
 
-		$billingAddress = $order->getBillingAddress();
-		if ( !is_null($billingAddress ) ) {
-			$consumer = GatewayClient::convertAddressToConsumer( $billingAddress );
-		} else {
-			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) );
-			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) );
-			$this->checkoutSession->restoreQuote();
-			$this->_redirect( 'checkout/cart' );
-			return;
-		}
+		try {
+			$transaction = $this->_gatewayClient->transactions()->create(
+				$this->_gatewayClient->getSiteId(),
+				(int)round( $order->getBaseGrandTotal() * 100 ),
+				$order->getBaseCurrencyCode()
+			);
 
-		$shippingAddress = ! is_null( $order->getShippingAddress() ) ? $order->getShippingAddress() : $order->getBillingAddress();
-		if ( !is_null($billingAddress ) ) {
-			$shipping = GatewayClient::convertAddressToConsumer( $shippingAddress, true );
-		}
+			$code = $order->getPayment()->getMethodInstance()->getCode();
+			$paymentMethod = substr( $code, 9 );
+			$transaction->setPaymentMethod( $this->_gatewayClient->methods()->get( $paymentMethod ) );
 
-		$grandTotal = round( $order->getBaseGrandTotal() * 100 );
-		/**
-		 *
-		 * @var float $calculatedGrandTotal
-		 */
-		$calculatedGrandTotal = 0.00;
-		/**
-		 *
-		 * @var float $calculatedVatTotal
-		 */
-		$calculatedVatTotal = 0.00;
+			$transaction->setCallbackUrl( $this->_url->getUrl( 'cardgate/payment/callback' ) );
+			$transaction->setRedirectUrl( $this->_url->getUrl( 'cardgate/payment/redirect' ) );
+			$transaction->setReference( $orderid );
+			$transaction->setDescription( str_replace( '%id%', $orderid, $this->_cardgateConfig->getGlobal( 'order_description' ) ) );
 
-		$data = [
-			'shop_version' => 'Magento2',
-			'plugin_version' => 'Cardgate_Payment',
-			'plugin_name' => $version,
-			'ip' => $this->_gatewayClient->determineIp(),
-			'site_id' => $this->_gatewayClient->getSiteId(),
-			'country_id' => $consumer['country_id'],
-			'amount' => $grandTotal,
-			'reference' => $orderid,
-			'description' => str_replace( '%id%', $orderid, $this->_cardgateConfig->getGlobal( 'order_description' ) ),
-			'consumer' => array_merge( $consumer, $shipping ),
-			'currency_id' => $order->getBaseCurrencyCode(),
-			'url_success' => $this->_url->getUrl( 'cardgate/payment/redirect' ),
-			'url_failure' => $this->_url->getUrl( 'cardgate/payment/redirect' ),
-			'url_callback' => $this->_url->getUrl( 'cardgate/payment/callback' )
-		];
+			// Add the consumer data to the transaction.
+			$consumer = $transaction->getConsumer();
+			$billingAddress = $order->getBillingAddress();
+			if ( !$billingAddress ) {
+				throw new \Exception( 'missing or invalid billing address' );
+			}
+			$consumer->setEmail( $billingAddress->getEmail() );
+			$consumer->setPhone( $billingAddress->getTelephone() );
+			self::_convertAddress( $billingAddress, $consumer, 'address' );
+			$shippingAddress = $order->getShippingAddress();
+			if ( !$shippingAddress ) {
+				$shippingAddress = &$billingAddress;
+			}
+			self::_convertAddress( $shippingAddress, $consumer, 'shippingAddress' );
 
-		$cartitems = [];
+			// Add the cart items to the transaction.
+			$calculatedGrandTotal = 0.00;
+			$calculatedVatTotal = 0.00;
+			$cart = $transaction->getCart();
+			$stock = ObjectManager::getInstance()->get( \Magento\CatalogInventory\Model\Stock\StockItemRepository::class );
+			foreach ( $order->getAllVisibleItems() as $item ) {
+				$itemQty = (int)( $item->getQtyOrdered() ? $item->getQtyOrdered() : $item->getQty() );
+				$product = $item->getProduct();
+				$url = $product->getUrlModel()->getUrl( $product );
+				$cartItem = $cart->addItem(
+					\cardgate\api\Item::TYPE_PRODUCT,
+					$item->getSku(),
+					$item->getName(),
+					$itemQty,
+					round( $item->getPriceInclTax() * 100, 0 ),
+					$url
+				);
+				$cartItem->setVat( round( $item->getTaxPercent(), 0 ) );
+				$cartItem->setVatIncluded( TRUE );
+				$cartItem->setVatAmount( round( ( $item->getTaxAmount() * 100 ) / $itemQty, 0 ) );
 
-		$stockItem = ObjectManager::getInstance()->get( 'Magento\CatalogInventory\Model\Stock\StockItemRepository' );
-
-		/**
-		 * @var \Magento\Sales\Api\Data\OrderItemInterface $item
-		 */
-		foreach ( $order->getAllVisibleItems() as $item ) {
-			$itemQty = ( int ) ( $item->getQtyOrdered() ? $item->getQtyOrdered() : $item->getQty() );
-			$cartitem = [
-				'sku' => $item->getSku(),
-				'name' => $item->getName(),
-				'quantity' => $itemQty,
-				'vat_amount' => round( ( $item->getTaxAmount() * 100 ) / $itemQty, 0 ),
-				'vat' => round( $item->getTaxPercent(), 0 ),
-				'price' => round( $item->getPriceInclTax() * 100, 0 ),
-				'vat_inc' => 1,
-				'type' => 1,
-			];
-
-			$productStock = $stockItem->get( $item->getProduct()->getId() )->getData();
-			if ( !!$productStock['manage_stock'] ) {
-				if ( $productStock['qty'] <= -1 ) { // happens when backorders are allowed
-					$cartitem['stock'] = 0;
-				} else {
-					// The stock qty has already been lowered with the purchased quantity.
-					$cartitem['stock'] = $itemQty + $productStock['qty'];
+				// Include stock in cart items will disable auto-capture on CardGate gateway if item
+				// is backordered.
+				$stockData = $stock->get( $item->getProduct()->getId() )->getData();
+				if ( !!$stockData['manage_stock'] ) {
+					if ( $stockData['qty'] <= -1 ) { // happens when backorders are allowed
+						$cartItem->setStock( 0 );
+					} else {
+						// The stock qty has already been lowered with the purchased quantity.
+						$cartItem->setStock( $itemQty + $stockData['qty'] );
+					}
 				}
+
+				$calculatedGrandTotal += $item->getPriceInclTax() * $itemQty;
+				$calculatedVatTotal += $item->getTaxAmount();
 			}
 
-			$cartitems[] = $cartitem;
-			$calculatedGrandTotal += $item->getPriceInclTax() * $itemQty;
-			$calculatedVatTotal += $item->getTaxAmount();
-		}
+			$shippingAmount = $order->getShippingAmount();
+			if ( $shippingAmount > 0 ) {
+				$cartItem = $cart->addItem(
+					\cardgate\api\Item::TYPE_SHIPPING,
+					'shipping',
+					'Shipping Costs',
+					1,
+					round( $order->getShippingInclTax() * 100, 0 )
+				);
+				$cartItem->setVat( ceil( ( ( $order->getShippingInclTax() / $shippingAmount ) - 1 ) * 1000 ) / 10 );
+				$cartItem->setVatIncluded( TRUE );
+				$cartItem->setVatAmount( round( $order->getShippingTaxAmount() * 100, 0 ) );
 
-		$shippingAmount = $order->getShippingAmount();
-		if ( $shippingAmount > 0 ) {
-			$cartitems[] = [
-				'sku' => 'shipping',
-				'name' => 'Shipping costs',
-				'quantity' => 1,
-				'vat_amount' => round( $order->getShippingTaxAmount() * 100, 0 ),
-				'vat' => ceil( ( ( $order->getShippingInclTax() / $shippingAmount ) - 1 ) * 1000 ) / 10,
-				'price' => round( $order->getShippingInclTax() * 100, 0 ),
-				'vat_inc' => 1,
-				'type' => 2
-			];
-			$calculatedGrandTotal += $order->getShippingInclTax();
-			$calculatedVatTotal += $order->getShippingTaxAmount();
+				$calculatedGrandTotal += $order->getShippingInclTax();
+				$calculatedVatTotal += $order->getShippingTaxAmount();
+			}
 
-		}
+			$discountAmount = $order->getDiscountAmount();
+			if ( $discountAmount < 0 ) {
+				$cartItem = $cart->addItem(
+					\cardgate\api\Item::TYPE_DISCOUNT,
+					'discount',
+					'Discount',
+					1,
+					round( $discountAmount * 100, 0 )
+				);
+				$cartItem->setVat( ceil( ( ( $discountAmount / ( $discountAmount - $order->getDiscountTaxCompensationAmount() ) ) - 1 ) * 1000 ) / 10 );
+				$cartItem->setVatIncluded( TRUE );
+				$cartItem->setVatAmount( round( $order->getDiscountTaxCompensationAmount() * 100, 0 ) );
 
-		$discountAmount = $order->getDiscountAmount();
-		if ( $discountAmount < 0 ) { // $discountAmount &&
-			$cartitems[] = [
-				'sku' => 'discount',
-				'name' => 'Discount',
-				'quantity' => 1,
-				'vat_amount' => round( $order->getDiscountTaxCompensationAmount() * 100, 0 ),
-				'vat' => ceil( ( ( $discountAmount / ( $discountAmount - $order->getDiscountTaxCompensationAmount() ) ) - 1 ) * 1000 ) / 10,
-				'price' => round( $discountAmount * 100, 0 ),
-				'vat_inc' => 1,
-				'type' => 4
-			];
-			$calculatedGrandTotal -= $discountAmount;
-			$calculatedVatTotal -= $order->getDiscountTaxCompensationAmount();
-		}
+				$calculatedGrandTotal -= $discountAmount;
+				$calculatedVatTotal -= $order->getDiscountTaxCompensationAmount();
+			}
 
-		$cardgatefeeAmount = $order->getCardgatefeeInclTax();
-		if ( $cardgatefeeAmount > 0 ) {
-			$cartitems[] = [
-				'sku' => 'cardgatefee',
-				'name' => 'Payment Fee',
-				'quantity' => 1,
-				'vat_amount' => round( $order->getCardgatefeeTaxAmount() * 100, 0 ),
-				'vat' => ceil( ( ( $order->getCardgatefeeInclTax() / $cardgatefeeAmount ) - 1 ) * 1000 ) / 10,
-				'price' => round( $order->getCardgatefeeInclTax() * 100, 0 ),
-				'vat_inc' => 1,
-				'type' => 5
-			];
-			$calculatedGrandTotal += $order->getCardgatefeeInclTax();
-			$calculatedVatTotal += $order->getCardgatefeeTaxAmount();
-		}
+			$cardGateFeeAmount = $order->getCardgatefeeAmount();
+			if ( $cardGateFeeAmount > 0 ) {
+				$cartItem = $cart->addItem(
+					\cardgate\api\Item::TYPE_HANDLING,
+					'cardgatefee',
+					'Payment Fee',
+					1,
+					round( $order->getCardgatefeeInclTax() * 100, 0 )
+				);
+				$cartItem->setVat( ceil( ( ( $order->getCardgatefeeInclTax() / $cardGateFeeAmount ) - 1 ) * 1000 ) / 10 );
+				$cartItem->setVatIncluded( TRUE );
+				$cartItem->setVatAmount( round( $order->getCardgatefeeTaxAmount() * 100, 0 ) );
 
-		// Failsafe; correct VAT if needed
-		if ( $calculatedVatTotal != $order->getTaxAmount() ) {
-			$vatCorrection = $order->getTaxAmount() - $calculatedVatTotal;
-			$cartitems[] = [
-				'sku' => 'cg-vatcorrection',
-				'name' => 'VAT Correction',
-				'quantity' => 1,
-				'vat_amount' => round( $vatCorrection * 100, 0 ),
-				'vat' => 100,
-				'price' => round( $vatCorrection * 100, 0 ),
-				'vat_inc' => 1,
-				'type' => 7
-			];
-			$calculatedGrandTotal += $vatCorrection;
-		}
+				$calculatedGrandTotal += $order->getCardgatefeeInclTax();
+				$calculatedVatTotal += $order->getCardgatefeeTaxAmount();
+			}
 
-		// Failsafe; correct grandtotal if needed
-		if ( $calculatedGrandTotal != $order->getGrandTotal() ) {
-			$grandTotalCorrection = $order->getGrandTotal() - $calculatedGrandTotal;
-			$cartitems[] = [
-				'sku' => 'cg-correction',
-				'name' => 'Correction',
-				'quantity' => 1,
-				'vat_amount' => 0,
-				'vat' => 0,
-				'price' => round( $grandTotalCorrection * 100, 0 ),
-				'vat_inc' => 1,
-				'type' => ( $grandTotalCorrection > 0 ) ? 1 : 4
-			];
-		}
+			// Failsafe; correct VAT if needed.
+			if ( $calculatedVatTotal != $order->getTaxAmount() ) {
+				$vatCorrection = $order->getTaxAmount() - $calculatedVatTotal;
+				$cartItem = $cart->addItem(
+					7,
+					'cg-vatcorrection',
+					'VAT Correction',
+					1,
+					round( $vatCorrection * 100, 0 )
+				);
+				$cartItem->setVat( 100 );
+				$cartItem->setVatIncluded( TRUE );
+				$cartItem->setVatAmount( round( $vatCorrection * 100, 0 ) );
 
-		$data['cartitems'] = $cartitems;
+				$calculatedGrandTotal += $vatCorrection;
+			}
 
-		$code = $order->getPayment()
-			->getMethodInstance()
-			->getCode();
-		$paymentmethod = substr( $code, 9 );
+			// Failsafe; correct grandtotal if needed.
+			$grandTotalCorrection = round( ( $order->getGrandTotal() - $calculatedGrandTotal ) * 100, 0 );
+			if ( abs( $grandTotalCorrection ) > 0 ) {
+				$cartItem = $cart->addItem(
+					( $grandTotalCorrection > 0 ) ? 1 : 4,
+					'cg-correction',
+					'Correction',
+					1,
+					round( $grandTotalCorrection * 100, 0 )
+				);
+				$cartItem->setVat( 0 );
+				$cartItem->setVatIncluded( TRUE );
+				$cartItem->setVatAmount( 0 );
+			}
 
-		/**
-		 *
-		 * @var \Magento\Sales\Model\Order\Payment $payment
-		 */
-		$payment = $order->getPayment();
+			// If there was an issuer present (most likely iDeal), configure the transaction with this issuer. The
+			// issuer is stored as additional data in the assignData method from Model/PaymentMethod.php.
+			$payment = $order->getPayment();
+			$data = $payment->getAdditionalInformation();
+			if ( ! empty( $data['issuer_id'] ) ) {
+				$transaction->setIssuer( $data['issuer_id'] );
+			}
 
-		$additional = $payment->getAdditionalInformation();
-		unset( $additional['method_title'] );
-		$data = array_merge( $additional, $data );
-		try {
-			$gatewayResult = $this->_gatewayClient->postRequest( 'payment/' . $paymentmethod . '/', $data );
-		} catch ( \Exception $e_ ) { }
+			// Register the transaction and finish up.
+			$transaction->register();
+			$payment->setCardgateTestmode( $this->_gatewayClient->getTestmode() );
+			$payment->setCardgatePaymentmethod( $paymentMethod );
+			$payment->setCardgateTransaction( $transaction->getId() );
+			$payment->save();
 
-		if (
-			! isset( $gatewayResult )
-			|| ! is_object( $gatewayResult )
-		) {
-			$this->messageManager->addErrorMessage( __( 'Error occurred while communicating with the payment service provider' ) );
-			$order->registerCancellation( 'Error occurred while communicating with the payment service provider' );
+			$order->addStatusHistoryComment( __( "Transaction registered. Transaction ID %1", $transaction->getId() ) );
+			$order->save();
+
+			$actionUrl = $transaction->getActionUrl();
+			if ( NULL !== $actionUrl ) {
+				// Redirect the consumer to the CardGate payment gateway.
+				$this->getResponse()->setRedirect( $actionUrl  );
+			} else {
+				// Payment methods without user interaction are not yet supported.
+				throw new \Exception( 'unsupported payment action' );
+			}
+
+		} catch ( \Exception $e ) {
+			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
+			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) );
 			$order->save();
 			$this->checkoutSession->restoreQuote();
 			$this->_redirect( 'checkout/cart' );
-			return;
-		} elseif ( ! isset( $gatewayResult->success ) || $gatewayResult->success != true || ! isset( $gatewayResult->payment ) || ! isset( $gatewayResult->payment->transaction_id ) ) {
-			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) . ' (' . $gatewayResult->warning . ( isset( $gatewayResult->error ) ? ' #' . $gatewayResult->error->code : '' ) . ')' );
-			$order->registerCancellation(
-					__( 'Error occurred while registering the transaction' ) . $gatewayResult->warning . ' // ' . ( isset( $gatewayResult->error ) ? ' #' . $gatewayResult->error->message . ' #' . $gatewayResult->code : '' ) . ')' );
-			$order->save();
-			$this->checkoutSession->restoreQuote();
-			$this->_redirect( 'checkout/cart' );
-			return;
 		}
+	}
 
-		// At this point 'success' is true
-		$payment->setCardgateTestmode( $this->_gatewayClient->getTestmode() );
-		$payment->setCardgatePaymentmethod( $paymentmethod );
-		$payment->setCardgateTransaction( $gatewayResult->payment->transaction_id );
-		$payment->save();
-
-		$order->addStatusHistoryComment( __("Transaction registered. Transaction ID %1", $gatewayResult->payment->transaction_id ), PaymentMethods::ORDER_STATUS_AUTHORIZED );
-		$order->save();
-
-		$this->getResponse()->setRedirect( $gatewayResult->payment->url );
-		return;
-
+	/**
+	 * Converts a Magento address object to a cardgate consumer address.
+	 * @return array
+	 */
+	private static function _convertAddress( Address &$oAddress_, \cardgate\api\Consumer &$oConsumer_, $sMethod_ ) {
+		$oConsumer_->$sMethod_()->setFirstName( $oAddress_->getFirstname() );
+		$oConsumer_->$sMethod_()->setLastName( $oAddress_->getLastname() );
+		if ( !!( $sCompany = $oAddress_->getCompany() ) ) {
+			$oConsumer_->$sMethod_()->setCompany( $sCompany );
+		}
+		$oConsumer_->$sMethod_()->setAddress( implode( PHP_EOL, $oAddress_->getStreet() ) );
+		$oConsumer_->$sMethod_()->setCity( $oAddress_->getCity() );
+		if ( !!( $sState = $oAddress_->getRegion() ) ) {
+			$oConsumer_->$sMethod_()->setState( $sState );
+		}
+		$oConsumer_->$sMethod_()->setZipCode( $oAddress_->getPostcode() );
+		$oConsumer_->$sMethod_()->setCountry( $oAddress_->getCountryId() );
 	}
 
 	/**

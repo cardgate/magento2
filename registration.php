@@ -34,9 +34,3 @@ class Registration {
 }
 
 spl_autoload_register( [ '\Cardgate\Payment\Registration', 'autoload' ] );
-
-$vendorDir = require BP . '/app/etc/vendor_path.php';
-$vendorAutoload = BP . "/{$vendorDir}/autoload.php";
-/** @var \Composer\Autoload\ClassLoader $composerAutoloader */
-$composerAutoloader = include $vendorAutoload;
-$composerAutoloader->addPsr4('curopayments\\', array(__DIR__ . '/lib'));
