@@ -57,7 +57,12 @@ class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset {
 	 */
 	private function testConfigurationHealth () {
 		$extra = $this->_authSession->getUser()->getExtra();
-		if ( empty( $this->config->getGlobal( 'api_username' ) ) || empty( $this->config->getGlobal( 'api_password' ) ) || empty( $this->config->getGlobal( 'site_id' ) ) ) {
+		if (
+			empty( $this->config->getGlobal( 'api_username' ) )
+			|| empty( $this->config->getGlobal( 'api_password' ) )
+			|| empty( $this->config->getGlobal( 'site_id' ) )
+			|| empty( $this->config->getGlobal( 'site_key' ) )
+		) {
 			$extra['configState']['cardgate_global'] = true;
 			$this->_authSession->getUser()->setExtra( $extra );
 			return false;

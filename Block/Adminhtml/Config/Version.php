@@ -51,7 +51,7 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field {
 		}
 
 		return "v" . $version . ( $this->config->getGlobal( 'testmode' ) ? ' <span style="color:red">'.__("TESTMODE ENABLED").'</span>' : '' ) .
-				( isset( $_SERVER['CGP_API_URL'] ) && $_SERVER['CGP_API_URL'] != '' ? ' <span style="color:red">API OVERRIDE (' . $_SERVER['CGP_API_URL'] . ')</span>' : '' );
+				( isset( $_SERVER['CG_API_URL'] ) && $_SERVER['CG_API_URL'] != '' ? ' <span style="color:red">API OVERRIDE (' . $_SERVER['CG_API_URL'] . ')</span>' : '' );
 	}
 
 }

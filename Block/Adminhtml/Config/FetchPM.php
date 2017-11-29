@@ -42,13 +42,18 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field {
 	 * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
 	 */
 	protected function _getElementHtml ( \Magento\Framework\Data\Form\Element\AbstractElement $element ) {
-		if ( ! empty( $this->config->getGlobal( 'api_username' ) ) && ! empty( $this->config->getGlobal( 'api_password' ) ) && ! empty( $this->config->getGlobal( 'site_id' ) ) ) {
+		if (
+			! empty( $this->config->getGlobal( 'api_username' ) )
+			&& ! empty( $this->config->getGlobal( 'api_password' ) )
+			&& ! empty( $this->config->getGlobal( 'site_id' ) )
+			&& ! empty( $this->config->getGlobal( 'site_key' ) )
+		) {
 			$fetchPMUrl = $this->_urlBuilder->getUrl( "cardgate/gateway/fetchpm", [
 				'section' => 'gateway'
 			] );
 			return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>".__("Refresh active paymentmethods")."</span></button>";
 		} else {
-			return __('Please enter api-username, api-password and site-id first');
+			return __("Please enter Site Id, Hash key, Merchant Id and API key first");
 		}
 	}
 

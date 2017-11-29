@@ -6,78 +6,61 @@
  */
 namespace Cardgate\Payment\Controller\Adminhtml\Gateway;
 
-use Magento\Backend\App\Action;
-use Magento\Framework\Controller\ResultFactory;
-use Cardgate\Payment\Model\GatewayClient;
-use Cardgate\Payment\Model\Config;
-use Magento\Framework\App\ObjectManager;
+use \Magento\Framework\App\ObjectManager;
 
 /**
- * Fetch paymentmethods Adminhtml action
- *
- * @author DBS B.V.
- * @package Magento2
+ * Test gateway connectivity Adminhtml action.
  */
-class FetchPM extends Action {
+class FetchPM extends \Magento\Backend\App\Action {
 
 	/**
-	 *
-	 * @var Config
+	 * @return \Magento\Framework\Controller\Result\Raw\Interceptor
 	 */
-	private $config;
-
-	/**
-	 *
-	 * @var GatewayClient
-	 */
-	private $gatewayclient;
-
-	/**
-	 *
-	 * @param \Magento\Backend\App\Action\Context $context
-	 * @param \Magento\Customer\Model\Session $customerSession
-	 * @param \Magento\Checkout\Model\Session $checkoutSession
-	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-	 */
-	public function __construct ( \Magento\Backend\App\Action\Context $context ) {
-		parent::__construct( $context );
-		$this->config = ObjectManager::getInstance()->get( Config::class );
-		$this->gatewayclient = ObjectManager::getInstance()->get( GatewayClient::class );
-	}
-
-	/**
-	 *
-	 * {@inheritdoc}
-	 *
-	 * @see \Magento\Framework\App\ActionInterface::execute()
-	 */
-	public function execute () {
-		$status = $this->getRequest()->getParam( 'section' );
-		$testResult = [];
-		$activePms = [];
-		try {
-			$pmResult = $this->gatewayclient->postRequest( 'options/' . $this->gatewayclient->getSiteId() );
-			foreach ( $pmResult->options as $pmId => $pmRecord ) {
-				$activePms[] = [
-					'id' => $pmRecord->id,
-					'name' => $pmRecord->name
+	public function execute() {
+		$sFetchResult = "Fetching CardGate payment methods...\n";
+		$aMethods = self::_fetch( $sFetchResult );
+		if ( is_array( $aMethods ) ) {
+			$aActiveMethods = [];
+			foreach ( $aMethods as $oMethod ) {
+				$aActiveMethods[] = [
+					'id'   => $oMethod->getId(),
+					'name' => $oMethod->getName()
 				];
 			}
-			$testResult['pms'] = $activePms;
-			$this->config->setGlobal( 'active_pm', serialize( $activePms ) );
-			$testResult['success'] = true;
-		} catch ( \Exception $e ) {
-			$testResult['success'] = false;
-			$testResult['message'] = $e->getMessage();
+			$oConfig = ObjectManager::getInstance()->get( \Cardgate\Payment\Model\Config::class );
+			$oConfig->setGlobal( 'active_pm', serialize( $aActiveMethods ) );
+			$sFetchResult .= "<span style=\"color:blue;font-weight:bold;\">Please go to \"Cache Management\" and refresh cache types.</span>\n";
 		}
-		// YYY: Should be JSON data + flush cache here automagically?
-		//$result = $this->resultFactory->create( ResultFactory::TYPE_JSON );
-		//$result->setData( $testResult );
-		$result = $this->resultFactory->create( ResultFactory::TYPE_RAW );
-		$result->setContents("<html><body><pre>After successful query; close this tab and <b><u>please flush CACHE</u></b> ('System' > 'Tools' > 'Cache Management')." .
-				( isset( $testResult['message'] ) ? "\n\n<b>Message : " . $testResult['message'] . '' : '' ) . "</b>\n\nNumber of active paymentmethods found : " . count( $activePms ) .
-				"\n\nRaw Result :\n" . var_export($activePms, 1)."</pre></body></html>"
-		);
-		return $result;
+		$sResult = $this->resultFactory->create( \Magento\Framework\Controller\ResultFactory::TYPE_RAW );
+		$sResult->setContents( '<pre>' . $sFetchResult . "Completed.<pre>" );
+		return $sResult;
 	}
+
+	/**
+	 * @return array
+	 */
+	protected function _fetch( &$sResult_ ) {
+		try {
+			$oGatewayClient = ObjectManager::getInstance()->get( \Cardgate\Payment\Model\GatewayClient::class );
+			$aMethods = $oGatewayClient->methods()->all( $oGatewayClient->getSiteId() );
+			$sResult_ .= 'Gateway request for site #' . $oGatewayClient->getSiteId() . " completed.\n";
+			if ( count( $aMethods ) > 0 ) {
+				$sResult_ .= "<span style=\"color:green;font-weight:bold;\">Found payment methods: ";
+				foreach ( $aMethods as $iIndex => $oMethod ) {
+					if ( $iIndex > 0 ) {
+						$sResult_ .= ', ';
+					}
+					$sResult_ .= $oMethod->getId();
+				}
+				$sResult_ .= ".</span>\n";
+			} else {
+				$sResult_ .= "<span style=\"color:red;font-weight:bold;\">No payment methods found.</span>\n";
+			}
+			return $aMethods;
+		} catch( \Exception $e_ ) {
+			$sResult_ .= "<span style=\"color:red;font-weight:bold;\">Error occurred: " . $e_->getMessage() . "</span>\n";
+			return FALSE;
+		}
+	}
+
 }
