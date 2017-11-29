@@ -38,7 +38,12 @@ class TestGateway extends \Magento\Config\Block\System\Config\Form\Field {
 	 * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
 	 */
 	protected function _getElementHtml ( \Magento\Framework\Data\Form\Element\AbstractElement $element ) {
-		if ( ! empty( $this->config->getGlobal( 'api_username' ) ) && ! empty( $this->config->getGlobal( 'api_password' ) ) && ! empty( $this->config->getGlobal( 'site_id' ) ) ) {
+		if (
+			! empty( $this->config->getGlobal( 'api_username' ) )
+			&& ! empty( $this->config->getGlobal( 'api_password' ) )
+			&& ! empty( $this->config->getGlobal( 'site_id' ) )
+			&& ! empty( $this->config->getGlobal( 'site_key' ) )
+		) {
 			$testGatewayUrl = $this->_urlBuilder->getUrl( "cardgate/gateway/test", [
 				'section' => 'gateway'
 			] );
