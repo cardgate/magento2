@@ -99,15 +99,20 @@ class GatewayClient {
 	 * @return string
 	 */
 	private static function _determineIp() {
+		$sIp = '0.0.0.0';
 		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-			return $_SERVER['HTTP_CLIENT_IP'];
+			$sIp = $_SERVER['HTTP_CLIENT_IP'];
 		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			return $_SERVER['HTTP_X_FORWARDED_FOR'];
+			$sIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
-			return $_SERVER['REMOTE_ADDR'];
-		} else {
-			return '0.0.0.0';
+			$sIp = $_SERVER['REMOTE_ADDR'];
 		}
+		foreach( preg_split( "/\s?[,;\|]\s?/i", $sIp ) as $sIp ) {
+			if ( filter_var( $sIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+				return $sIp;
+			}
+		}
+		return $sIp;
 	}
 
 }
