@@ -42,6 +42,7 @@ class FetchPM extends \Magento\Backend\App\Action {
 	protected function _fetch( &$sResult_ ) {
 		try {
 			$oGatewayClient = ObjectManager::getInstance()->get( \Cardgate\Payment\Model\GatewayClient::class );
+			$sResult_ .= 'Using gateway address ' . $oGatewayClient->getUrl() . "\n";
 			$aMethods = $oGatewayClient->methods()->all( $oGatewayClient->getSiteId() );
 			$sResult_ .= 'Gateway request for site #' . $oGatewayClient->getSiteId() . " completed.\n";
 			if ( count( $aMethods ) > 0 ) {
