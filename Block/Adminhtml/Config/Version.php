@@ -45,13 +45,17 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field {
 		 */
 		try {
 			$modList = ObjectManager::getInstance()->get( ModuleListInterface::class );
-			$version = $modList->getOne( 'Cardgate_Payment' )['setup_version'];
+			$pluginVersion = $modList->getOne( 'Cardgate_Payment' )['setup_version'];
 		} catch ( \Exception $e ) {
-			$version = __("UNKOWN");
+			$pluginVersion = __("UNKOWN");
 		}
 
-		return "v" . $version . ( $this->config->getGlobal( 'testmode' ) ? ' <span style="color:red">'.__("TESTMODE ENABLED").'</span>' : '' ) .
-				( isset( $_SERVER['CG_API_URL'] ) && $_SERVER['CG_API_URL'] != '' ? ' <span style="color:red">API OVERRIDE (' . $_SERVER['CG_API_URL'] . ')</span>' : '' );
+		return
+			"Plugin <strong>v" . $pluginVersion . '</strong><br/>'
+			. 'Client Library <strong>v' . \cardgate\api\Client::CLIENT_VERSION . '</strong>'
+			. ( $this->config->getGlobal( 'testmode' ) ? '<br/><span style="color:red">'.__("TESTMODE ENABLED").'</span>' : '' )
+			. ( isset( $_SERVER['CG_API_URL'] ) && $_SERVER['CG_API_URL'] != '' ? ' <span style="color:red">API OVERRIDE (' . $_SERVER['CG_API_URL'] . ')</span>' : '' )
+		;
 	}
 
 }
