@@ -49,12 +49,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 *
 	 * @var string
 	 */
-	protected $_formBlockType = 'Cardgate\Payment\Block\Form\DefaultForm';
-
-	/**
-	 *
-	 * @var string
-	 */
 	protected $_infoBlockType = 'Cardgate\Payment\Block\Info\DefaultInfo';
 
 	/**
