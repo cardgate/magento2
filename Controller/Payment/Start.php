@@ -164,7 +164,10 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 				// Include stock in cart items will disable auto-capture on CardGate gateway if item
 				// is backordered.
-				$stockData = $stock->get( $item->getProduct()->getId() )->getData();
+				$stockData = [ 'manage_stock' => false ];
+				try {
+					$stockData = $stock->get( $item->getProduct()->getId() )->getData();
+				} catch ( \Exception $e ) { /* ignore */ }
 				if ( !!$stockData['manage_stock'] ) {
 					if ( $stockData['qty'] <= -1 ) { // happens when backorders are allowed
 						$cartItem->setStock( 0 );
