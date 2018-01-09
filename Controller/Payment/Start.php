@@ -164,11 +164,16 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 				// Include stock in cart items will disable auto-capture on CardGate gateway if item
 				// is backordered.
-				$stockData = [ 'manage_stock' => false ];
+				$stockData = NULL;
 				try {
 					$stockData = $stock->get( $item->getProduct()->getId() )->getData();
 				} catch ( \Exception $e ) { /* ignore */ }
-				if ( !!$stockData['manage_stock'] ) {
+				if (
+					is_array( $stockData )
+					&& isset( $stockData['manage_stock'] )
+					&& isset( $stockData['qty'] )
+					&& !!$stockData['manage_stock']
+				) {
 					if ( $stockData['qty'] <= -1 ) { // happens when backorders are allowed
 						$cartItem->setStock( 0 );
 					} else {
@@ -293,7 +298,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 		} catch ( \Exception $e ) {
 			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
-			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) );
+			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
 			$order->save();
 			$this->checkoutSession->restoreQuote();
 			$this->_redirect( 'checkout/cart' );
