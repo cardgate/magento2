@@ -72,6 +72,10 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		if ( ! is_array( $post ) ) {
 			$post = [];
 		}
+		$get = $this->getRequest()->getParams();
+		if ( ! is_array( $get ) ) {
+			$get = [];
+		}
 
 		$transactionId = empty( $post['transaction'] ) ? $this->getRequest()->getParam( 'transaction' ) : $post['transaction'];
 		$reference = empty( $post['reference'] ) ? $this->getRequest()->getParam( 'reference' ) : $post['reference'];
@@ -83,7 +87,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		$updateCardgateData = FALSE;
 
 		try {
-			if ( FALSE == $this->_cardgateClient->transactions()->verifyCallback( empty( $post ) ? $_GET : $post, $this->_cardgateClient->getSiteKey() ) ) {
+			if ( FALSE == $this->_cardgateClient->transactions()->verifyCallback( empty( $post ) ? $get : $post, $this->_cardgateClient->getSiteKey() ) ) {
 				throw new \Exception( 'hash verification failure' );
 			}
 
