@@ -53,15 +53,17 @@ class GatewayClient {
 		}
 		$this->_oClient = new \cardgate\api\Client( $sMerchantId, $sApiKey, $bTestMode );
 
-		$this->_oClient->setIp( self::_determineIp() );
-		@list( $sLanguage, $sCountry ) = explode( '_', $oLocaleResolver_->getLocale() );
-		if ( ! empty( $sLanguage ) ) {
-			$this->_oClient->setLanguage( $sLanguage );
-		}
-		$this->_oClient->version()->setPlatformName( 'PHP' );
-		$this->_oClient->version()->setPlatformVersion( phpversion() );
-		$this->_oClient->version()->setPluginName( 'Magento/cardgate-clientlib-php' );
-		$this->_oClient->version()->setPluginVersion( $oMetaData_->getVersion() . '/' . $oModuleList_->getOne( 'Cardgate_Payment' )['setup_version'] );
+		try {
+			$this->_oClient->setIp( self::_determineIp() );
+			@list( $sLanguage, $sCountry ) = explode( '_', $oLocaleResolver_->getLocale() );
+			if ( ! empty( $sLanguage ) ) {
+				$this->_oClient->setLanguage( $sLanguage );
+			}
+			$this->_oClient->version()->setPlatformName( 'PHP, Magento2' );
+			$this->_oClient->version()->setPlatformVersion( phpversion() . ', ' . $oMetaData_->getVersion() );
+			$this->_oClient->version()->setPluginName( 'cardgate/magento2, cardgate/cardgate-clientlib-php' );
+			$this->_oClient->version()->setPluginVersion( $oModuleList_->getOne( 'Cardgate_Payment' )['setup_version'] . ', ' . \cardgate\api\Client::CLIENT_VERSION );
+		} catch ( \Exception $e ) { /* ignore */ }
 	}
 
 	/**
