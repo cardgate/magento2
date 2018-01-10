@@ -29,8 +29,7 @@ class PreProcessorCardgate implements PreProcessorInterface {
 							'model' => $masterConfig->getPMClassByCode( $paymentMethod ),
 							'label' => $paymentMethod,
 							'group' => 'cardgate',
-							'title' => $paymentMethodName,
-							'name'  => $paymentMethodName
+							'title' => $paymentMethodName
 						], $config['default']['payment'][$paymentMethod] );
 			}
 		}
