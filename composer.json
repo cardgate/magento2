@@ -9,10 +9,7 @@
 		"cardgate/cardgate-clientlib-php": "^1.1.4"
 	},
 	"type": "magento2-module",
-	"license": [
-		"OSL-3.0",
-		"AFL-3.0"
-	],
+	"license": "MIT",
 	"autoload": {
 		"files": [
 			"registration.php"
