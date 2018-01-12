@@ -241,7 +241,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			if ( $calculatedVatTotal != $order->getTaxAmount() ) {
 				$vatCorrection = $order->getTaxAmount() - $calculatedVatTotal;
 				$cartItem = $cart->addItem(
-					7,
+					\cardgate\api\Item::TYPE_VAT_CORRECTION,
 					'cg-vatcorrection',
 					'VAT Correction',
 					1,
@@ -258,7 +258,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			$grandTotalCorrection = round( ( $order->getGrandTotal() - $calculatedGrandTotal ) * 100, 0 );
 			if ( abs( $grandTotalCorrection ) > 0 ) {
 				$cartItem = $cart->addItem(
-					( $grandTotalCorrection > 0 ) ? 1 : 4,
+					\cardgate\api\Item::TYPE_CORRECTION,
 					'cg-correction',
 					'Correction',
 					1,
