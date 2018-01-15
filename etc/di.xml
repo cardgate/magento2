@@ -30,4 +30,5 @@
 			</argument>
 		</arguments>
 	</type>
+	<preference for="Magento\SalesRule\Model\Rule\Condition\Address" type="Cardgate\Payment\Model\Rule\Address" />
 </config>
