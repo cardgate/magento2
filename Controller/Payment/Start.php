@@ -216,7 +216,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 				$cartItem->setVatIncluded( TRUE );
 				$cartItem->setVatAmount( round( $order->getDiscountTaxCompensationAmount() * 100, 0 ) );
 
-				$calculatedGrandTotal -= $discountAmount;
+				$calculatedGrandTotal += $discountAmount;
 				$calculatedVatTotal -= $order->getDiscountTaxCompensationAmount();
 			}
 
@@ -262,7 +262,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 					'cg-correction',
 					'Correction',
 					1,
-					round( $grandTotalCorrection * 100, 0 )
+					$grandTotalCorrection
 				);
 				$cartItem->setVat( 0 );
 				$cartItem->setVatIncluded( TRUE );
