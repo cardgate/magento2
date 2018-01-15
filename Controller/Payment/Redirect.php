@@ -37,6 +37,7 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 	public function execute () {
 		$orderId = $this->getRequest()->getParam( 'reference' );
 		$status = $this->getRequest()->getParam( 'status' );
+		$code = $this->getRequest()->getParam( 'code' );
 		$transactionId = $this->getRequest()->getParam( 'transaction' );
 
 		$resultRedirect = $this->resultRedirectFactory->create();
@@ -45,9 +46,10 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 			if (
 				empty( $orderId )
 				|| empty( $status )
+				|| empty( $code )
 				|| empty( $transactionId )
 			) {
-				throw new \Exception( 'wrong parameters supplied' );
+				throw new \Exception( __( 'Wrong parameters supplied.' ) );
 			}
 
 			// If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
@@ -57,15 +59,16 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 				$gatewayClient = ObjectManager::getInstance()->get( \Cardgate\Payment\Model\GatewayClient::class );
 				$status = $gatewayClient->transactions()->status( $transactionId );
 			}
-
 			if (
 				'success' == $status
 				|| 'pending' == $status
 			) {
 				$this->_checkoutSession->start();
 				$resultRedirect->setPath( 'checkout/onepage/success' );
+			} else if ( (int)$code == 309 ) {
+				throw new \Exception( __( 'Transaction canceled.' ) );
 			} else {
-				throw new \Exception( 'payment not completed' );
+				throw new \Exception( __( 'Payment not completed.' ) );
 			}
 		} catch ( \Exception $e ) {
 			$this->_checkoutSession->restoreQuote();

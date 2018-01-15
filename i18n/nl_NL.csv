@@ -57,8 +57,8 @@
 
 "Callback received for transaction %1 with paymentmethod '%2' but paymentmethod should be '%3'. Processing anyway.", "Callback ontvangen voor transactie %1 met betaalmethode '%2' maar de verwachtte betaalmethode is '%3'. Transactie wordt toch verwerkt."
 "Error processing callback","Fout tijdens verwerken callback"
-"Wrong parameters supplied","Verkeerde parameters geleverd"
-"Payment not completed","Betaling niet voltooid"
+"Wrong parameters supplied.","Verkeerde parameters geleverd"
+"Payment not completed.","Betaling niet voltooid"
 "Error occurred while communicating with the payment service provider","Fout opgetreden tijdens communicatie met de betaaldienst provider"
 "Error occurred while registering the transaction","Fout opgetreden tijdens registratie van de transactie"
 "Error occurred while registering the refund (%1)","Fout opgetreden tijdens registratie van de refund (%1)"

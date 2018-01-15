@@ -57,8 +57,8 @@
 
 "Callback received for transaction %1 with paymentmethod '%2' but paymentmethod should be '%3'. Processing anyway.",""""Callback empfangen für Transaktion %1 mit Zahlungsmethode '%2' jedoch sollte die  Zahlungsmethode ‚%3' sein. Transaktion wird dennoch verarbeitet.""""
 "Error processing callback","Fehler während Callbackverarbeitung"
-"Wrong parameters supplied","Falsche Parameter geliefert"
-"Payment not completed","Zahlung nicht erfolgt"
+"Wrong parameters supplied.","Falsche Parameter geliefert"
+"Payment not completed.","Zahlung nicht erfolgt"
 "Error occurred while communicating with the payment service provider","Fehler während Kommunikation mit dem Zahlungsverkehrsdienstleister aufgetreten."
 "Error occurred while registering the transaction","Fehler während der Registration der Transaktion aufgetreten."
 "Error occurred while registering the refund (%1)","Fehler während der Registration von dem Refund aufgetreten (%1)."
