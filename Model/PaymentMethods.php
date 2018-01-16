@@ -188,11 +188,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 
 		$feeFixed = floatval( $this->config->getField( $this->_code, 'paymentfee_fixed' ) );
 		$feePercentage = floatval( $this->config->getField( $this->_code, 'paymentfee_percentage' ) );
-		$fee = 0;
-		if ( $feePercentage > 0 ) {
-			$fee = $calculatedTotal * ( $feePercentage / 100 );
-		}
-		$fee = round( $fee + $feeFixed, 4 );
+		$fee = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
 
 		$taxClassId = $this->config->getGlobal( 'paymentfee_tax_class' );
 		/**
