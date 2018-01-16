@@ -77,3 +77,6 @@
 "Payment fee","Betaaltoeslag"
 "Transaction Id","Transactie Id"
 "Choose your bank...","Kies uw bank..."
+
+"Always show success page","Toon altijd succes pagina"
+"Always show the success page after returning from CardGate, even for non-successful payments.","Toon altijd de succes pagina bij terugkomst van CardGate, zelfs bij een onsuccesvolle betaling."

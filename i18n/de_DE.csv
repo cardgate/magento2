@@ -77,3 +77,6 @@
 "Payment fee","Zahlungsgebühr"
 "Transaction Id","Transaktions Id"
 "Choose your bank...","Wählen Sie Ihre Bank aus"
+
+"Always show success page","Immer Bestätigungsseite anzeigen"
+"Always show the success page after returning from CardGate, even for non-successful payments.","Immer die Bestätigungsseite anzeigen bei Zurückkommen von CardGate, auch bei einer nicht erfolgreichen Bezahlung."

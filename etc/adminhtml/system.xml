@@ -81,7 +81,6 @@
 					<label>Order description</label>
 					<comment><![CDATA[Payment description that will be shown to the customer in the gateway screen. <br />Variables: <b>%id%</b> = Order ID]]></comment>
 				</field>
-
 				<field id="paymentfee_includes_tax" translate="label comment" type="select" sortOrder="50" showInDefault="1"
 					showInWebsite="1" showInStore="0">
 					<label>Payment fees tax</label>
@@ -92,6 +91,12 @@
 					showInStore="0">
 					<label>Tax Class for CardGate Payment fees</label>
 					<source_model>Magento\Tax\Model\TaxClass\Source\Product</source_model>
+				</field>
+				<field id="always_show_success_page" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1"
+					showInStore="1">
+					<label>Always show success page</label>
+					<comment><![CDATA[Always show the success page after returning from CardGate, <b>even for non-successful payments</b>.]]></comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				</field>
 			</group>
 		</section>

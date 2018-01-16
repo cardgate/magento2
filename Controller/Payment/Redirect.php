@@ -8,6 +8,7 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ObjectManager;
+use Cardgate\Payment\Model\Config;
 
 /**
  * Client redirect after payment action
@@ -19,12 +20,23 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 
 	/**
 	 *
+	 * @var \Cardgate\Payment\Model\Config
+	 */
+	private $_cardgateConfig;
+
+	/**
+	 *
 	 * @var Session
 	 */
 	protected $_checkoutSession;
 
-	public function __construct ( \Magento\Framework\App\Action\Context $context, Session $checkoutSession ) {
+	public function __construct(
+		\Magento\Framework\App\Action\Context $context,
+		Session $checkoutSession,
+		Config $cardgateConfig
+	) {
 		$this->_checkoutSession = $checkoutSession;
+		$this->_cardgateConfig = $cardgateConfig;
 		parent::__construct( $context );
 	}
 
@@ -41,7 +53,6 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 		$transactionId = $this->getRequest()->getParam( 'transaction' );
 
 		$resultRedirect = $this->resultRedirectFactory->create();
-
 		try {
 			if (
 				empty( $orderId )
@@ -71,9 +82,14 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 				throw new \Exception( __( 'Payment not completed.' ) );
 			}
 		} catch ( \Exception $e ) {
-			$this->_checkoutSession->restoreQuote();
 			$this->messageManager->addErrorMessage( __( $e->getMessage() ) );
-			$resultRedirect->setPath( 'checkout/cart' );
+			if ( !!$this->_cardgateConfig->getGlobal( 'always_show_success_page' ) ) {
+				$this->_checkoutSession->start();
+				$resultRedirect->setPath( 'checkout/onepage/success' );
+			} else {
+				$this->_checkoutSession->restoreQuote();
+				$resultRedirect->setPath( 'checkout/cart' );
+			}
 		}
 
 		return $resultRedirect;
