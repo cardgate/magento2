@@ -1,21 +1,17 @@
 <!--
-/**
- * Copyright © 2016 CardGate.
- * All rights reserved.
- * See LICENSE.txt for license details.
- */
+	Copyright (c) 2018 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
 -->
 <!-- ko -->
-
 <tr class="totals fee excl">
-		<th class="mark" scope="row">
-			<span class="label" data-bind="text: title"></span>
-			<span class="value" data-bind="text: getValue()"></span>
-		</th>
-		<td class="amount">
-			<span class="price"
-				data-bind="text: getValue(), attr: {'data-th': title}"></span>
-		</td>
-	</tr>
-
+	<th class="mark" scope="row">
+		<span class="label" data-bind="text: title"></span>
+		<span class="value" data-bind="text: getValue()"></span>
+	</th>
+	<td class="amount">
+		<span class="price"
+			data-bind="text: getValue(), attr: {'data-th': title}"></span>
+	</td>
+</tr>
 <!-- /ko -->

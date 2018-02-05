@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <!--
-	/**
-	* Copyright © 2016 CardGate.
-	* All rights reserved.
-	* See LICENSE.txt for license details.
-	*/
+	Copyright (c) 2018 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
-
 	<section id="cardgate_pm_skelleton_section" translate="label" type="text" sortOrder="410" showInDefault="1" showInWebsite="1"
 		showInStore="1">
 		<group id="pm_skelleton" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -35,7 +32,6 @@
 				<label>Sort Order</label>
 				<frontend_class>validate-number</frontend_class>
 			</field>
-
 			<field id="paymentfee_fixed" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Payment fee Fixed</label>
 				<frontend_class>validate-number</frontend_class>
@@ -49,5 +45,4 @@
 			</field>
 		</group>
 	</section>
-
 </config>

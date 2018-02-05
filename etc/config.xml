@@ -1,34 +1,32 @@
 <?xml version="1.0"?>
 <!--
-    /**
-    * Copyright © 2016 CardGate.
-    * All rights reserved.
-    * See LICENSE.txt for license details.
-    */
+	Copyright (c) 2018 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
-    <default>
-        <cardgate>
-            <global>
-                <title>CardGate</title>
-                <model>Cardgate\Payment\Model\PaymentMethods</model>
-                <debug>1</debug>
-                <active>0</active>
-                <testmode>1</testmode>
-                <gateway_locale>nl_NL</gateway_locale>
-                <order_description>Order %id%</order_description>
-                <notification_email>general</notification_email>
-                <initialized_status>pending</initialized_status>
-                <complete_status>processing</complete_status>
-                <waitconf_status>pending_payment</waitconf_status>
-                <failed_status>canceled</failed_status>
-                <fraud_status>fraud</fraud_status>
-                <use_backoffice_urls>0</use_backoffice_urls>
-                <orderemail_at_payment>1</orderemail_at_payment>
-                <mail_invoice>1</mail_invoice>
-                <event_invoicing_failed>0</event_invoicing_failed>
-                <always_show_success_page>0</always_show_success_page>
-            </global>
-        </cardgate>
-    </default>
+	<default>
+		<cardgate>
+			<global>
+				<title>CardGate</title>
+				<model>Cardgate\Payment\Model\PaymentMethods</model>
+				<debug>1</debug>
+				<active>0</active>
+				<testmode>1</testmode>
+				<gateway_locale>nl_NL</gateway_locale>
+				<order_description>Order %id%</order_description>
+				<notification_email>general</notification_email>
+				<initialized_status>pending</initialized_status>
+				<complete_status>processing</complete_status>
+				<waitconf_status>pending_payment</waitconf_status>
+				<failed_status>canceled</failed_status>
+				<fraud_status>fraud</fraud_status>
+				<use_backoffice_urls>0</use_backoffice_urls>
+				<orderemail_at_payment>1</orderemail_at_payment>
+				<mail_invoice>1</mail_invoice>
+				<event_invoicing_failed>0</event_invoicing_failed>
+				<always_show_success_page>0</always_show_success_page>
+			</global>
+		</cardgate>
+	</default>
 </config>

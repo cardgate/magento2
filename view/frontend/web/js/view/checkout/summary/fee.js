@@ -1,14 +1,8 @@
 /**
- * Copyright © 2016 CardGate.
+ * Copyright (c) 2018 CardGate B.V.
  * All rights reserved.
- * See LICENSE.txt for license details.
+ * See LICENSE for license details.
  */
-/**
- * Checkout Payment Fee script.
- * This also attaches the set-payment-method action to the setPaymentMethod event.
- */
-/*jshint browser:true jquery:true*/
-/*global alert*/
 define(
 	[
 		'Magento_Checkout/js/view/summary/abstract-total',

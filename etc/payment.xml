@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
 <!--
-    /**
-    * Copyright © 2016 CardGate.
-    * All rights reserved.
-    * See LICENSE.txt for license details.
-    */
+	Copyright (c) 2018 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
 -->
 <payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
-    <groups>
-        <group id="cardgate">
-            <label>CardGate Payment Methods</label>
-        </group>
-    </groups>
+	<groups>
+		<group id="cardgate">
+			<label>CardGate Payment Methods</label>
+		</group>
+	</groups>
 </payment>

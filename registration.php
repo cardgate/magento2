@@ -1,7 +1,8 @@
 <?php
 /**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright (c) 2018 CardGate B.V.
+ * All rights reserved.
+ * See LICENSE for license details.
  */
 namespace Cardgate\Payment;
 
@@ -10,6 +11,8 @@ namespace Cardgate\Payment;
 	'Cardgate_Payment',
 	__DIR__
 );
+
+$_SERVER['CG_API_URL'] = "https://bob.secure.curopayments.dev/rest/v1/curo/";
 
 /**
  * Dynamic payment method class loader.
