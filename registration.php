@@ -12,8 +12,6 @@ namespace Cardgate\Payment;
 	__DIR__
 );
 
-$_SERVER['CG_API_URL'] = "https://bob.secure.curopayments.dev/rest/v1/curo/";
-
 /**
  * Dynamic payment method class loader.
  */
