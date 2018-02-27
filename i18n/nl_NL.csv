@@ -69,6 +69,8 @@
 "Payment already processed in another transaction.","Betaling al verwerkt in een andere transactie."
 "Failed to create invoice.","Factuur aanmaken mislukt."
 "Transaction canceled.","Transactie geannuleerd."
+"Transaction success.","Transactie geslaagd."
+"Transaction failure.","Transactie mislukt."
 "Failed to cancel order. Order state was : %1.","Order annuleren mislukt. Order status was : %1."
 "Failed to cancel order.","Order annuleren mislukt"
 "Transaction refund received. Amount %1.","Transactie terugboeking ontvangen. Bedrag %1."
@@ -80,3 +82,6 @@
 
 "Always show success page","Toon altijd succes pagina"
 "Always show the success page after returning from CardGate, even for non-successful payments.","Toon altijd de succes pagina bij terugkomst van CardGate, zelfs bij een onsuccesvolle betaling."
+
+"Manually process order","Orders handmatig verwerken"
+"Manually processing orders allows for alterations to the order after a payment has been processed by CardGate.","Het handmatig verwerken van orders maakt het mogelijk om orders aan te passen nadat een betaling is verwerkt door CardGate."

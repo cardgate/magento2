@@ -25,12 +25,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 
 	const PAYMENT_METHOD_CODE = 'cardgate_unknown';
 
-	const ORDER_STATUS_AUTHORIZED = 'cardgate_authorized';
-
-	const ORDER_STATUS_WAITCONF = 'cardgate_waitconf';
-
-	const ORDER_STATUS_REFUND = 'cardgate_refund';
-
 	/**
 	 * See /web/js/view/payment/method-renderer
 	 *

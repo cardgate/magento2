@@ -68,7 +68,9 @@
 "Transaction rebooked. Product stock reclaimed from inventory.","Transaktion erneut gebucht. Produktvorrat aus Inventar zurückgenommen"
 "Payment already processed in another transaction.","Zahlung bereits in einer anderen Transaktion verarbeitet."
 "Failed to create invoice.","Rechnungserstellung gescheitert"
-"Transaction canceled.","Transaktion abgebrochen"
+"Transaction canceled.","Transaktion abgebrochen."
+"Transaction success.","Transaktion geslaagt."
+"Transaction failure.","Transaktion gescheitert."
 "Failed to cancel order. Order state was : %1.","Stornieren der Bestellung gescheitert. Bestellstatus war: %1."
 "Failed to cancel order.","Stornieren der Bestellung gescheitert"
 "Transaction refund received. Amount %1.","Transaktionsrückerstattung empfangen. Betrag %1."
@@ -80,3 +82,6 @@
 
 "Always show success page","Immer Bestätigungsseite anzeigen"
 "Always show the success page after returning from CardGate, even for non-successful payments.","Immer die Bestätigungsseite anzeigen bei Zurückkommen von CardGate, auch bei einer nicht erfolgreichen Bezahlung."
+
+"Manually process order","Aufträge manuell verarbeiten"
+"Manually processing orders allows for alterations to the order after a payment has been processed by CardGate.","Das manuelle Verarbeiten von Aufträgen macht es möglich, Aufträge anzupassen, nachdem eine Zahlung durch CardGate verarbeitet ist."

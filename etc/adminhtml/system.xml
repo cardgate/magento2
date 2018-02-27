@@ -96,6 +96,12 @@
 					<comment><![CDATA[Always show the success page after returning from CardGate, <b>even for non-successful payments</b>.]]></comment>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				</field>
+				<field id="manually_process_order" translate="label" type="select" sortOrder="81" showInDefault="1" showInWebsite="1"
+					showInStore="1">
+					<label>Manually process order</label>
+					<comment><![CDATA[Manually processing orders allows for alterations to the order after a payment has been processed by CardGate.]]></comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
 			</group>
 		</section>
 		<include path="Cardgate_Payment::system/paymentmethod.xml" />

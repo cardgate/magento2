@@ -50,7 +50,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	private $_cardgateConfig;
 
 	public function __construct ( \Magento\Framework\App\Action\Context $context, \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender, \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
-			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, GatewayClient $client, Master $config ) {
+			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, GatewayClient $client, \Cardgate\Payment\Model\Config $config ) {
 		parent::__construct( $context );
 		$this->invoiceSender = $invoiceSender;
 		$this->orderSender = $orderSender;
@@ -84,7 +84,10 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		$amount = (int)( empty( $post['amount'] ) ? $this->getRequest()->getParam( 'amount' ) : $post['amount'] );
 		$pt = empty( $post['pt'] ) ? $this->getRequest()->getParam( 'pt' ) : $post['pt'];
 		$pmId = ( ! empty( $pt ) ? $pt : 'unknown' );
-		$updateCardgateData = FALSE;
+
+		$manualProcessing = !!$this->_cardgateConfig->getGlobal( 'manually_process_order' );
+		$updateCardgateData = false;
+		$payment = null;
 
 		try {
 			if ( FALSE == $this->_cardgateClient->transactions()->verifyCallback( empty( $post ) ? $get : $post, $this->_cardgateClient->getSiteKey() ) ) {
@@ -92,119 +95,121 @@ class Callback extends \Magento\Framework\App\Action\Action {
 			}
 
 			$order = ObjectManager::getInstance()->create( \Magento\Sales\Model\Order::class )->loadByIncrementId( $reference );
-			$payment = $order->getPayment();
-			$updateCardgateData = ! (
-				$payment->getCardgateStatus() >= 200
-				&& $payment->getCardgateStatus() < 300
-			);
-
-			// If the gateway is using a different payment method than us, update the payment method of our order to
-			// match the one from the gateway.
-			if ( $payment->getCardgatePaymentmethod() != $pmId ) {
-				$payment->setCardgatePaymentmethod( $pmId );
-				$order->addStatusHistoryComment( __( "Callback received for transaction %1 with paymentmethod '%2' but paymentmethod should be '%3'. Processing anyway.", $transactionId, $pmId, $order->getPayment()->getCardgatePaymentmethod() ) );
-			}
-
+			$order->setStatus( "cardgate_payment_pending" );
 			$order->addStatusHistoryComment( __( "Update for transaction %1. Received status code %2.", $transactionId, $code ) );
 
-			if ( $code < 100 ) {
+			if ( !$manualProcessing ) {
+				$payment = $order->getPayment();
+				$updateCardgateData = ! (
+					$payment->getCardgateStatus() >= 200
+					&& $payment->getCardgateStatus() < 300
+				);
 
+				// If the gateway is using a different payment method than us, update the payment method of our order to
+				// match the one from the gateway.
+				if ( $payment->getCardgatePaymentmethod() != $pmId ) {
+					$payment->setCardgatePaymentmethod( $pmId );
+					$order->addStatusHistoryComment( __( "Callback received for transaction %1 with paymentmethod '%2' but paymentmethod should be '%3'. Processing anyway.", $transactionId, $pmId, $order->getPayment()->getCardgatePaymentmethod() ) );
+				}
+			}
+
+			if ( $code < 100 ) {
 				// 0xx pending
 				if ( $order->getState() != \Magento\Sales\Model\Order::STATE_NEW ) {
 					$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
 				}
-
 			} elseif ( $code < 200 ) {
-
 				// 1xx auth phase
 				if ( $order->getState() != \Magento\Sales\Model\Order::STATE_NEW ) {
 					$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
 				}
-
 			} elseif ( $code < 300 ) {
-
 				// 2xx success
-				// Uncancel if needed.
-				if ( $order->isCanceled() ) {
-					$stockRegistry = ObjectManager::getInstance()->get( \Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface::class );
-					foreach ( $order->getItems() as $item ) {
-						$stockItem = $stockRegistry->getStockItem( $item->getProductId(), $order->getStore()->getWebsiteId() );
-						$stockItem->setQty( $stockItem->getQty() - $item->getQtyCanceled() );
-						$stockItem->save();
+				$order->setStatus( "cardgate_payment_success" );
+				$order->addStatusHistoryComment( __( "Transaction success." ) );
 
-						$item->setQtyCanceled( 0 );
-						$item->setTaxCanceled( 0 );
-						$item->setDiscountTaxCompensationCanceled( 0 );
-						$item->save();
+				if ( !$manualProcessing ) {
+					// Uncancel if needed.
+					if ( $order->isCanceled() ) {
+						$stockRegistry = ObjectManager::getInstance()->get( \Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface::class );
+						foreach ( $order->getItems() as $item ) {
+							$stockItem = $stockRegistry->getStockItem( $item->getProductId(), $order->getStore()->getWebsiteId() );
+							$stockItem->setQty( $stockItem->getQty() - $item->getQtyCanceled() );
+							$stockItem->save();
+
+							$item->setQtyCanceled( 0 );
+							$item->setTaxCanceled( 0 );
+							$item->setDiscountTaxCompensationCanceled( 0 );
+							$item->save();
+						}
+						$order->addStatusHistoryComment( __( 'Transaction rebooked. Product stock reclaimed from inventory.' ) );
 					}
-					$order->addStatusHistoryComment( __( 'Transaction rebooked. Product stock reclaimed from inventory.' ) );
+
+					// Test if transaction has been processed already.
+					$paymentRepository = ObjectManager::getInstance()->get( \Magento\Sales\Model\Order\Payment\Transaction\Repository::class );
+					$currentTransaction = $paymentRepository->getByTransactionId( $transactionId, $payment->getId(), $order->getId() );
+					if (
+						! empty( $currentTransaction )
+						&& $currentTransaction->getTxnType() == Transaction::TYPE_CAPTURE
+					) {
+						$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
+						$updateCardgateData = FALSE;
+						throw new \Exception( 'transaction already processed.' );
+					}
+
+					// Test if payment has been processed already.
+					if (
+						$payment->getCardgateStatus() >= 200
+						&& $payment->getCardgateStatus() < 300
+					) {
+						$order->addStatusHistoryComment( __( 'Payment already processed in another transaction.' ) );
+						$updateCardgateData = FALSE;
+						throw new \Exception( 'payment already processed in another transaction.' );
+					}
+
+					// Do capture.
+					$payment->setTransactionId( $transactionId );
+					$payment->setCurrencyCode( $currency );
+					$payment->registerCaptureNotification( $amount / 100 );
+					$payment->setMethod( 'cardgate_' . $pt );
+
+					if ( ! $order->getEmailSent() ) {
+						$this->orderSender->send( $order );
+					}
+
+					$invoice = $payment->getCreatedInvoice();
+					if ( ! empty( $invoice ) ) {
+						$invoice->save(); // makes sure there's an invoice id generated
+						$this->invoiceSender->send( $invoice );
+					} else {
+						$order->addStatusHistoryComment( __( 'Failed to create invoice.' ) );
+						throw new \Exception( 'failed to create invoice.' );
+					}
 				}
-
-				// Test if transaction has been processed already.
-				$paymentRepository = ObjectManager::getInstance()->get( \Magento\Sales\Model\Order\Payment\Transaction\Repository::class );
-				$currentTransaction = $paymentRepository->getByTransactionId( $transactionId, $payment->getId(), $order->getId() );
-				if (
-					! empty( $currentTransaction )
-					&& $currentTransaction->getTxnType() == Transaction::TYPE_CAPTURE
-				) {
-					$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
-					$updateCardgateData = FALSE;
-					throw new \Exception( 'transaction already processed.' );
-				}
-
-				// Test if payment has been processed already.
-				if (
-					$payment->getCardgateStatus() >= 200
-					&& $payment->getCardgateStatus() < 300
-				) {
-					$order->addStatusHistoryComment( __( 'Payment already processed in another transaction.' ) );
-					$updateCardgateData = FALSE;
-					throw new \Exception( 'payment already processed in another transaction.' );
-				}
-
-				// Do capture.
-				$payment->setTransactionId( $transactionId );
-				$payment->setCurrencyCode( $currency );
-				$payment->registerCaptureNotification( $amount / 100 );
-				$payment->setMethod( 'cardgate_' . $pt );
-
-				if ( ! $order->getEmailSent() ) {
-					$this->orderSender->send( $order );
-				}
-
-				$invoice = $payment->getCreatedInvoice();
-				if ( ! empty( $invoice ) ) {
-					$invoice->save(); // makes sure there's an invoice id generated
-					$this->invoiceSender->send( $invoice );
-				} else {
-					$order->addStatusHistoryComment( __( 'Failed to create invoice.' ) );
-					throw new \Exception( 'failed to create invoice.' );
-				}
-
 			} elseif ( $code < 400 ) {
-
 				// 3xx error
-				try {
-					$order->registerCancellation( __( 'Transaction canceled.' ), FALSE );
-				} catch ( \Exception $e ) {
-					$order->addStatusHistoryComment( __( "Failed to cancel order. Order state was : %1.", $order->getState() . '/' . $order->getStatus() ) );
-					throw new \Exception( 'failed to cancel order.' );
+				$order->setStatus( "cardgate_payment_failure" );
+				$order->addStatusHistoryComment( __( "Transaction failure." ) );
+
+				if ( !$manualProcessing ) {
+					try {
+						$order->registerCancellation( __( 'Transaction canceled.' ), FALSE );
+					} catch ( \Exception $e ) {
+						$order->addStatusHistoryComment( __( "Failed to cancel order. Order state was : %1.", $order->getState() . '/' . $order->getStatus() ) );
+						throw new \Exception( 'failed to cancel order.' );
+					}
 				}
-
 			} elseif ( $code < 500 ) {
-
 				// 4xx refund
-				$order->registerCancellation( __( "Transaction refund received. Amount %1.", $currency . ' ' . round( $amount / 100, 2 ) ) );
-
+				if ( !$manualProcessing ) {
+					$order->registerCancellation( __( "Transaction refund received. Amount %1.", $currency . ' ' . round( $amount / 100, 2 ) ) );
+				}
 			} elseif (
 				$code >= 600
 				&& $code < 700
 			) {
-
 				// 6xx notification from bank
-
 			} elseif ( $code < 800 ) {
-
 				// 7xx waiting for confirmation
 			}
 

@@ -21,10 +21,10 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 class InstallSchema implements InstallSchemaInterface {
 
 	/**
-	 *
-	 * {@inheritdoc} @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+	 * @var Magento\Framework\Setup\SchemaSetupInterface
+	 * @var Magento\Framework\Setup\ModuleContextInterface
 	 */
-	public function install ( SchemaSetupInterface $setup, ModuleContextInterface $context ) {
+	public function install( SchemaSetupInterface $setup, ModuleContextInterface $context ) {
 		$setup->startSetup();
 
 			// QUOTE_PAYMENT TABLE
@@ -281,4 +281,5 @@ class InstallSchema implements InstallSchemaInterface {
 			$setup->getConnection()->addColumn( $orderPaymentTable, $columnName, $definition );
 		}
 	}
+
 }
