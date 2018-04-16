@@ -23,8 +23,6 @@ use Magento\Framework\App\ObjectManager;
  */
 class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 
-	const PAYMENT_METHOD_CODE = 'cardgate_unknown';
-
 	/**
 	 * See /web/js/view/payment/method-renderer
 	 *
@@ -37,7 +35,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 *
 	 * @var string
 	 */
-	protected $_code = self::PAYMENT_METHOD_CODE;
+	protected $_code = 'cardgate_unknown';
 
 	/**
 	 *
@@ -118,40 +116,23 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 *        	@SuppressWarnings(PHPMD.ExcessiveParameterList)
 	 */
 	public function __construct (
-			\Magento\Framework\Model\Context $context,
-			\Magento\Framework\Registry $registry,
-			\Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
-			\Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
-			\Magento\Payment\Helper\Data $paymentData,
-			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-			\Magento\Payment\Model\Method\Logger $logger,
-			\Cardgate\Payment\Model\Config\Master $master,
-			\Cardgate\Payment\Model\Config $config,
-			\Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-			\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
-			\Magento\Sales\Model\Order\Payment\Transaction\Repository $transactionRepository,
-			\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-			\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-			array $data = []
-		) {
-
-		// compose payment_code
-		// NOTE as of v2.2.1 of Magento the class name includes Interceptor which needs to be stripped off.
-		$sClass = get_called_class();
-		if ( 'Interceptor' == substr( $sClass, -11 ) ) {
-			$sClass = substr( $sClass, 0, -12 );
-		}
-		$this->_code = substr( $sClass, strrpos( $sClass, '\\' ) + 1 );
-
-		// YYY: .. nah ..
-		if ( $this->_code == 'PaymentMethods' ) {
-			// .. naaaah ..
-		} else {
-			$this->_code = 'cardgate_' . $this->_code;
-		}
-
-		parent::__construct( $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger, $resource,
-				$resourceCollection, $data );
+		\Magento\Framework\Model\Context $context,
+		\Magento\Framework\Registry $registry,
+		\Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
+		\Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
+		\Magento\Payment\Helper\Data $paymentData,
+		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+		\Magento\Payment\Model\Method\Logger $logger,
+		\Cardgate\Payment\Model\Config\Master $master,
+		\Cardgate\Payment\Model\Config $config,
+		\Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
+		\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
+		\Magento\Sales\Model\Order\Payment\Transaction\Repository $transactionRepository,
+		\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+		\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+		array $data = []
+	) {
+		parent::__construct( $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data );
 
 		$this->orderSender = $orderSender;
 		$this->invoiceSender = $invoiceSender;

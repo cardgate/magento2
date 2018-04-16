@@ -7,24 +7,17 @@
 namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
- * iDeal class with custom renderer.
+ * Safeklick class.
  * @author DBS B.V.
  * @package Magento2
  */
-class ideal extends \Cardgate\Payment\Model\PaymentMethods {
+class safeklick extends \Cardgate\Payment\Model\PaymentMethods {
 
 	/**
 	 * Payment method code
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_ideal';
-
-	/**
-	 * Renderer template name
-	 *
-	 * @var string
-	 */
-	public static $renderer = 'ideal';
+	protected $_code = 'cardgate_safeklick';
 
 }
