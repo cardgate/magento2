@@ -77,7 +77,12 @@ class Redirect extends \Magento\Framework\App\Action\Action {
 				$this->_checkoutSession->start();
 				$resultRedirect->setPath( 'checkout/onepage/success' );
 			} else if ( (int)$code == 309 ) {
-				throw new \Exception( __( 'Transaction canceled.' ) );
+				if ( !!$this->_cardgateConfig->getGlobal( 'return_to_checkout' ) ) {
+					$this->_checkoutSession->restoreQuote();
+					$resultRedirect->setPath( 'checkout' );
+				} else {
+					throw new \Exception( __( 'Transaction canceled.' ) );
+				}
 			} else {
 				throw new \Exception( __( 'Payment not completed.' ) );
 			}

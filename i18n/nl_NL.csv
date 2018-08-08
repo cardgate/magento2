@@ -80,8 +80,11 @@
 "Transaction Id","Transactie Id"
 "Choose your bank...","Kies uw bank..."
 
+"Return to checkout page on cancel","Keer terug naar de checkout pagina bij annuleren van betaling"
+"Return to the default checkout page after cancellation of payment. By default the user returns to the cart.","Keer terug naar de checkout pagina na een geannuleerde betaling. Standaard wordt de gebruiker teruggestuurd naar de winkelwagen."
+
 "Always show success page","Toon altijd succes pagina"
-"Always show the success page after returning from CardGate, even for non-successful payments.","Toon altijd de succes pagina bij terugkomst van CardGate, zelfs bij een onsuccesvolle betaling."
+"Always show the success page after returning from CardGate, <b>even for non-successful payments</b>.","Toon altijd de succes pagina bij terugkomst van CardGate, <b>zelfs bij een onsuccesvolle betaling</b>."
 
 "Manually process order","Orders handmatig verwerken"
 "Manually processing orders allows for alterations to the order after a payment has been processed by CardGate.","Het handmatig verwerken van orders maakt het mogelijk om orders aan te passen nadat een betaling is verwerkt door CardGate."

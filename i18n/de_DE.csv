@@ -80,8 +80,11 @@
 "Transaction Id","Transaktions Id"
 "Choose your bank...","Wählen Sie Ihre Bank aus"
 
+"Return to checkout page on cancel","Kehren Sie bei einem Stornierung zur Checkout-Seite zurück"
+"Return to the default checkout page after cancellation of payment. By default the user returns to the cart.","Kehren Sie bei einer Stornierung der Zahlung zur Standard Checkout-Seite zurück. Standardmäßig kehrt der Benutzer zum Warenkorb zurück."
+
 "Always show success page","Immer Bestätigungsseite anzeigen"
-"Always show the success page after returning from CardGate, even for non-successful payments.","Immer die Bestätigungsseite anzeigen bei Zurückkommen von CardGate, auch bei einer nicht erfolgreichen Bezahlung."
+"Always show the success page after returning from CardGate, <b>even for non-successful payments</b>.","Immer die Bestätigungsseite anzeigen bei Zurückkommen von CardGate, <b>auch bei einer nicht erfolgreichen Bezahlung</b>."
 
 "Manually process order","Aufträge manuell verarbeiten"
 "Manually processing orders allows for alterations to the order after a payment has been processed by CardGate.","Das manuelle Verarbeiten von Aufträgen macht es möglich, Aufträge anzupassen, nachdem eine Zahlung durch CardGate verarbeitet ist."

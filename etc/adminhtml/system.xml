@@ -90,13 +90,19 @@
 					<label>Tax Class for CardGate Payment fees</label>
 					<source_model>Magento\Tax\Model\TaxClass\Source\Product</source_model>
 				</field>
-				<field id="always_show_success_page" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1"
+				<field id="return_to_checkout" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1"
+					showInStore="1">
+					<label>Return to checkout page on cancel</label>
+					<comment><![CDATA[Return to the default checkout page after cancellation of payment. By default the user returns to the cart.]]></comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="always_show_success_page" translate="label" type="select" sortOrder="81" showInDefault="1" showInWebsite="1"
 					showInStore="1">
 					<label>Always show success page</label>
 					<comment><![CDATA[Always show the success page after returning from CardGate, <b>even for non-successful payments</b>.]]></comment>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				</field>
-				<field id="manually_process_order" translate="label" type="select" sortOrder="81" showInDefault="1" showInWebsite="1"
+				<field id="manually_process_order" translate="label" type="select" sortOrder="82" showInDefault="1" showInWebsite="1"
 					showInStore="1">
 					<label>Manually process order</label>
 					<comment><![CDATA[Manually processing orders allows for alterations to the order after a payment has been processed by CardGate.]]></comment>
