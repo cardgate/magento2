@@ -5,7 +5,7 @@
 	See LICENSE for license details.
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-	<module name="Cardgate_Payment" setup_version="2.0.13">
+	<module name="Cardgate_Payment" setup_version="2.0.14">
 		<sequence>
 			<module name="Magento_Quote" />
 			<module name="Magento_Sales" />

@@ -44,7 +44,8 @@ class UpgradeData implements UpgradeDataInterface {
 					'label' => $info
 				];
 			}
-			$setup->getConnection()->query( "DELETE FROM sales_order_status WHERE status LIKE 'cardgate%'" );
+			$tablename = $setup->getTable( 'sales_order_status' );
+			$setup->getConnection()->query( "DELETE FROM {$tablename} WHERE status LIKE 'cardgate%'" );
 			$setup->getConnection()->insertArray( $setup->getTable( 'sales_order_status' ), [
 				'status',
 				'label'
