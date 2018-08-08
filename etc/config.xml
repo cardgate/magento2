@@ -25,6 +25,7 @@
 				<orderemail_at_payment>1</orderemail_at_payment>
 				<mail_invoice>1</mail_invoice>
 				<event_invoicing_failed>0</event_invoicing_failed>
+				<return_to_checkout>0</return_to_checkout>
 				<always_show_success_page>0</always_show_success_page>
 				<manually_process_order>0</manually_process_order>
 			</global>
