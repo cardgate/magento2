@@ -155,7 +155,6 @@ class Start extends \Magento\Framework\App\Action\Action {
 					$item->getSku(),
 					$item->getName(),
 					$itemQty,
-					//round( $item->getPriceInclTax() * 100, 0 ),
 				    round( $item->getPrice() * 100, 0 ),
 					$url
 				    );
