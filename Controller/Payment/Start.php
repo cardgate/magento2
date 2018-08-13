@@ -155,11 +155,12 @@ class Start extends \Magento\Framework\App\Action\Action {
 					$item->getSku(),
 					$item->getName(),
 					$itemQty,
-					round( $item->getPriceInclTax() * 100, 0 ),
+					//round( $item->getPriceInclTax() * 100, 0 ),
+				    round( $item->getPrice() * 100, 0 ),
 					$url
-				);
+				    );
 				$cartItem->setVat( round( $item->getTaxPercent(), 0 ) );
-				$cartItem->setVatIncluded( TRUE );
+				$cartItem->setVatIncluded( FALSE );
 				$cartItem->setVatAmount( round( ( $item->getTaxAmount() * 100 ) / $itemQty, 0 ) );
 
 				// Include stock in cart items will disable auto-capture on CardGate gateway if item
@@ -181,8 +182,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 						$cartItem->setStock( $itemQty + $stockData['qty'] );
 					}
 				}
-
-				$calculatedGrandTotal += $item->getPriceInclTax() * $itemQty;
+				$calculatedGrandTotal += $item->getPrice() * $itemQty + round($item->getTaxAmount(),2);
 				$calculatedVatTotal += $item->getTaxAmount();
 			}
 
@@ -198,8 +198,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 				$cartItem->setVat( ceil( ( ( $order->getShippingInclTax() / $shippingAmount ) - 1 ) * 1000 ) / 10 );
 				$cartItem->setVatIncluded( TRUE );
 				$cartItem->setVatAmount( round( $order->getShippingTaxAmount() * 100, 0 ) );
-
-				$calculatedGrandTotal += $order->getShippingInclTax();
+				$calculatedGrandTotal += $order->getShippingAmount();
 				$calculatedVatTotal += $order->getShippingTaxAmount();
 			}
 
@@ -215,7 +214,6 @@ class Start extends \Magento\Framework\App\Action\Action {
 				$cartItem->setVat( ceil( ( ( $discountAmount / ( $discountAmount - $order->getDiscountTaxCompensationAmount() ) ) - 1 ) * 1000 ) / 10 );
 				$cartItem->setVatIncluded( TRUE );
 				$cartItem->setVatAmount( round( $order->getDiscountTaxCompensationAmount() * 100, 0 ) );
-
 				$calculatedGrandTotal += $discountAmount;
 				$calculatedVatTotal -= $order->getDiscountTaxCompensationAmount();
 			}
