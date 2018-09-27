@@ -157,7 +157,9 @@ class Master {
 			'capayable' => 'Capayable',
 			'bitcoin' => 'Bitcoin',
 			'belfius' => 'Belfius',
-			'eps' => 'EPS'
+			'eps' => 'EPS',
+		    'billink' => 'Billink',
+		    'idealqr' => 'iDEAL QR'
 		];
 		$this->cache->save( serialize( $this->paymentMethodIds ), self::CACHEKEY, [], 24 * 3600 );
 	}
