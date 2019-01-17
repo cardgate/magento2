@@ -153,6 +153,7 @@ class Master {
 			'safeklick' => 'Safeklick',
 			'banktransfer' => 'Bank transfer',
 			'giropay' => 'Giropay',
+		    'giftcard' => 'Gift Card',
 			'pos' => 'POS',
 			'capayable' => 'Capayable',
 			'bitcoin' => 'Bitcoin',
