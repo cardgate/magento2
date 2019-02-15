@@ -9,7 +9,7 @@ namespace Cardgate\Payment\Block\Adminhtml\Config;
 use Cardgate\Payment\Model\Config;
 
 /**
- * Fetch Paymentmethods HTML Block renderer
+ * Fetch Payment methods HTML Block renderer
  *
  * @author DBS B.V.
  * @package Magento2
@@ -51,7 +51,7 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field {
 			$fetchPMUrl = $this->_urlBuilder->getUrl( "cardgate/gateway/fetchpm", [
 				'section' => 'gateway'
 			] );
-			return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>".__("Refresh active paymentmethods")."</span></button>";
+			return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>".__("Refresh active payment methods")."</span></button>";
 		} else {
 			return __("Please enter Site Id, Hash key, Merchant Id and API key first");
 		}
