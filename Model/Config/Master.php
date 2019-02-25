@@ -78,7 +78,7 @@ class Master {
 	}
 
 	/**
-	 * Get Paymentmethod classname by Code
+	 * Get Payment method classname by Code
 	 *
 	 * @param string $paymentMethodCode
 	 * @param string $fullClassName
@@ -89,7 +89,7 @@ class Master {
 	}
 
 	/**
-	 * Get Paymentmethod instance by Code.
+	 * Get Payment method instance by Code.
 	 * $force can be set to ensure class exists (or create it if not exists)
 	 *
 	 * @param string $paymentMethodCode
@@ -110,7 +110,7 @@ class Master {
 	}
 
 	/**
-	 * Tests if Paymentmethod Code is a CardGate Code
+	 * Tests if Payment method Code is a CardGate Code
 	 *
 	 * @param unknown $paymentMethodCode
 	 * @return boolean
@@ -120,7 +120,7 @@ class Master {
 	}
 
 	/**
-	 * Get Paymentmethod Code for a given PM ID (CardGate style ID)
+	 * Get Payment method Code for a given PM ID (CardGate style ID)
 	 *
 	 * @param unknown $paymentMethodId
 	 * @return string
@@ -130,7 +130,7 @@ class Master {
 	}
 
 	/**
-	 * Load Paymentmethods and save them in cache
+	 * Load Payment methods and save them in cache
 	 *
 	 * @return void
 	 */
@@ -141,6 +141,7 @@ class Master {
 			'mistercash' => 'Bancontact',
 			'creditcard' => 'Creditcard',
 			'paysafecard' => 'PaySafeCard',
+		    'paysafecash' => 'Paysafecash',
 			'sofortbanking' => 'SofortBanking',
 			'paypal' => 'PayPal',
 			'klarna' => 'Klarna',
@@ -153,6 +154,7 @@ class Master {
 			'safeklick' => 'Safeklick',
 			'banktransfer' => 'Bank transfer',
 			'giropay' => 'Giropay',
+		    'giftcard' => 'Gift Card',
 			'pos' => 'POS',
 			'capayable' => 'Capayable',
 			'bitcoin' => 'Bitcoin',

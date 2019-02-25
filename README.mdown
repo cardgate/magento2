@@ -53,9 +53,9 @@ The CardGate Module for Magento 2 is installed via [Composer](http://getcomposer
 - Save config.
 - Refresh the active payment methods:
   - *CardGate information* section
-  - Paymentmethods > Refresh active paymentmethods
+  - Payment methods > Refresh active payment methods
   - Check the output
-- After the paymentmethods are refreshed successfully, all active *Paymentmethod sections* can be enabled and edited.
+- After the payment methods are refreshed successfully, all active *Payment method sections* can be enabled and edited.
 
 ## Requirements
 

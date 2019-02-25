@@ -9,7 +9,7 @@ namespace Cardgate\Payment\Model\Config;
 use Magento\Framework\App\Config\Initial;
 
 /**
- * Initial Config plugin to dynamically add all paymentmethods.
+ * Initial Config plugin to dynamically add all payment methods.
  *
  * @author DBS B.V.
  * @package Magento2
