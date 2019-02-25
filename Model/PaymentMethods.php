@@ -13,7 +13,7 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Framework\App\ObjectManager;
 
 /**
- * Base Payment class from which all paymentmethods extend
+ * Base Payment class from which all payment methods extend
  * YYY: This class should not be extended
  * \Magento\Payment\Model\Method\AbstractMethod
  *
@@ -113,7 +113,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
 	 * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
 	 * @param array $data
-	 *        	@SuppressWarnings(PHPMD.ExcessiveParameterList)
+	 * @SuppressWarnings(PHPMD.ExcessiveParameterList)
 	 */
 	public function __construct (
 		\Magento\Framework\Model\Context $context,
@@ -139,6 +139,22 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		$this->transactionRepository = $transactionRepository;
 		$this->cardgateConfig = $master;
 		$this->config = $config;
+		
+	}
+	
+	/**
+	 *
+	 * @param \Magento\Quote\Api\Data\CartInterface $quote
+	 * @return boolean
+	 */
+	public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null) {
+	   $customerGroups = $this->config->getField( $this->_code, 'specific_customer_groups' );
+	   $aCustomerGroups = str_getcsv($customerGroups,',');
+	   $groupId = $quote->getCustomer()->getGroupId();
+	   
+	   if ($groupId > 0 && strlen($customerGroups > 0 && !in_array($groupId,$aCustomerGroups)))
+	       return false;
+	   return true;
 	}
 
 	/**

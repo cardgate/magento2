@@ -7,17 +7,17 @@
 namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
- * iDEAL QR class.
+ * Paysafecash class.
  * @author DBS B.V.
  * @package Magento2
  */
-class idealqr extends \Cardgate\Payment\Model\PaymentMethods {
+class paysafecash extends \Cardgate\Payment\Model\PaymentMethods {
 
 	/**
 	 * Payment method code
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_idealqr';
+	protected $_code = 'cardgate_paysafecash';
 
 }

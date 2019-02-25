@@ -109,7 +109,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				// match the one from the gateway.
 				if ( $payment->getCardgatePaymentmethod() != $pmId ) {
 					$payment->setCardgatePaymentmethod( $pmId );
-					$order->addStatusHistoryComment( __( "Callback received for transaction %1 with paymentmethod '%2' but paymentmethod should be '%3'. Processing anyway.", $transactionId, $pmId, $order->getPayment()->getCardgatePaymentmethod() ) );
+					$order->addStatusHistoryComment( __( "Callback received for transaction %1 with payment method '%2' but payment method should be '%3'. Processing anyway.", $transactionId, $pmId, $order->getPayment()->getCardgatePaymentmethod() ) );
 				}
 			}
 

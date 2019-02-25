@@ -21,7 +21,7 @@ use Cardgate\Payment\Model\Config\Master;
 class Config implements ConfigInterface {
 
 	/**
-	 * Active Paymentmethods as configured in my.cardgate.com (and fetched from
+	 * Active Payment methods as configured in my.cardgate.com (and fetched from
 	 * RESTful API)
 	 *
 	 * @var array
@@ -46,7 +46,7 @@ class Config implements ConfigInterface {
 	}
 
 	/**
-	 * Retrieve information from CardGate configuration for given paymentmethod
+	 * Retrieve information from CardGate configuration for given payment method
 	 *
 	 * @param string $method
 	 * @param string $field
@@ -58,7 +58,7 @@ class Config implements ConfigInterface {
 	}
 
 	/**
-	 * Set information info CardGate configuration for given paymentmethod and
+	 * Set information info CardGate configuration for given payment method and
 	 * save configuration
 	 *
 	 * @param string $method
@@ -97,7 +97,7 @@ class Config implements ConfigInterface {
 	}
 
 	/**
-	 * Get active Paymentmethod ID's (CardGate style ID's)
+	 * Get active Payment method ID's (CardGate style ID's)
 	 *
 	 * @param number $storeId
 	 * @return mixed
