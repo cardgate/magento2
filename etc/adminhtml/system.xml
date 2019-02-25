@@ -28,14 +28,14 @@
 					</field>
 				</group>
 				<group id="pms" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Paymentmethods</label>
-					<comment>Manage paymentmethods</comment>
+					<label>Payment methods</label>
+					<comment>Manage payment methods</comment>
 					<field id="showpm" translate="label" type="note" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>Currently active paymentmethods</label>
+						<label>Currently active payment methods</label>
 						<frontend_model>Cardgate\Payment\Block\Adminhtml\Config\ShowPM</frontend_model>
 					</field>
 					<field id="fetchpm" translate="label" type="note" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>Refresh active paymentmethods</label>
+						<label>Refresh active payment methods</label>
 						<frontend_model>Cardgate\Payment\Block\Adminhtml\Config\FetchPM</frontend_model>
 					</field>
 				</group>

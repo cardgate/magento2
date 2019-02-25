@@ -28,7 +28,7 @@
 				<label>Payment from Specific Countries</label>
 				<source_model>Magento\Directory\Model\Config\Source\Country</source_model>
 			</field>
-			<field id="sort_order" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="0">
+			<field id="sort_order" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="0">
 				<label>Sort Order</label>
 				<frontend_class>validate-number</frontend_class>
 			</field>
@@ -37,11 +37,16 @@
 				<frontend_class>validate-number</frontend_class>
 				<comment><![CDATA[Fixed Payment fee amount. Can be used in conjunction with Payment fee Percentage.]]></comment>
 			</field>
-			<field id="paymentfee_percentage" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1"
+			<field id="paymentfee_percentage" translate="label" type="text" sortOrder="170" showInDefault="1" showInWebsite="1"
 				showInStore="1">
 				<label>Payment fee Percentage</label>
 				<frontend_class>validate-number</frontend_class>
 				<comment><![CDATA[Payment fee percentage. Can be used in conjunction with Payment fee Fixed. Note: Fixed amount will be applied after percentage.]]></comment>
+			</field>
+			<field id="specific_customer_groups" translate="label" type="multiselect" sortOrder="180" showInDefault="1" showInWebsite="1"
+				showInStore="0">
+				<label>Payment method for specific customer groups</label>
+				<source_model>Magento\Customer\Model\Config\Source\Group</source_model>
 			</field>
 		</group>
 	</section>

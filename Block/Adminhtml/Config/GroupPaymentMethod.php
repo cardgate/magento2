@@ -23,14 +23,14 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
 	private $config;
 
 	/**
-	 * paymentmethod id
+	 * payment method id
 	 *
 	 * @var boolean
 	 */
 	private $pm_id;
 
 	/**
-	 * flag if paymentmethod is active in cardgate platform for configured
+	 * flag if payment method is active in cardgate platform for configured
 	 * siteid
 	 *
 	 * @var boolean
@@ -38,7 +38,7 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
 	private $pm_enabled;
 
 	/**
-	 * flag if paymentmethod is active in magento configuration
+	 * flag if payment method is active in magento configuration
 	 *
 	 * @var boolean
 	 */
@@ -111,7 +111,7 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
 	protected function _getHeaderCommentHtml ( $element ) {
 
 		if ( ! $this->pm_enabled ) {
-			return '<div class="comment">' . __("This paymentmethod is not active in the CardGate configuration.") . ' <a target="_blank" href="https://my.cardgate.com">' . __( "Please check CardGate settings" ) . '</a> ' .
+			return '<div class="comment">' . __("This payment method is not active in the CardGate configuration.") . ' <a target="_blank" href="https://my.cardgate.com">' . __( "Please check CardGate settings" ) . '</a> ' .
 					__("or") .' <a target="_blank" href="https://www.cardgate.com">' . __( "contact an accountmanager" ) . '</a>.</div>';
 		}
 		$groupConfig = $element->getGroup();

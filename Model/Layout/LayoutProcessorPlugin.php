@@ -10,7 +10,7 @@ use Cardgate\Payment\Model\Config\Master;
 use Magento\Checkout\Block\Checkout\LayoutProcessor;
 
 /**
- * Layout Processor plugin to inject paymentmethods in checkout billing-step section
+ * Layout Processor plugin to inject payment methods in checkout billing-step section
  *
  * @author DBS B.V.
  * @package Magento2
@@ -28,7 +28,7 @@ class LayoutProcessorPlugin {
 	}
 
 	/**
-	 * Inject paymentmethods in checkout billing-step section
+	 * Inject payment methods in checkout billing-step section
 	 *
 	 * @param LayoutProcessor $layoutProcessor
 	 * @param \Closure $proceed

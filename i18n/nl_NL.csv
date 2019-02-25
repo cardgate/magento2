@@ -10,11 +10,11 @@
 "Please enter Site Id, Hash key, Merchant Id and API key first","Voer eerst de Site Id, Hash key, Merchant Id en API key in"
 "TESTMODE ENABLED","TESTMODE INGESCHAKELD"
 "UNKNOWN","ONBEKEND"
-"Paymentmethods","Betaalmethoden"
-"Manage paymentmethods","Beheer betaalmethoden"
-"Currently active paymentmethods","Huidige actieve betaalmethoden"
-"No active paymentmethods found","Geen actieve betaalmethoden gevonden"
-"Refresh active paymentmethods","Vernieuw actieve betaalmethoden"
+"Payment methods","Betaalmethoden"
+"Manage payment methods","Beheer betaalmethoden"
+"Currently active payment methods","Huidige actieve betaalmethoden"
+"No active payment methods found","Geen actieve betaalmethoden gevonden"
+"Refresh active payment methods","Vernieuw actieve betaalmethoden"
 
 "CardGate configuration","CardGate instellingen"
 "Manage CardGate settings.","Manage CardGate settings."
@@ -50,12 +50,12 @@
 
 "disabled","uitgeschakeld"
 "Enabled but not active","Ingeschakeld maar niet actief"
-"This paymentmethod is not active in the CardGate configuration.","Deze betaalmethode is niet actief in de CardGate configurtie."
+"This payment method is not active in the CardGate configuration.","Deze betaalmethode is niet actief in de CardGate configurtie."
 "Please check CardGate settings","Controleer de CardGate instellingen"
 "or","of"
 "contact an accountmanager","contacteer een accountmanager"
 
-"Callback received for transaction %1 with paymentmethod '%2' but paymentmethod should be '%3'. Processing anyway.", "Callback ontvangen voor transactie %1 met betaalmethode '%2' maar de verwachtte betaalmethode is '%3'. Transactie wordt toch verwerkt."
+"Callback received for transaction %1 with payment method '%2' but payment method should be '%3'. Processing anyway.", "Callback ontvangen voor transactie %1 met betaalmethode '%2' maar de verwachtte betaalmethode is '%3'. Transactie wordt toch verwerkt."
 "Error processing callback","Fout tijdens verwerken callback"
 "Wrong parameters supplied.","Verkeerde parameters geleverd"
 "Payment not completed.","Betaling niet voltooid"
@@ -88,3 +88,5 @@
 
 "Manually process order","Orders handmatig verwerken"
 "Manually processing orders allows for alterations to the order after a payment has been processed by CardGate.","Het handmatig verwerken van orders maakt het mogelijk om orders aan te passen nadat een betaling is verwerkt door CardGate."
+
+"Payment method for specific customer groups","Betaalmethode voor specifieke klantgroepen"
