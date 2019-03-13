@@ -62,6 +62,10 @@ define(
 			getIDealIssuers: function() {
 				return window.checkoutConfig.payment.cardgate_ideal_issuers;
 			},
+			
+			getInstructions: function() {
+				return window.checkoutConfig.payment.instructions[this.item.method];
+			},
 
 			afterPlaceOrder: function() {
 				window.location.replace(url.build('cardgate/payment/start/'));
