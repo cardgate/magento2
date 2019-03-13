@@ -269,5 +269,14 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		}
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return string
+	 */
+	public function getInstructions(){
+	    $instructions = $this->config->getField( $this->_code, 'instructions' );
+	    return nl2br($instructions);
+	}
 
 }

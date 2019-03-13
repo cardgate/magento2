@@ -36,6 +36,7 @@
 			<!-- /ko -->
 			<!--/ko-->
 		</div>
+		<p data-bind="html: getInstructions()"></p>
 		<div class="actions-toolbar">
 			<div class="primary">
 				<button class="action primary checkout" type="submit" data-bind="click: placeOrder, enable: (getCode() == isChecked()), attr: {title: $t('Place Order')}" disabled>
