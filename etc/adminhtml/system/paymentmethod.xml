@@ -28,9 +28,8 @@
 				<label>Payment from Specific Countries</label>
 				<source_model>Magento\Directory\Model\Config\Source\Country</source_model>
 			</field>
-			<field id="sort_order" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="0">
-				<label>Sort Order</label>
-				<frontend_class>validate-number</frontend_class>
+			<field id="instructions" translate="label" type="textarea" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Instructions</label>
 			</field>
 			<field id="paymentfee_fixed" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Payment fee Fixed</label>
@@ -47,6 +46,10 @@
 				showInStore="0">
 				<label>Payment method for specific customer groups</label>
 				<source_model>Magento\Customer\Model\Config\Source\Group</source_model>
+			</field>
+			<field id="sort_order" translate="label" type="text" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="0">
+				<label>Sort Order</label>
+				<frontend_class>validate-number</frontend_class>
 			</field>
 		</group>
 	</section>

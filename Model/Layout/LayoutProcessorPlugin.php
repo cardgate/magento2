@@ -36,7 +36,6 @@ class LayoutProcessorPlugin {
 	 * @return string[]|boolean[]
 	 */
 	public function aroundProcess ( LayoutProcessor $layoutProcessor, \Closure $proceed, $scope ) {
-		$data = $proceed( $scope );
 		$arr = [
 			'component' => 'Cardgate_Payment/js/view/payment/paymentmethods',
 			'label' => 'CardGate',
@@ -47,7 +46,8 @@ class LayoutProcessorPlugin {
 				'isBillingAddressRequired' => true
 			];
 		}
-		$data['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['renders']['children']['cardgate'] = $arr;
+		$scope['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['renders']['children']['cardgate'] = $arr;
+		$data = $proceed( $scope );
 		return $data;
 	}
 
