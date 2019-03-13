@@ -89,7 +89,7 @@ class ConfigProvider implements ConfigProviderInterface {
 				'cardgatefee' => $fee->getAmount(),
 				'cardgatefeetax' => $fee->getTaxAmount()
 			];
-			$config['payment']['instructions'][$method] = 'Test instructies';
+			$config['payment']['instructions'][$method] = $this->masterConfig->getPMInstanceByCode( $method )->getInstructions();
 		}
 		return $config;
 	}
