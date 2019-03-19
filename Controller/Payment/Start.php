@@ -197,7 +197,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 				$cartItem->setVat( ceil( ( ( $order->getShippingInclTax() / $shippingAmount ) - 1 ) * 1000 ) / 10 );
 				$cartItem->setVatIncluded( TRUE );
 				$cartItem->setVatAmount( round( $order->getShippingTaxAmount() * 100, 0 ) );
-				$calculatedGrandTotal += $order->getShippingAmount();
+				$calculatedGrandTotal += $order->getShippingInclTax();
 				$calculatedVatTotal += $order->getShippingTaxAmount();
 			}
 
