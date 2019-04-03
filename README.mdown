@@ -8,7 +8,7 @@
 
 ## Support
 
-This plugin supports Magento **2.2.x**.
+This plugin supports Magento 2.1.x - 2.3.x.
 
 ## Preparation
 
