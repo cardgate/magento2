@@ -50,7 +50,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	private $_cardgateConfig;
 
 	public function __construct ( \Magento\Framework\App\Action\Context $context, \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender, \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
-			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, GatewayClient $client, \Cardgate\Payment\Model\Config $config ) {
+			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, GatewayClient $client, \Cardgate\Payment\Model\Config $config) {
 		parent::__construct( $context );
 		$this->invoiceSender = $invoiceSender;
 		$this->orderSender = $orderSender;
@@ -77,6 +77,28 @@ class Callback extends \Magento\Framework\App\Action\Action {
 			$get = [];
 		}
 
+
+		if (!empty($get['cgp_sitesetup']) && !empty($get['token'])) {
+
+			try {
+				$bIsTest = ($get['testmode'] == 1 ? true : false);
+				$aResult = $this->_cardgateClient->pullConfig($get['token'], $bIsTest);
+				$aConfigData = $aResult['pullconfig']['content'];
+				$this->_cardgateConfig->setGlobal( 'testmode', $aConfigData['testmode'] );
+				$this->_cardgateConfig->setGlobal( 'site_id', $aConfigData['site_id'] );
+				$this->_cardgateConfig->setGlobal( 'site_key', $aConfigData['site_key'] );
+				$this->_cardgateConfig->setGlobal( 'api_username', $aConfigData['merchant_id'] );
+				$this->_cardgateConfig->setGlobal( 'api_password', $aConfigData['api_key'] );
+				$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
+				$typeListInterface->cleanType('config');
+				$sResponse = $this->_cardgateConfig->getGlobal('api_username') . '.' . $this->_cardgateConfig->getGlobal('site_id') . '.200';
+				die($sResponse);
+
+			} catch (\Exception $e) {
+				die($e->getMessage());
+			}
+		}
+
 		$transactionId = empty( $post['transaction'] ) ? $this->getRequest()->getParam( 'transaction' ) : $post['transaction'];
 		$reference = empty( $post['reference'] ) ? $this->getRequest()->getParam( 'reference' ) : $post['reference'];
 		$code = (int)( empty( $post['code'] ) ? $this->getRequest()->getParam( 'code' ) : $post['code'] );
@@ -88,15 +110,14 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		$manualProcessing = !!$this->_cardgateConfig->getGlobal( 'manually_process_order' );
 		$updateCardgateData = false;
 		$payment = null;
-
 		try {
 			if ( FALSE == $this->_cardgateClient->transactions()->verifyCallback( empty( $post ) ? $get : $post, $this->_cardgateClient->getSiteKey() ) ) {
 				throw new \Exception( 'hash verification failure' );
 			}
 
 			$order = ObjectManager::getInstance()->create( \Magento\Sales\Model\Order::class )->loadByIncrementId( $reference );
-			$order->setStatus( "cardgate_payment_pending" );
 			$order->addStatusHistoryComment( __( "Update for transaction %1. Received status code %2.", $transactionId, $code ) );
+
 
 			if ( !$manualProcessing ) {
 				$payment = $order->getPayment();
@@ -188,12 +209,11 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				}
 			} elseif ( $code < 400 ) {
 				// 3xx error
-				$order->setStatus( "cardgate_payment_failure" );
-				$order->addStatusHistoryComment( __( "Transaction failure." ) );
-
 				if ( !$manualProcessing ) {
 					try {
-						$order->registerCancellation( __( 'Transaction canceled.' ), FALSE );
+							$order->registerCancellation( __( 'Transaction canceled.' ), false );
+							$order->setStatus( "cardgate_payment_failure" );
+							$order->addStatusHistoryComment( __( "Transaction failure." ) );
 					} catch ( \Exception $e ) {
 						$order->addStatusHistoryComment( __( "Failed to cancel order. Order state was : %1.", $order->getState() . '/' . $order->getStatus() ) );
 						throw new \Exception( 'failed to cancel order.' );
