@@ -18,6 +18,7 @@ class PreProcessorCardgate implements PreProcessorInterface {
 	 * @inheritdoc
 	 */
 	public function process ( array $config ) {
+
 		$masterConfig = ObjectManager::getInstance()->create( 'Cardgate\\Payment\\Model\\Config\\Master' );
 		foreach ( $masterConfig->getPaymentMethods( true ) as $paymentMethod => $paymentMethodName ) {
 			if ( !isset( $config['default']['payment'][$paymentMethod] ) ) {

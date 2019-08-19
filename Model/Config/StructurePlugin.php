@@ -91,15 +91,15 @@ class StructurePlugin {
 					$newChildren = [];
 					foreach ( $paymentMethodResult->getChildren() as $child ) {
 						$childData = array_merge( $child->getData(),
-								[
-									'id' => "cardgate_{$paymentMethod}",
-									'path' => $newPath,
-									'label' => sprintf( $child->getLabel(), $paymentMethodName ),
-									'sortOrder' => strval( in_array( $paymentMethod, $activePmIds ) ? 10 : 100 ),
-									'title' => $paymentMethodName,
-									'pmid' => $paymentMethod,
-									'pmname' => $paymentMethodName
-								] );
+							[
+								'id' => "cardgate_{$paymentMethod}",
+								'path' => $newPath,
+								'label' => sprintf( $child->getLabel(), $paymentMethodName ) ,
+								'sortOrder' => strval( @$activePmIds[$paymentMethod] ? 10 : 100 ),
+								'title' => $paymentMethodName,
+								'pmid' => $paymentMethod,
+								'pmname' => $paymentMethodName
+							] );
 						if ( $child instanceof \Magento\Config\Model\Config\Structure\Element\Group ) {
 							$childData['children'] = [];
 							foreach ( $child->getChildren() as $subchild ) {
