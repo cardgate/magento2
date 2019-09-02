@@ -14,7 +14,7 @@ use \Magento\Framework\App\ObjectManager;
 class UpdatePM extends \Magento\Framework\App\Action\Action {
 
 	public function execute() {
-		$sPaymentMethod = $this->getRequest()->getParam( 'pm' );
+		$sPaymentMethod = htmlspecialchars($this->getRequest()->getParam( 'pm' ));
 
 		$oSession = ObjectManager::getInstance()->get( \Magento\Checkout\Model\Session::class );
 		$oQuote = $oSession->getQuote();
