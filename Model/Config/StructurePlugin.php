@@ -36,11 +36,20 @@ class StructurePlugin {
 
 	/**
 	 *
+	 * @var \Magento\Framework\Serialize\SerializerInterface
+	 */
+	private $serializer;
+
+	/**
+	 *
 	 * @param \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner
 	 * @param MasterConfig $cardgateConfig
 	 * @param \Cardgate\Payment\Model\Config $config
 	 */
 	public function __construct ( \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner, MasterConfig $cardgateConfig, \Cardgate\Payment\Model\Config $config ) {
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
+		$this->serializer = $serializer;
 		$this->_scopeDefiner = $scopeDefiner;
 		$this->_masterConfig = $cardgateConfig;
 		$this->_cgconfig = $config;
@@ -64,7 +73,9 @@ class StructurePlugin {
 			$allPaymentMethods = $this->_masterConfig->getCardgateMethods();
 
 			// get all active methods
-			$activePms = unserialize( $this->_cgconfig->getGlobal( 'active_pm' ) );
+			$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+			$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
+			$activePms = $serializer->unserialize( $this->_cgconfig->getGlobal( 'active_pm' ) );
 			if ( ! is_array( $activePms ) ) {
 				$activePms = [];
 			}
@@ -95,7 +106,7 @@ class StructurePlugin {
 								'id' => "cardgate_{$paymentMethod}",
 								'path' => $newPath,
 								'label' => sprintf( $child->getLabel(), $paymentMethodName ) ,
-								'sortOrder' => strval( @$activePmIds[$paymentMethod] ? 10 : 100 ),
+								'sortOrder' => strval( isset($activePmIds[$paymentMethod]) ? 10 : 100 ),
 								'title' => $paymentMethodName,
 								'pmid' => $paymentMethod,
 								'pmname' => $paymentMethodName

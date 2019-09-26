@@ -92,10 +92,10 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
 				$typeListInterface->cleanType('config');
 				$sResponse = $this->_cardgateConfig->getGlobal('api_username') . '.' . $this->_cardgateConfig->getGlobal('site_id') . '.200';
-				die($sResponse);
+				$this->getResponse()->setBody($sResponse);
 
 			} catch (\Exception $e) {
-				die($e->getMessage());
+				$this->getResponse()->setBody($e->getMessage());
 			}
 		}
 

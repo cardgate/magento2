@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Model;
 
-use Magento\Payment\Model\Method\ConfigInterface;
+use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Config\Model\ResourceModel\Config as ConfigResource;
 use Magento\Framework\App\Config\MutableScopeConfigInterface;
@@ -36,10 +36,19 @@ class Config implements ConfigInterface {
 
 	/**
 	 *
+	 * @var \Magento\Framework\Serialize\SerializerInterface
+	 */
+	public $serializer;
+
+	/**
+	 *
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
 	 * @param Magento\Config\Model\ResourceModel\Config $configResource
 	 */
 	public function __construct ( MutableScopeConfigInterface $scopeConfig, ConfigResource $configResource, Master $master ) {
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
+		$this->serializer = $serializer;
 		$this->_scopeConfig = $scopeConfig;
 		$this->_configResource = $configResource;
 		$this->_masterConfig = $master;
@@ -107,7 +116,7 @@ class Config implements ConfigInterface {
 			return self::$activePMIDs[$storeId];
 		}
 		self::$activePMIDs[$storeId] = [];
-		$activePmInfo = unserialize( $this->getGlobal( 'active_pm', $storeId ) );
+		$activePmInfo = $this->serializer->unserialize( $this->getGlobal( 'active_pm', $storeId ) );
 		if ( !is_array($activePmInfo) ) {
 			$activePmInfo = [];
 		}
@@ -156,5 +165,4 @@ class Config implements ConfigInterface {
 		return null;
 		//return $this->_scopeConfig->getValue( sprintf( $this->_pathPattern, $this->_methodCode, $field ), ScopeInterface::SCOPE_STORE, $storeId );
 	}
-
 }
