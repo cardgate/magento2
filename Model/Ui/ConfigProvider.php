@@ -107,7 +107,7 @@ class ConfigProvider implements ConfigProviderInterface {
 			$cacheID = "cgIDealIssuers" . ( $testmode ? 'test' : 'live' );
 			if ( $this->cache->test( $cacheID ) !== false ) {
 				try {
-					$issuers = unserialize( $this->cache->load( $cacheID ) );
+					$issuers = $this->config->serializer->unserialize( $this->cache->load( $cacheID ) );
 					if ( count( $issuers ) > 0 ) {
 						return $issuers;
 					}
@@ -116,7 +116,7 @@ class ConfigProvider implements ConfigProviderInterface {
 				}
 			}
 			$issuers = $gatewayClient->methods()->get( \cardgate\api\Method::IDEAL )->getIssuers();
-			$this->cache->save( serialize( $issuers ), $cacheID, [], 7200 );
+			$this->cache->save( $this->config->serializer->serialize( $issuers ), $cacheID, [], 7200 );
 		} catch ( \Exception $e ) {
 			// YYY: Log error here
 			$issuers = [];
