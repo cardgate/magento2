@@ -28,7 +28,7 @@ class FetchPM extends \Magento\Backend\App\Action {
 				];
 			}
 			$oConfig = ObjectManager::getInstance()->get( \Cardgate\Payment\Model\Config::class );
-			$oConfig->setGlobal( 'active_pm', serialize( $aActiveMethods ) );
+			$oConfig->setGlobal( 'active_pm', $this->serialize( $aActiveMethods ) );
 			$sFetchResult .= "<span style=\"color:blue;font-weight:bold;\">Please go to \"Cache Management\" and refresh cache types.</span>\n";
 		}
 		$sResult = $this->resultFactory->create( \Magento\Framework\Controller\ResultFactory::TYPE_RAW );
@@ -62,6 +62,17 @@ class FetchPM extends \Magento\Backend\App\Action {
 			$sResult_ .= "<span style=\"color:red;font-weight:bold;\">Error occurred: " . $e_->getMessage() . "</span>\n";
 			return FALSE;
 		}
+	}
+
+	/**
+	 * @param mixed $data
+	 * @return string
+	 */
+	private function serialize($data)
+	{
+			$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+			$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
+			return $serializer->serialize($data);
 	}
 
 }

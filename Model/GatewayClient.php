@@ -55,7 +55,10 @@ class GatewayClient {
 
 		try {
 			$this->_oClient->setIp( self::_determineIp() );
-			@list( $sLanguage, $sCountry ) = explode( '_', $oLocaleResolver_->getLocale() );
+			$aLangCountry = [];
+			$aLangCountry = explode( '_', $oLocaleResolver_->getLocale() );
+			$sLanguage = $aLangCountry[0];
+
 			if ( ! empty( $sLanguage ) ) {
 				$this->_oClient->setLanguage( $sLanguage );
 			}

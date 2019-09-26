@@ -47,12 +47,21 @@ class Master {
 	 */
 	private $config;
 
+	/**
+	 *
+	 * @var \Magento\Framework\Serialize\SerializerInterface
+	 */
+	private $serializer;
+
 	public function __construct ( \Magento\Framework\App\Cache\Type\Collection $cache, \Magento\Framework\Filesystem $filesystem ) {
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
+		$this->serializer = $serializer;
 		$this->cache = $cache;
 		$this->filesystem = $filesystem;
 		if ( $this->cache->test( self::CACHEKEY ) !== false ) {
 			try {
-				$cachedPMs = unserialize( $this->cache->load( self::CACHEKEY ) );
+				$cachedPMs = $serializer->unserialize( $this->cache->load( self::CACHEKEY ) );
 			} catch ( \Exception $e ) {
 				$cachedPMs = [];
 			}
@@ -163,7 +172,7 @@ class Master {
 		    'billink' => 'Billink',
 		    'idealqr' => 'iDEAL QR'
 		];
-		$this->cache->save( serialize( $this->paymentMethodIds ), self::CACHEKEY, [], 24 * 3600 );
+		$this->cache->save( $this->serializer->serialize( $this->paymentMethodIds ), self::CACHEKEY, [], 24 * 3600 );
 	}
 
 	public function getCardgateMethods () {
