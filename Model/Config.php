@@ -116,10 +116,12 @@ class Config implements ConfigInterface {
 			return self::$activePMIDs[$storeId];
 		}
 		self::$activePMIDs[$storeId] = [];
-		$activePmInfo = $this->serializer->unserialize( $this->getGlobal( 'active_pm', $storeId ) );
-		if ( !is_array($activePmInfo) ) {
+		try {
+			$activePmInfo = $this->serializer->unserialize( $this->getGlobal( 'active_pm', $storeId ) );
+		} catch (\Exception $e){
 			$activePmInfo = [];
 		}
+
 		foreach ( $activePmInfo as $activePm ) {
 
 			self::$activePMIDs[$storeId][] = $activePm['id'];
