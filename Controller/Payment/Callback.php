@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
-use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\App\ObjectManager;
 
 /**
@@ -49,14 +48,22 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	 */
 	private $_cardgateConfig;
 
+	/**
+	 *
+	 * @var
+	 */
+	private $encryptor;
+
 	public function __construct ( \Magento\Framework\App\Action\Context $context, \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender, \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
 			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, GatewayClient $client, \Cardgate\Payment\Model\Config $config) {
+		$encryptor = ObjectManager::getInstance()->get( \Magento\Framework\Encryption\Encryptor::class );
 		parent::__construct( $context );
 		$this->invoiceSender = $invoiceSender;
 		$this->orderSender = $orderSender;
 		$this->scopeConfig = $scopeConfig;
 		$this->_cardgateConfig = $config;
 		$this->_cardgateClient = $client;
+		$this->encryptor = $encryptor;
 	}
 
 	/**
@@ -88,14 +95,14 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				$this->_cardgateConfig->setGlobal( 'site_id', $aConfigData['site_id'] );
 				$this->_cardgateConfig->setGlobal( 'site_key', $aConfigData['site_key'] );
 				$this->_cardgateConfig->setGlobal( 'api_username', $aConfigData['merchant_id'] );
-				$this->_cardgateConfig->setGlobal( 'api_password', $aConfigData['api_key'] );
+				$this->_cardgateConfig->setGlobal('api_password', $this->encryptor->encrypt($aConfigData['api_key'] ));
 				$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
 				$typeListInterface->cleanType('config');
 				$sResponse = $this->_cardgateConfig->getGlobal('api_username') . '.' . $this->_cardgateConfig->getGlobal('site_id') . '.200';
-				$this->getResponse()->setBody($sResponse);
+				return $this->getResponse()->setBody($sResponse);
 
 			} catch (\Exception $e) {
-				$this->getResponse()->setBody($e->getMessage());
+				return $this->getResponse()->setBody($e->getMessage());
 			}
 		}
 
