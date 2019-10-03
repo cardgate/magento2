@@ -75,10 +75,13 @@ class StructurePlugin {
 			// get all active methods
 			$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 			$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
-			$activePms = $serializer->unserialize( $this->_cgconfig->getGlobal( 'active_pm' ) );
-			if ( ! is_array( $activePms ) ) {
+
+			try {
+				$activePms = $serializer->unserialize( $this->_cgconfig->getGlobal( 'active_pm' ) );
+			} catch (\Exception $e){
 				$activePms = [];
 			}
+
 			$activePmIds = [];
 			foreach ( $activePms as $pmRecord ) {
 				$activePmIds[$pmRecord['id']] = $pmRecord['name'];
