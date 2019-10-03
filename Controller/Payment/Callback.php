@@ -50,7 +50,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 
 	/**
 	 *
-	 * @var
+	 * @var \Magento\Framework\Encryption\Encryptor
 	 */
 	private $encryptor;
 
