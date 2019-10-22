@@ -170,7 +170,8 @@ class Master {
 			'belfius' => 'Belfius',
 			'eps' => 'EPS',
 		    'billink' => 'Billink',
-		    'idealqr' => 'iDEAL QR'
+		    'idealqr' => 'iDEAL QR',
+			'onlineueberweisen' => 'OnlineÜberweisen'
 		];
 		$this->cache->save( $this->serializer->serialize( $this->paymentMethodIds ), self::CACHEKEY, [], 24 * 3600 );
 	}
