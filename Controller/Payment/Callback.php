@@ -9,6 +9,7 @@ namespace Cardgate\Payment\Controller\Payment;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
 use Magento\Framework\App\ObjectManager;
+use Magento\Sales\Api\Data\TransactionInterface;
 
 /**
  * Callback handler action
@@ -83,7 +84,6 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		if ( ! is_array( $get ) ) {
 			$get = [];
 		}
-
 
 		if (!empty($get['cgp_sitesetup']) && !empty($get['token'])) {
 
@@ -178,7 +178,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 					$currentTransaction = $paymentRepository->getByTransactionId( $transactionId, $payment->getId(), $order->getId() );
 					if (
 						! empty( $currentTransaction )
-						&& $currentTransaction->getTxnType() == Transaction::TYPE_CAPTURE
+						&& $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE
 					) {
 						$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
 						$updateCardgateData = FALSE;
