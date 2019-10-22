@@ -85,7 +85,6 @@ class Callback extends \Magento\Framework\App\Action\Action {
 			$get = [];
 		}
 
-
 		if (!empty($get['cgp_sitesetup']) && !empty($get['token'])) {
 
 			try {
