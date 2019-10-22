@@ -11,11 +11,6 @@ use Cardgate\Payment\Model\Config\Master;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Api\Data\TransactionInterface;
 
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 /**
  * Callback handler action
  *
