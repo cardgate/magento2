@@ -153,6 +153,9 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				}
 			} elseif ( $code < 300 ) {
 				// 2xx success
+				if ( $order->getState() == \Magento\Sales\Model\Order::STATE_NEW ) {
+					$order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+				}
 				$order->setStatus( "cardgate_payment_success" );
 				$order->addStatusHistoryComment( __( "Transaction success." ) );
 
