@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project version="4">
-	<component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
-</project>
 <phpunit
+		bootstrap="src/autoload.php"
 		colors="true"
 		convertErrorsToExceptions="true"
 		convertNoticesToExceptions="true"
@@ -14,7 +12,7 @@
 	</php>
 	<testsuites>
 		<testsuite name="Unit tests">
-			<directory>tests/</directory>
+			<directory>./tests</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
