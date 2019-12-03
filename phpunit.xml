@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<phpunit colors="true">
+<project version="4">
+	<component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
+</project>
+<phpunit
+		colors="true"
+		convertErrorsToExceptions="true"
+		convertNoticesToExceptions="true"
+		convertWarningsToExceptions="true"
+		verbose="true">
 	<php>
 		<ini name="display_errors" value="stderr" />
 		<ini name="error_log" value="/dev/null" />
