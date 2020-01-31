@@ -104,8 +104,8 @@ class Start extends \Magento\Framework\App\Action\Action {
 		try {
 			$transaction = $this->_gatewayClient->transactions()->create(
 				$this->_gatewayClient->getSiteId(),
-				(int)round( $order->getBaseGrandTotal() * 100 ),
-				$order->getBaseCurrencyCode()
+				(int)round( $order->getGrandTotal() * 100 ),
+				$order->getOrderCurrencyCode()
 			);
 
 			$code = $order->getPayment()->getMethodInstance()->getCode();
@@ -146,7 +146,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 					$item->getSku(),
 					$item->getName(),
 					$itemQty,
-				    round( $item->getPrice() * 100, 0 ),
+				    round($item->getPrice() * 100, 0 ),
 					$url
 				    );
 				$cartItem->setVat( round( $item->getTaxPercent(), 0 ) );
@@ -272,7 +272,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			$payment->setCardgateTransaction( $transaction->getId() );
 			$payment->save();
 
-			$order->addStatusHistoryComment( __( "Transaction registered. Transaction ID %1", $transaction->getId() ) );
+			$order->addCommentToStatusHistory( __( "Transaction registered. Transaction ID %1", $transaction->getId() ) );
 			$order->save();
 
 			$actionUrl = $transaction->getActionUrl();
