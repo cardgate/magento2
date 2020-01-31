@@ -8,15 +8,7 @@ php:
   - 7.3
   - 7.4
 
-# This triggers builds to run on the new TravisCI infrastructure.
-# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
-sudo: false
+before_script:
+  - composer install -n --prefer-source
 
-## Cache composer
-cache:
-  directories:
-    - $HOME/.composer/cache
-
-install:
-  - travis_retry composer install --no-interaction
-  - composer require --dev "phpunit/phpunit"
+script: vendor/bin/phpunit -c phpunit.xml
