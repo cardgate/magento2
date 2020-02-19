@@ -89,18 +89,30 @@ class Callback extends \Magento\Framework\App\Action\Action {
 
 			try {
 				$bIsTest = ($get['testmode'] == 1 ? true : false);
-				$aResult = $this->_cardgateClient->pullConfig($get['token'], $bIsTest);
-				$aConfigData = $aResult['pullconfig']['content'];
-				$this->_cardgateConfig->setGlobal( 'testmode', $aConfigData['testmode'] );
-				$this->_cardgateConfig->setGlobal( 'site_id', $aConfigData['site_id'] );
-				$this->_cardgateConfig->setGlobal( 'site_key', $aConfigData['site_key'] );
-				$this->_cardgateConfig->setGlobal( 'api_username', $aConfigData['merchant_id'] );
-				$this->_cardgateConfig->setGlobal('api_password', $this->encryptor->encrypt($aConfigData['api_key'] ));
-				$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
-				$typeListInterface->cleanType('config');
-				$sResponse = $this->_cardgateConfig->getGlobal('api_username') . '.' . $this->_cardgateConfig->getGlobal('site_id') . '.200';
-				return $this->getResponse()->setBody($sResponse);
-
+				$sMerchantId = (int)$this->_cardgateConfig->getGlobal( 'api_username' );
+				if ($sMerchantId == 0){
+					$this->_cardgateConfig->setGlobal( 'api_username', 0 );
+					$this->_cardgateConfig->setGlobal( 'api_password', $this->encryptor->encrypt( 'initconfig' ) );
+					$this->_cardgateConfig->setGlobal( 'testmode', $bIsTest );
+					$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
+					$typeListInterface->cleanType( 'config' );
+				}
+				$this->_cardgateClient = ObjectManager::getInstance()->create( '\Cardgate\Payment\Model\GatewayClient' );
+				$aResult = $this->_cardgateClient->pullConfig($get['token']);
+				if (isset($aResult['success']) && $aResult['success']==1){
+					$aConfigData = $aResult['pullconfig']['content'];
+					$this->_cardgateConfig->setGlobal( 'testmode', $aConfigData['testmode'] );
+					$this->_cardgateConfig->setGlobal( 'site_id', $aConfigData['site_id'] );
+					$this->_cardgateConfig->setGlobal( 'site_key', $aConfigData['site_key'] );
+					$this->_cardgateConfig->setGlobal( 'api_username', $aConfigData['merchant_id'] );
+					$this->_cardgateConfig->setGlobal( 'api_password', $this->encryptor->encrypt( $aConfigData['api_key'] ) );
+					$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
+					$typeListInterface->cleanType( 'config' );
+					$sResponse = $this->_cardgateConfig->getGlobal( 'api_username' ) . '.' . $this->_cardgateConfig->getGlobal( 'site_id' ) . '.200';
+				} else {
+					$sResponse = 'Data retrieval failed.';
+				}
+					return $this->getResponse()->setBody( $sResponse );
 			} catch (\Exception $e) {
 				return $this->getResponse()->setBody($e->getMessage());
 			}
