@@ -71,7 +71,6 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal {
 			$payment->setBaseCardgatefeeInclTax( $fee->getTotal() + $payment->getBaseCardgatefeeInclTax() );
 		}
 
-		// YYY: Todo: add base_amount
 		$total->addTotalAmount( 'cardgatefee', $fee->getAmount() );
 		$total->addBaseTotalAmount( 'cardgatefee', $fee->getAmount() );
 

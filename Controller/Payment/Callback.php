@@ -210,10 +210,15 @@ class Callback extends \Magento\Framework\App\Action\Action {
 						throw new \Exception( 'payment already processed in another transaction.' );
 					}
 
+					if ($order->isCurrencyDifferent()){
+						$currency = $order->getBaseCurrencyCode();
+						$amount = round(($amount / $order->getBaseToOrderRate()));
+					}
+
 					// Do capture.
 					$payment->setTransactionId( $transactionId );
 					$payment->setCurrencyCode( $currency );
-					$payment->registerCaptureNotification( $amount / 100 );
+					$payment->registerCaptureNotification( $amount / 100);
 					$payment->setMethod( 'cardgate_' . $pt );
 
 					if ( ! $order->getEmailSent() ) {

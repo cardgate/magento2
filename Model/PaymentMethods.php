@@ -151,9 +151,10 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	   $customerGroups = $this->config->getField( $this->_code, 'specific_customer_groups' );
 	   $aCustomerGroups = str_getcsv($customerGroups,',');
 	   $groupId = $quote->getCustomer()->getGroupId();
-	   
-	   if ($groupId > 0 && strlen($customerGroups > 0 && !in_array($groupId,$aCustomerGroups)))
-	       return false;
+
+	   if ($groupId > 0 && strlen( $customerGroups > 0 ) && ! in_array( $groupId, $aCustomerGroups ) ) {
+	   	    return false;
+	   }
 	   return true;
 	}
 
