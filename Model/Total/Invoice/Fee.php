@@ -33,15 +33,13 @@ class Fee extends \Magento\Sales\Model\Order\Invoice\Total\AbstractTotal {
 	 * @return $this
 	 */
 	public function collect ( \Magento\Sales\Model\Order\Invoice $invoice ) {
-		$store = $invoice->getStore();
 		$order = $invoice->getOrder();
-		if ( $invoice->isLast() ) {
+		if ( $order->canInvoice() ) {
 			$invoice->setTaxAmount( $invoice->getTaxAmount() + $order->getCardgatefeeTaxAmount() );
 			$invoice->setBaseTaxAmount( $invoice->getBaseTaxAmount() + $order->getBaseCardgatefeeTaxAmount() );
 			$invoice->setGrandTotal( $invoice->getGrandTotal() + $order->getCardgatefeeInclTax() );
 			$invoice->setBaseGrandTotal( $invoice->getBaseGrandTotal() + $order->getBaseCardgatefeeInclTax() );
 		}
-
 		return $this;
 	}
 }
