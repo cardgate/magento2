@@ -45,7 +45,7 @@
 			<field id="specific_customer_groups" translate="label" type="multiselect" sortOrder="180" showInDefault="1" showInWebsite="1"
 				showInStore="0">
 				<label>Payment method for specific customer groups</label>
-				<source_model>Cardgate\Payment\Model\System\Config\Source\Customer\Group</source_model>
+				<source_model>Magento\Customer\Model\Config\Source\Group</source_model>
 			</field>
 			<field id="sort_order" translate="label" type="text" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="0">
 				<label>Sort Order</label>
