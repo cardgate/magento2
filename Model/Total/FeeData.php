@@ -40,16 +40,23 @@ class FeeData {
 
 	/**
 	 *
+	 * @var float
+	 */
+	protected $currency_converter;
+
+	/**
+	 *
 	 * @param float $amount
 	 * @param float $tax_amount
 	 * @param int $tax_class
 	 * @param boolean $fee_includes_tax
 	 */
-	function __construct ( $amount = 0, $tax_amount = 0, $tax_class = null, $fee_includes_tax = true ) {
+	function __construct ( $amount = 0, $tax_amount = 0, $tax_class = null, $fee_includes_tax = true , $currency_converter = 1) {
 		$this->amount = $amount;
 		$this->tax_amount = $tax_amount;
 		$this->tax_class = $tax_class;
-		$this->fee_includes_tax = $fee_includes_tax;
+		$this->fee_includes_tax =  $fee_includes_tax;
+		$this->currency_converter = $currency_converter;
 	}
 
 	function getDisplayAmount() {
@@ -60,13 +67,30 @@ class FeeData {
 		}
 	}
 
+	function getBaseDisplayAmount() {
+		if ( $this->getFeeIncludesTax() ) {
+			return $this->getBaseTotal();
+		} else {
+			return $this->getBaseAmount();
+		}
+	}
+
 	/**
 	 * Get fee amount including tax
 	 *
 	 * @return float
 	 */
 	function getTotal () {
-		return $this->amount + $this->tax_amount;
+		return ($this->amount + $this->tax_amount)* $this->currency_converter;
+	}
+
+	/**
+	 * Get base fee amount including tax
+	 *
+	 * @return float
+	 */
+	function getBaseTotal () {
+		return ($this->amount + $this->tax_amount) ;
 	}
 
 	/**
@@ -75,6 +99,15 @@ class FeeData {
 	 * @return float
 	 */
 	function getAmount () {
+		return $this->amount  * $this->currency_converter;
+	}
+
+	/**
+	 * Get base fee amount
+	 *
+	 * @return float
+	 */
+	function getBaseAmount () {
 		return $this->amount;
 	}
 
@@ -84,6 +117,15 @@ class FeeData {
 	 * @return float
 	 */
 	function getTaxAmount () {
+		return $this->tax_amount  * $this->currency_converter;
+	}
+
+	/**
+	 * Get base tax amount
+	 *
+	 * @return float
+	 */
+	function getBaseTaxAmount () {
 		return $this->tax_amount;
 	}
 

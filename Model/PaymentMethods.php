@@ -80,6 +80,12 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 
 	/**
 	 *
+	 * @var \Magento\Tax\Model\Calculation
+	 */
+	protected $taxCalculation;
+
+	/**
+	 *
 	 * @var \Magento\Sales\Model\Order\Payment\Transaction\Repository
 	 */
 	protected $transactionRepository;
@@ -104,6 +110,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
 	 * @param \Magento\Payment\Helper\Data $paymentData
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+	 * @param \Magento\Tax\Model\Calculation $taxCalculation,
 	 * @param Logger $logger
 	 * @param \Cardgate\Payment\Model\Config\Master $master
 	 * @param \Cardgate\Payment\Model\Config $config
@@ -122,6 +129,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		\Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
 		\Magento\Payment\Helper\Data $paymentData,
 		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+		\Magento\Tax\Model\Calculation $taxCalculation,
 		\Magento\Payment\Model\Method\Logger $logger,
 		\Cardgate\Payment\Model\Config\Master $master,
 		\Cardgate\Payment\Model\Config $config,
@@ -134,28 +142,29 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	) {
 		parent::__construct( $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data );
 
+		$this->taxCalculation = $taxCalculation;
+		$this->cardgateConfig = $master;
+		$this->config = $config;
 		$this->orderSender = $orderSender;
 		$this->invoiceSender = $invoiceSender;
 		$this->transactionRepository = $transactionRepository;
-		$this->cardgateConfig = $master;
-		$this->config = $config;
-		
+
 	}
-	
+
 	/**
 	 *
 	 * @param \Magento\Quote\Api\Data\CartInterface $quote
 	 * @return boolean
 	 */
 	public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null) {
-	   $customerGroups = $this->config->getField( $this->_code, 'specific_customer_groups' );
-	   $aCustomerGroups = str_getcsv($customerGroups,',');
-	   $groupId = $quote->getCustomer()->getGroupId();
+		$customerGroups = $this->config->getField( $this->_code, 'specific_customer_groups' );
+		$aCustomerGroups = str_getcsv($customerGroups,',');
+		$groupId = $quote->getCustomer()->getGroupId();
 
-	   if ($groupId > 0 && strlen( $customerGroups > 0 ) && ! in_array( $groupId, $aCustomerGroups ) ) {
-	   	    return false;
-	   }
-	   return true;
+		if ($groupId > 0 && strlen( $customerGroups > 0 ) && ! in_array( $groupId, $aCustomerGroups ) ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -173,39 +182,45 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 			$calculatedTotal = 0 - $quote->getPayment()->getBaseCardgatefeeInclTax();
 			foreach ( $quote->getAllAddresses() as $address ) {
 				$calculatedTotal += $address->getBaseGrandTotal();
-				$debug[] = $address->getBaseGrandTotal();
+				$debug[]         = $address->getBaseGrandTotal();
 			}
 		}
 		$debug[] = 'total: ' . $calculatedTotal;
 
-		$feeFixed = floatval( $this->config->getField( $this->_code, 'paymentfee_fixed' ) );
-		$feePercentage = floatval( $this->config->getField( $this->_code, 'paymentfee_percentage' ) );
-		$fee = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
-
 		$taxClassId = $this->config->getGlobal( 'paymentfee_tax_class' );
-		/**
-		 *
-		 * @var \Magento\Catalog\Helper\Data $catalogHelper
-		 */
-		$catalogHelper = ObjectManager::getInstance()->get( 'Magento\\Catalog\\Helper\\Data' );
+		$request               = new \Magento\Framework\DataObject(
+			[
+				'country_id'        => $quote->getBillingAddress()->getCountryId(),
+				'region_id'         => $quote->getBillingAddress()->getRegionId(),
+				'postcode'          => $quote->getBillingAddress()->getPostcode(),
+				'customer_class_id' => $quote->getCustomerTaxClassId(),
+				'product_class_id'  => $taxClassId
+			] );
+		$taxRate = $this->taxCalculation->getRate($request);
 
-		$pseudoProduct = new \Magento\Framework\DataObject();
-		$pseudoProduct->setTaxClassId( $taxClassId );
+		$paymentFeeIncludesTax = $this->config->getGlobal( 'paymentfee_includes_tax' );
+		$feeFixed      = floatval( $this->config->getField( $this->_code, 'paymentfee_fixed' ) );
+		$feePercentage = floatval( $this->config->getField( $this->_code, 'paymentfee_percentage' ) );
+		$fee           = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
 
-		$priceExcl = $catalogHelper->getTaxPrice( $pseudoProduct, $fee, false, $quote->getShippingAddress(), $quote->getBillingAddress(),
-				$quote->getCustomerTaxClassId(), $quote->getStore(), $this->config->getGlobal( 'paymentfee_includes_tax' ) );
-
-		$priceIncl = $catalogHelper->getTaxPrice( $pseudoProduct, $fee, true, $quote->getShippingAddress(), $quote->getBillingAddress(),
-				$quote->getCustomerTaxClassId(), $quote->getStore(), $this->config->getGlobal( 'paymentfee_includes_tax' ) );
+		if ($paymentFeeIncludesTax){
+			$priceIncl = $fee;
+			$priceExcl = round($fee/((100 + $taxRate)/100),4);
+		} else {
+			$priceExcl = $fee;
+			$priceIncl = round($fee * (1+($taxRate/100)),4);
+		}
 
 		return ObjectManager::getInstance()->create( 'Cardgate\\Payment\\Model\\Total\\FeeData',
-				[
-					'amount' => $priceExcl,
-					'tax_amount' => ( $priceIncl - $priceExcl ),
-					'tax_class' => $taxClassId,
-					'fee_includes_tax' => $this->config->getGlobal( 'paymentfee_includes_tax' )
-				] );
+			[
+				'amount'             => $priceExcl,
+				'tax_amount'         => ( $priceIncl - $priceExcl ),
+				'tax_class'          => $taxClassId,
+				'fee_includes_tax'   => $this->config->getGlobal( 'paymentfee_includes_tax' ),
+				'currency_converter' => $quote->getBaseToQuoteRate()
+			] );
 	}
+
 
 	/**
 	 *
@@ -270,14 +285,14 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 *
 	 * @return string
 	 */
 	public function getInstructions(){
-	    $instructions = $this->config->getField( $this->_code, 'instructions' );
-	    return nl2br($instructions);
+		$instructions = $this->config->getField( $this->_code, 'instructions' );
+		return nl2br($instructions);
 	}
 
 }
