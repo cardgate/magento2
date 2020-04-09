@@ -79,17 +79,32 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 	/**
 	 *
+	 * @var \Magento\Sales\Api\OrderRepositoryInterface
+	 */
+	private $_orderRepository;
+
+	/**
+	 *
 	 * @param \Magento\Framework\App\Action\Context $context
 	 * @param \Magento\Customer\Model\Session $customerSession
 	 * @param \Magento\Checkout\Model\Session $checkoutSession
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
 	 */
-	public function __construct( \Magento\Framework\App\Action\Context $context, \Magento\Customer\Model\Session $customerSession, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,  PaymentHelper $paymentHelper, GatewayClient $gatewayClient, Config $cardgateConfig, Master $masterConfig ) {
+	public function __construct(    \Magento\Framework\App\Action\Context $context,
+								    \Magento\Customer\Model\Session $customerSession,
+									\Magento\Checkout\Model\Session $checkoutSession,
+									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+									\Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+									PaymentHelper $paymentHelper,
+									GatewayClient $gatewayClient,
+									Config $cardgateConfig,
+									Master $masterConfig ) {
 		// $this->_logger = $logger;
 		// $this->_logger->addDebug('some text or variable');
 		$this->customerSession = $customerSession;
 		$this->checkoutSession = $checkoutSession;
 		$this->scopeConfig = $scopeConfig;
+		$this->_orderRepository = $orderRepository;
 		$this->_paymentHelper = $paymentHelper;
 		$this->_gatewayClient = $gatewayClient;
 		$this->_cardgateConfig = $cardgateConfig;
@@ -98,8 +113,8 @@ class Start extends \Magento\Framework\App\Action\Action {
 	}
 
 	public function execute () {
-		$order = $this->checkoutSession->getLastRealOrder();
-		$orderid = $order->getIncrementId();
+		$orderId = $this->checkoutSession->getLastRealOrder()->getIncrementId();
+		$order = $this->_orderRepository->get($orderId);
 
 		try {
 			$transaction = $this->_gatewayClient->transactions()->create(
@@ -114,8 +129,8 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 			$transaction->setCallbackUrl( $this->_url->getUrl( 'cardgate/payment/callback' ) );
 			$transaction->setRedirectUrl( $this->_url->getUrl( 'cardgate/payment/redirect' ) );
-			$transaction->setReference( $orderid );
-			$transaction->setDescription( str_replace( '%id%', $orderid, $this->_cardgateConfig->getGlobal( 'order_description' ) ) );
+			$transaction->setReference( $orderId );
+			$transaction->setDescription( str_replace( '%id%', $orderId, $this->_cardgateConfig->getGlobal( 'order_description' ) ) );
 
 			// Add the consumer data to the transaction.
 			$consumer = $transaction->getConsumer();
@@ -220,13 +235,12 @@ class Start extends \Magento\Framework\App\Action\Action {
 				$cartItem->setVat( ceil( ( ( $order->getCardgatefeeInclTax() / $cardGateFeeAmount ) - 1 ) * 1000 ) / 10 );
 				$cartItem->setVatIncluded( TRUE );
 				$cartItem->setVatAmount( round( $order->getCardgatefeeTaxAmount() * 100, 0 ) );
-
 				$calculatedGrandTotal += $order->getCardgatefeeInclTax();
 				$calculatedVatTotal += $order->getCardgatefeeTaxAmount();
 			}
 
 			// Failsafe; correct VAT if needed.
-			if ( $calculatedVatTotal != $order->getTaxAmount() ) {
+			if ( abs($calculatedVatTotal - $order->getTaxAmount())>=0.01 ){
 				$vatCorrection = $order->getTaxAmount() - $calculatedVatTotal;
 				$cartItem = $cart->addItem(
 					\cardgate\api\Item::TYPE_VAT_CORRECTION,
@@ -273,7 +287,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			$payment->save();
 
 			$order->addCommentToStatusHistory( __( "Transaction registered. Transaction ID %1", $transaction->getId() ) );
-			$order->save();
+			$this->_orderRepository->save($order);
 
 			$actionUrl = $transaction->getActionUrl();
 			if ( NULL !== $actionUrl ) {
@@ -287,7 +301,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 		} catch ( \Exception $e ) {
 			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
 			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
-			$order->save();
+			$this->_orderRepository->save($order);
 			$this->checkoutSession->restoreQuote();
 			$this->_redirect( 'checkout/cart' );
 		}

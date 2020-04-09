@@ -4,7 +4,8 @@
 	"homepage": "https://www.cardgate.com",
 	"version": "2.0.32",
 	"keywords": [ "cardgate", "ideal", "bancontact", "creditcard", "magento" ],
-	"require": {
+	"require": { 
+		"magento/framework": "^100.1",
 		"php": "^5.6.0|^7.0.0",
 		"cardgate/cardgate-clientlib-php": ">=1.1.13"
 	},

@@ -53,18 +53,47 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	 *
 	 * @var \Magento\Framework\Encryption\Encryptor
 	 */
-	private $encryptor;
+	private $_encryptor;
 
-	public function __construct ( \Magento\Framework\App\Action\Context $context, \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender, \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
-			\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, GatewayClient $client, \Cardgate\Payment\Model\Config $config) {
-		$encryptor = ObjectManager::getInstance()->get( \Magento\Framework\Encryption\Encryptor::class );
+	/**
+	 *
+	 * @var \Magento\Framework\Encryption\Encryptor
+	 */
+	private $_listInterface;
+	/**
+	 *
+	 * @var \Magento\Sales\Api\OrderRepositoryInterface
+	 */
+	private $_orderRepository;
+
+	/**
+	 *
+	 * @var \Magento\Sales\Model\Order\Payment\Transaction\Repository
+	 */
+	private $_paymentRepository;
+
+
+
+	public function __construct (   \Magento\Framework\App\Action\Context $context,
+									\Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
+									\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
+									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+									\Magento\Framework\App\Cache\TypeListInterface $_listInterface,
+									\Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+									\Magento\Sales\Model\Order\Payment\Transaction\Repository $repository,
+									GatewayClient $client,
+	 	 							\Cardgate\Payment\Model\Config $config,
+									\Magento\Framework\Encryption\Encryptor $encryptor)	{
 		parent::__construct( $context );
 		$this->invoiceSender = $invoiceSender;
 		$this->orderSender = $orderSender;
 		$this->scopeConfig = $scopeConfig;
+		$this->_orderRepository = $orderRepository;
+		$this->_paymentRepository = $repository;
+		$this->_listInterface = $_listInterface;
 		$this->_cardgateConfig = $config;
 		$this->_cardgateClient = $client;
-		$this->encryptor = $encryptor;
+		$this->_encryptor = $encryptor;
 	}
 
 	/**
@@ -92,10 +121,9 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				$sMerchantId = (int)$this->_cardgateConfig->getGlobal( 'api_username' );
 				if ($sMerchantId == 0){
 					$this->_cardgateConfig->setGlobal( 'api_username', 0 );
-					$this->_cardgateConfig->setGlobal( 'api_password', $this->encryptor->encrypt( 'initconfig' ) );
+					$this->_cardgateConfig->setGlobal( 'api_password', $this->_encryptor->encrypt( 'initconfig' ) );
 					$this->_cardgateConfig->setGlobal( 'testmode', $bIsTest );
-					$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
-					$typeListInterface->cleanType( 'config' );
+					$this->_listInterface->cleanType('config');
 				}
 				$this->_cardgateClient = ObjectManager::getInstance()->create( '\Cardgate\Payment\Model\GatewayClient' );
 				$aResult = $this->_cardgateClient->pullConfig($get['token']);
@@ -106,8 +134,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 					$this->_cardgateConfig->setGlobal( 'site_key', $aConfigData['site_key'] );
 					$this->_cardgateConfig->setGlobal( 'api_username', $aConfigData['merchant_id'] );
 					$this->_cardgateConfig->setGlobal( 'api_password', $this->encryptor->encrypt( $aConfigData['api_key'] ) );
-					$typeListInterface = ObjectManager::getInstance()->get( \Magento\Framework\App\Cache\TypeListInterface::class );
-					$typeListInterface->cleanType( 'config' );
+					$this->_listInterface->cleanType('config');
 					$sResponse = $this->_cardgateConfig->getGlobal( 'api_username' ) . '.' . $this->_cardgateConfig->getGlobal( 'site_id' ) . '.200';
 				} else {
 					$sResponse = 'Data retrieval failed.';
@@ -134,9 +161,9 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				throw new \Exception( 'hash verification failure' );
 			}
 
-			$order = ObjectManager::getInstance()->create( \Magento\Sales\Model\Order::class )->loadByIncrementId( $reference );
-			$order->addStatusHistoryComment( __( "Update for transaction %1. Received status code %2.", $transactionId, $code ) );
+			$order = $this->_orderRepository->get($reference);
 
+			$order->addCommentToStatusHistory(__( "Update for transaction %1. Received status code %2.", $transactionId, $code ));
 
 			if ( !$manualProcessing ) {
 				$payment = $order->getPayment();
@@ -149,32 +176,33 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				// match the one from the gateway.
 				if ( $payment->getCardgatePaymentmethod() != $pmId ) {
 					$payment->setCardgatePaymentmethod( $pmId );
-					$order->addStatusHistoryComment( __( "Callback received for transaction %1 with payment method '%2' but payment method should be '%3'. Processing anyway.", $transactionId, $pmId, $order->getPayment()->getCardgatePaymentmethod() ) );
+					$order->addCommentToStatusHistory(__( "Callback received for transaction %1 with payment method '%2' but payment method should be '%3'. Processing anyway.", $transactionId, $pmId, $order->getPayment()->getCardgatePaymentmethod() ) );
 				}
 			}
 
 			if ( $code < 100 ) {
 				// 0xx pending
 				if ( $order->getState() != \Magento\Sales\Model\Order::STATE_NEW ) {
-					$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
+					$order->addCommentToStatusHistory(__( 'Transaction already processed.' ));
 				}
 			} elseif ( $code < 200 ) {
 				// 1xx auth phase
 				if ( $order->getState() != \Magento\Sales\Model\Order::STATE_NEW ) {
-					$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
+					$order->addCommentToStatusHistory(__( 'Transaction already processed.' ));
 				}
 			} elseif ( $code < 300 ) {
 				// 2xx success
-				if ( $order->getState() == \Magento\Sales\Model\Order::STATE_NEW ) {
+				if ( ($order->getState() == \Magento\Sales\Model\Order::STATE_NEW) || ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED) ) {
 					$order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
 				}
 				$order->setStatus( "cardgate_payment_success" );
-				$order->addStatusHistoryComment( __( "Transaction success." ) );
+				$order->addCommentToStatusHistory(__( "Transaction success." ));
 
 				if ( !$manualProcessing ) {
 					// Uncancel if needed.
 					if ( $order->isCanceled() ) {
 						$stockRegistry = ObjectManager::getInstance()->get( \Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface::class );
+
 						foreach ( $order->getItems() as $item ) {
 							$stockItem = $stockRegistry->getStockItem( $item->getProductId(), $order->getStore()->getWebsiteId() );
 							$stockItem->setQty( $stockItem->getQty() - $item->getQtyCanceled() );
@@ -185,17 +213,16 @@ class Callback extends \Magento\Framework\App\Action\Action {
 							$item->setDiscountTaxCompensationCanceled( 0 );
 							$item->save();
 						}
-						$order->addStatusHistoryComment( __( 'Transaction rebooked. Product stock reclaimed from inventory.' ) );
+						$order->addCommentToStatusHistory(__( 'Transaction rebooked. Product stock reclaimed from inventory.' ));
 					}
 
 					// Test if transaction has been processed already.
-					$paymentRepository = ObjectManager::getInstance()->get( \Magento\Sales\Model\Order\Payment\Transaction\Repository::class );
-					$currentTransaction = $paymentRepository->getByTransactionId( $transactionId, $payment->getId(), $order->getId() );
+					$currentTransaction = $this->_paymentRepository->getByTransactionId($transactionId,$payment->getId(), $order->getId());
 					if (
 						! empty( $currentTransaction )
 						&& $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE
 					) {
-						$order->addStatusHistoryComment( __( 'Transaction already processed.' ) );
+						$order->addCommentToStatusHistory(__( 'Transaction already processed.' ));
 						$updateCardgateData = FALSE;
 						throw new \Exception( 'transaction already processed.' );
 					}
@@ -205,20 +232,27 @@ class Callback extends \Magento\Framework\App\Action\Action {
 						$payment->getCardgateStatus() >= 200
 						&& $payment->getCardgateStatus() < 300
 					) {
-						$order->addStatusHistoryComment( __( 'Payment already processed in another transaction.' ) );
+						$order->addCommentToStatusHistory(__( 'Payment already processed in another transaction.' ));
 						$updateCardgateData = FALSE;
 						throw new \Exception( 'payment already processed in another transaction.' );
 					}
 
+
 					if ($order->isCurrencyDifferent()){
 						$currency = $order->getBaseCurrencyCode();
-						$amount = round(($amount / $order->getBaseToOrderRate()));
+						$grandTotal = round(  $order->getGrandTotal()* 100, 0 );
+						if (abs($grandTotal - $amount) < 1) {
+							$amount = $order->getBaseTotalDue();
+						}
+					} else {
+						$amount = $amount/100;
 					}
+
 
 					// Do capture.
 					$payment->setTransactionId( $transactionId );
 					$payment->setCurrencyCode( $currency );
-					$payment->registerCaptureNotification( $amount / 100);
+					$payment->registerCaptureNotification($amount);
 					$payment->setMethod( 'cardgate_' . $pt );
 
 					if ( ! $order->getEmailSent() ) {
@@ -230,7 +264,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 						$invoice->save(); // makes sure there's an invoice id generated
 						$this->invoiceSender->send( $invoice );
 					} else {
-						$order->addStatusHistoryComment( __( 'Failed to create invoice.' ) );
+						$order->addCommentToStatusHistory(__( 'Failed to create invoice.' ));
 						throw new \Exception( 'failed to create invoice.' );
 					}
 				}
@@ -240,9 +274,9 @@ class Callback extends \Magento\Framework\App\Action\Action {
 					try {
 							$order->registerCancellation( __( 'Transaction canceled.' ), false );
 							$order->setStatus( "cardgate_payment_failure" );
-							$order->addStatusHistoryComment( __( "Transaction failure." ) );
+							$order->addCommentToStatusHistory(__( "Transaction failure." ));
 					} catch ( \Exception $e ) {
-						$order->addStatusHistoryComment( __( "Failed to cancel order. Order state was : %1.", $order->getState() . '/' . $order->getStatus() ) );
+						$order->addCommentToStatusHistory(__( "Failed to cancel order. Order state was : %1.", $order->getState() . '/' . $order->getStatus() ));
 						throw new \Exception( 'failed to cancel order.' );
 					}
 				}
@@ -279,7 +313,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		}
 
 		if ( $order != NULL ) {
-			$order->save();
+			$this->_orderRepository->save($order);
 		}
 
 		return $result;
