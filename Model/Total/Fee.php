@@ -63,23 +63,23 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal {
 
 			$payment = $quote->getPayment();
 
-			$payment->setCardgatefeeAmount( $fee->getAmount() + $payment->getCardgatefeeAmount() );
-			$payment->setBaseCardgatefeeAmount( $fee->getAmount() + $payment->getBaseCardgatefeeAmount() );
-			$payment->setCardgatefeeTaxAmount( $fee->getTaxAmount() + $payment->getCardgatefeeTaxAmount() );
-			$payment->setBaseCardgatefeeTaxAmount( $fee->getTaxAmount() + $payment->getBaseCardgatefeeTaxAmount() );
-			$payment->setCardgatefeeInclTax( $fee->getTotal() + $payment->getCardgatefeeInclTax() );
-			$payment->setBaseCardgatefeeInclTax( $fee->getTotal() + $payment->getBaseCardgatefeeInclTax() );
+			$payment->setCardgatefeeAmount( $fee->getAmount() );
+			$payment->setBaseCardgatefeeAmount( $fee->getBaseAmount());
+			$payment->setCardgatefeeTaxAmount( $fee->getTaxAmount() );
+			$payment->setBaseCardgatefeeTaxAmount( $fee->getBaseTaxAmount() );
+			$payment->setCardgatefeeInclTax( $fee->getTotal() );
+			$payment->setBaseCardgatefeeInclTax( $fee->getBaseTotal() );
 		}
 
 		$total->addTotalAmount( 'cardgatefee', $fee->getAmount() );
-		$total->addBaseTotalAmount( 'cardgatefee', $fee->getAmount() );
+		$total->addBaseTotalAmount( 'cardgatefee', $fee->getBaseAmount() );
 
-		$quote->setCardgatefeeAmount( $fee->getAmount() + $quote->getCardgatefeeAmount() );
-		$quote->setBaseCardgatefeeAmount( $fee->getAmount() + $quote->getBaseCardgatefeeAmount() );
-		$quote->setCardgatefeeTaxAmount( $fee->getTaxAmount() + $quote->getCardgatefeeTaxAmount() );
-		$quote->setBaseCardgatefeeTaxAmount( $fee->getTaxAmount() + $quote->getBaseCardgatefeeTaxAmount() );
-		$quote->setCardgatefeeInclTax( $fee->getTotal() + $quote->getCardgatefeeInclTax() );
-		$quote->setBaseCardgatefeeInclTax( $fee->getTotal() + $quote->getBaseCardgatefeeInclTax() );
+		$quote->setCardgatefeeAmount( $fee->getAmount() );
+		$quote->setBaseCardgatefeeAmount( $fee->getBaseAmount() );
+		$quote->setCardgatefeeTaxAmount( $fee->getTaxAmount() );
+		$quote->setBaseCardgatefeeTaxAmount( $fee->getBaseTaxAmount() );
+		$quote->setCardgatefeeInclTax( $fee->getTotal() );
+		$quote->setBaseCardgatefeeInclTax( $fee->getBaseTotal());
 
 		if ( $fee->getAmount() > 0 ) {
 			$associatedTaxables = [];
@@ -87,7 +87,7 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal {
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_TYPE => self::TYPE_FEE,
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_CODE => self::CODE_FEE,
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_UNIT_PRICE => $fee->getDisplayAmount(),
-				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_BASE_UNIT_PRICE => $fee->getDisplayAmount(),
+				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_BASE_UNIT_PRICE => $fee->getBaseDisplayAmount(),
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_QUANTITY => 1,
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_TAX_CLASS_ID => $fee->getTaxClass(),
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_PRICE_INCLUDES_TAX => $fee->getFeeIncludesTax(),
@@ -137,7 +137,7 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal {
 		return [
 			'code' => 'cardgatefee',
 			'title' => __( 'Payment fee' ),
-			'value' => $fee->getAmount(),
+			'value' => $fee->getDisplayAmount(),
 		];
 	}
 
