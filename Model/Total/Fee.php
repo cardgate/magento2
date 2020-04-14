@@ -86,16 +86,15 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal {
 			$associatedTaxables[] = [
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_TYPE => self::TYPE_FEE,
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_CODE => self::CODE_FEE,
-				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_UNIT_PRICE => $fee->getDisplayAmount(),
-				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_BASE_UNIT_PRICE => $fee->getBaseDisplayAmount(),
+				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_UNIT_PRICE => $fee->getAmount(),
+				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_BASE_UNIT_PRICE => $fee->getBaseAmount(),
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_QUANTITY => 1,
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_TAX_CLASS_ID => $fee->getTaxClass(),
-				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_PRICE_INCLUDES_TAX => $fee->getFeeIncludesTax(),
+				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_PRICE_INCLUDES_TAX => !$fee->getFeeIncludesTax(),
 				CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_ASSOCIATION_ITEM_CODE => CommontaxCollector::ASSOCIATION_ITEM_CODE_FOR_QUOTE
 			];
 			$shippingAssignment->getShipping()->getAddress()->setAssociatedTaxables( $associatedTaxables );
 		}
-
 		return $this;
 	}
 

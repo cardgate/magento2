@@ -204,17 +204,26 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		$fee           = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
 
 		if ($paymentFeeIncludesTax){
-			$priceIncl = $fee;
-			$priceExcl = round($fee/((100 + $taxRate)/100),4);
+			$taxAmount = $fee - round($fee/((100 + $taxRate)/100),4);
+			$priceExcl = $fee - $taxAmount;
 		} else {
 			$priceExcl = $fee;
-			$priceIncl = round($fee * (1+($taxRate/100)),4);
+			$taxAmount = round($fee * (1+($taxRate/100)),4) - $fee;
 		}
 
+		$aFee = [
+			'amount'             => $priceExcl,
+			'tax_amount'         => $taxAmount,
+			'tax_class'          => $taxClassId,
+			'fee_includes_tax'   => $paymentFeeIncludesTax,
+			'currency_converter' => $quote->getBaseToQuoteRate()
+		] ;
+
+		$amount = ( $paymentFeeIncludesTax == 1 ? $priceExcl:($priceExcl + $taxAmount));
 		return ObjectManager::getInstance()->create( 'Cardgate\\Payment\\Model\\Total\\FeeData',
 			[
-				'amount'             => $priceExcl,
-				'tax_amount'         => ( $priceIncl - $priceExcl ),
+				'amount'             => $amount,
+				'tax_amount'         => $taxAmount,
 				'tax_class'          => $taxClassId,
 				'fee_includes_tax'   => $this->config->getGlobal( 'paymentfee_includes_tax' ),
 				'currency_converter' => $quote->getBaseToQuoteRate()
