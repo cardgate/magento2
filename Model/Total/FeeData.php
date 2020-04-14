@@ -60,19 +60,11 @@ class FeeData {
 	}
 
 	function getDisplayAmount() {
-		if ( $this->getFeeIncludesTax() ) {
-			return $this->getTotal();
-		} else {
 			return $this->getAmount();
-		}
 	}
 
 	function getBaseDisplayAmount() {
-		if ( $this->getFeeIncludesTax() ) {
-			return $this->getBaseTotal();
-		} else {
 			return $this->getBaseAmount();
-		}
 	}
 
 	/**
