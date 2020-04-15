@@ -78,19 +78,19 @@ class Callback extends \Magento\Framework\App\Action\Action {
 									\Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
 									\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
 									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-									\Magento\Framework\App\Cache\TypeListInterface $_listInterface,
+									\Magento\Framework\App\Cache\TypeListInterface $listInterface,
 									\Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
 									\Magento\Sales\Model\Order\Payment\Transaction\Repository $repository,
 									GatewayClient $client,
 	 	 							\Cardgate\Payment\Model\Config $config,
 									\Magento\Framework\Encryption\Encryptor $encryptor)	{
 		parent::__construct( $context );
-		$this->invoiceSender = $invoiceSender;
 		$this->orderSender = $orderSender;
+		$this->invoiceSender = $invoiceSender;
 		$this->scopeConfig = $scopeConfig;
+		$this->_listInterface = $listInterface;
 		$this->_orderRepository = $orderRepository;
 		$this->_paymentRepository = $repository;
-		$this->_listInterface = $_listInterface;
 		$this->_cardgateConfig = $config;
 		$this->_cardgateClient = $client;
 		$this->_encryptor = $encryptor;
@@ -191,8 +191,9 @@ class Callback extends \Magento\Framework\App\Action\Action {
 					$order->addCommentToStatusHistory(__( 'Transaction already processed.' ));
 				}
 			} elseif ( $code < 300 ) {
+
 				// 2xx success
-				if ( ($order->getState() == \Magento\Sales\Model\Order::STATE_NEW) || ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED) ) {
+				if ( ($order->getState() == \Magento\Sales\Model\Order::STATE_NEW) ) {
 					$order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
 				}
 				$order->setStatus( "cardgate_payment_success" );
@@ -201,13 +202,20 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				if ( !$manualProcessing ) {
 					// Uncancel if needed.
 					if ( $order->isCanceled() ) {
-						$stockRegistry = ObjectManager::getInstance()->get( \Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface::class );
+						if ( ($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED) ) {
+							$order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+						}
 
+						$stockRegistry = ObjectManager::getInstance()->get( \Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface::class );
 						foreach ( $order->getItems() as $item ) {
+							foreach ($item->getChildrenItems() as $child){
+								$stockItem = $stockRegistry->getStockItem( $child->getProductId(), $order->getStore()->getWebsiteId() );
+								$stockItem->setQty( $stockItem->getQty() - $item->getQtyCanceled() );
+								$stockItem->save();
+							}
 							$stockItem = $stockRegistry->getStockItem( $item->getProductId(), $order->getStore()->getWebsiteId() );
 							$stockItem->setQty( $stockItem->getQty() - $item->getQtyCanceled() );
 							$stockItem->save();
-
 							$item->setQtyCanceled( 0 );
 							$item->setTaxCanceled( 0 );
 							$item->setDiscountTaxCompensationCanceled( 0 );
@@ -218,10 +226,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 
 					// Test if transaction has been processed already.
 					$currentTransaction = $this->_paymentRepository->getByTransactionId($transactionId,$payment->getId(), $order->getId());
-					if (
-						! empty( $currentTransaction )
-						&& $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE
-					) {
+					if ( ! empty( $currentTransaction ) && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE ) {
 						$order->addCommentToStatusHistory(__( 'Transaction already processed.' ));
 						$updateCardgateData = FALSE;
 						throw new \Exception( 'transaction already processed.' );
@@ -237,7 +242,6 @@ class Callback extends \Magento\Framework\App\Action\Action {
 						throw new \Exception( 'payment already processed in another transaction.' );
 					}
 
-
 					if ($order->isCurrencyDifferent()){
 						$currency = $order->getBaseCurrencyCode();
 						$grandTotal = round(  $order->getGrandTotal()* 100, 0 );
@@ -247,7 +251,6 @@ class Callback extends \Magento\Framework\App\Action\Action {
 					} else {
 						$amount = $amount/100;
 					}
-
 
 					// Do capture.
 					$payment->setTransactionId( $transactionId );
