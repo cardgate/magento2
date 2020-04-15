@@ -99,8 +99,6 @@ class Start extends \Magento\Framework\App\Action\Action {
 									GatewayClient $gatewayClient,
 									Config $cardgateConfig,
 									Master $masterConfig ) {
-		// $this->_logger = $logger;
-		// $this->_logger->addDebug('some text or variable');
 		$this->customerSession = $customerSession;
 		$this->checkoutSession = $checkoutSession;
 		$this->scopeConfig = $scopeConfig;
