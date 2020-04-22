@@ -60,27 +60,12 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	 * @var \Magento\Framework\Encryption\Encryptor
 	 */
 	private $_listInterface;
-	/**
-	 *
-	 * @var \Magento\Sales\Api\OrderRepositoryInterface
-	 */
-	private $_orderRepository;
-
-	/**
-	 *
-	 * @var \Magento\Sales\Model\Order\Payment\Transaction\Repository
-	 */
-	private $_paymentRepository;
-
-
 
 	public function __construct (   \Magento\Framework\App\Action\Context $context,
 									\Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
 									\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
 									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
 									\Magento\Framework\App\Cache\TypeListInterface $listInterface,
-									\Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
-									\Magento\Sales\Model\Order\Payment\Transaction\Repository $repository,
 									GatewayClient $client,
 	 	 							\Cardgate\Payment\Model\Config $config,
 									\Magento\Framework\Encryption\Encryptor $encryptor)	{
@@ -89,8 +74,6 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		$this->invoiceSender = $invoiceSender;
 		$this->scopeConfig = $scopeConfig;
 		$this->_listInterface = $listInterface;
-		$this->_orderRepository = $orderRepository;
-		$this->_paymentRepository = $repository;
 		$this->_cardgateConfig = $config;
 		$this->_cardgateClient = $client;
 		$this->_encryptor = $encryptor;
@@ -161,7 +144,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 				throw new \Exception( 'hash verification failure' );
 			}
 
-			$order = $this->_orderRepository->get($reference);
+			$order = ObjectManager::getInstance()->create( \Magento\Sales\Model\Order::class )->loadByIncrementId( $reference );
 
 			$order->addCommentToStatusHistory(__( "Update for transaction %1. Received status code %2.", $transactionId, $code ));
 
@@ -225,7 +208,8 @@ class Callback extends \Magento\Framework\App\Action\Action {
 					}
 
 					// Test if transaction has been processed already.
-					$currentTransaction = $this->_paymentRepository->getByTransactionId($transactionId,$payment->getId(), $order->getId());
+					$paymentRepository = ObjectManager::getInstance()->get( \Magento\Sales\Model\Order\Payment\Transaction\Repository::class );
+					$currentTransaction = $paymentRepository->getByTransactionId( $transactionId, $payment->getId(), $order->getId() );
 					if ( ! empty( $currentTransaction ) && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE ) {
 						$order->addCommentToStatusHistory(__( 'Transaction already processed.' ));
 						$updateCardgateData = FALSE;
@@ -316,7 +300,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 		}
 
 		if ( $order != NULL ) {
-			$this->_orderRepository->save($order);
+			$order->save();
 		}
 
 		return $result;
