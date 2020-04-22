@@ -79,12 +79,6 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 	/**
 	 *
-	 * @var \Magento\Sales\Api\OrderRepositoryInterface
-	 */
-	private $_orderRepository;
-
-	/**
-	 *
 	 * @param \Magento\Framework\App\Action\Context $context
 	 * @param \Magento\Customer\Model\Session $customerSession
 	 * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -94,7 +88,6 @@ class Start extends \Magento\Framework\App\Action\Action {
 								    \Magento\Customer\Model\Session $customerSession,
 									\Magento\Checkout\Model\Session $checkoutSession,
 									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-									\Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
 									PaymentHelper $paymentHelper,
 									GatewayClient $gatewayClient,
 									Config $cardgateConfig,
@@ -102,7 +95,6 @@ class Start extends \Magento\Framework\App\Action\Action {
 		$this->customerSession = $customerSession;
 		$this->checkoutSession = $checkoutSession;
 		$this->scopeConfig = $scopeConfig;
-		$this->_orderRepository = $orderRepository;
 		$this->_paymentHelper = $paymentHelper;
 		$this->_gatewayClient = $gatewayClient;
 		$this->_cardgateConfig = $cardgateConfig;
@@ -111,8 +103,8 @@ class Start extends \Magento\Framework\App\Action\Action {
 	}
 
 	public function execute () {
-		$orderId = $this->checkoutSession->getLastRealOrder()->getIncrementId();
-		$order = $this->_orderRepository->get($orderId);
+		$order = $this->checkoutSession->getLastRealOrder();
+		$orderId = $order->getIncrementId();
 
 		try {
 			$transaction = $this->_gatewayClient->transactions()->create(
@@ -238,7 +230,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			}
 
 			// Failsafe; correct VAT if needed.
-			if ( abs($calculatedVatTotal - $order->getTaxAmount())>=0.01 ){
+			if ( abs($calculatedVatTotal - $order->getTaxAmount()) >= 0.01 ){
 				$vatCorrection = $order->getTaxAmount() - $calculatedVatTotal;
 				$cartItem = $cart->addItem(
 					\cardgate\api\Item::TYPE_VAT_CORRECTION,
@@ -285,7 +277,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			$payment->save();
 
 			$order->addCommentToStatusHistory( __( "Transaction registered. Transaction ID %1", $transaction->getId() ) );
-			$this->_orderRepository->save($order);
+			$order->save();
 
 			$actionUrl = $transaction->getActionUrl();
 			if ( NULL !== $actionUrl ) {
@@ -299,7 +291,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 		} catch ( \Exception $e ) {
 			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
 			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
-			$this->_orderRepository->save($order);
+			$order->save();
 			$this->checkoutSession->restoreQuote();
 			$this->_redirect( 'checkout/cart' );
 		}
