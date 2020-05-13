@@ -116,7 +116,7 @@ class Callback extends \Magento\Framework\App\Action\Action {
 					$this->_cardgateConfig->setGlobal( 'site_id', $aConfigData['site_id'] );
 					$this->_cardgateConfig->setGlobal( 'site_key', $aConfigData['site_key'] );
 					$this->_cardgateConfig->setGlobal( 'api_username', $aConfigData['merchant_id'] );
-					$this->_cardgateConfig->setGlobal( 'api_password', $this->encryptor->encrypt( $aConfigData['api_key'] ) );
+					$this->_cardgateConfig->setGlobal( 'api_password', $this->_encryptor->encrypt( $aConfigData['api_key'] ) );
 					$this->_listInterface->cleanType('config');
 					$sResponse = $this->_cardgateConfig->getGlobal( 'api_username' ) . '.' . $this->_cardgateConfig->getGlobal( 'site_id' ) . '.200';
 				} else {
