@@ -38,7 +38,7 @@ class StructurePlugin {
 	 *
 	 * @var \Magento\Framework\Serialize\SerializerInterface
 	 */
-	private $serializer;
+	private $_serializer;
 
 	/**
 	 *
@@ -46,10 +46,11 @@ class StructurePlugin {
 	 * @param MasterConfig $cardgateConfig
 	 * @param \Cardgate\Payment\Model\Config $config
 	 */
-	public function __construct ( \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner, MasterConfig $cardgateConfig, \Cardgate\Payment\Model\Config $config ) {
-		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-		$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
-		$this->serializer = $serializer;
+	public function __construct ( \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner,
+									MasterConfig $cardgateConfig,
+									\Cardgate\Payment\Model\Config $config,
+									\Magento\Framework\Serialize\SerializerInterface $serializer) {
+		$this->_serializer = $serializer;
 		$this->_scopeDefiner = $scopeDefiner;
 		$this->_masterConfig = $cardgateConfig;
 		$this->_cgconfig = $config;
@@ -72,12 +73,8 @@ class StructurePlugin {
 			// get all methods
 			$allPaymentMethods = $this->_masterConfig->getCardgateMethods();
 
-			// get all active methods
-			$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-			$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
-
 			try {
-				$activePms = $serializer->unserialize( $this->_cgconfig->getGlobal( 'active_pm' ) );
+				$activePms = $this->_serializer->unserialize( $this->_cgconfig->getGlobal( 'active_pm' ) );
 			} catch (\Exception $e){
 				$activePms = [];
 			}
