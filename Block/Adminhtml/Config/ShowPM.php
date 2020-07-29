@@ -43,7 +43,7 @@ class ShowPM extends \Magento\Config\Block\System\Config\Form\Field {
 	 */
 	protected function _getElementHtml ( \Magento\Framework\Data\Form\Element\AbstractElement $element ) {
 		if ( empty( $this->config->getGlobal( 'active_pm' ) ) ) {
-			return "<span style='color:red'>".__("No active payment methods found")."</span>";
+			return "<span style='color:#ff0000'>" . __("No active payment methods found") . "</span>";
 		} else {
 			return implode( ', ', $this->config->getActivePMIDs() );
 		}

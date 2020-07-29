@@ -62,8 +62,9 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
 	 * @see \Magento\Config\Block\System\Config\Form\Fieldset::render()
 	 */
 	public function render ( \Magento\Framework\Data\Form\Element\AbstractElement $element ) {
-		$this->pm_id = $element->getData( 'original_data' )['pmid'];
-		$this->pm_active = ( $this->config->getField( 'cardgate_' . $this->pm_id, 'active' ) == 1 );
+		$id = $element->getData( 'original_data' )['id'];
+		$this->pm_id = substr($id,9);
+		$this->pm_active = ( $this->config->getField( $id, 'active' ) == 1 );
 		$activePms = $this->config->getActivePMIDs();
 		$this->pm_enabled = in_array( $this->pm_id, $activePms );
 		return parent::render( $element );
