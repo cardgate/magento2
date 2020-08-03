@@ -18,6 +18,6 @@ class przelewy24 extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_przelewy24';
+	protected $code = 'cardgate_przelewy24';
 
 }

@@ -6,22 +6,39 @@
  */
 namespace Cardgate\Payment\Model;
 
-use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Payment\Model\Config\ValueHandlerPool;
+use Cardgate\Payment\Block\Info\DefaultInfo;
+use Exception;
+use Magento\Framework\DataObject;
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Payment\Gateway\Config\Config as MagentoConfig;
+use Magento\Payment\Gateway\Config\ConfigValueHandler;
+use Magento\Payment\Gateway\Command\CommandManagerInterface;
+use Magento\Payment\Gateway\Command\CommandPoolInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
+use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
+use Magento\Payment\Block\Form;
 use Magento\Payment\Model\InfoInterface;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Payment\Transaction;
-use Magento\Framework\App\ObjectManager;
+use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address\Total;
+use Magento\Tax\Model\Calculation;
 
 /**
  * Base Payment class from which all payment methods extend
- * YYY: This class should not be extended
- * \Magento\Payment\Model\Method\AbstractMethod
+ * Magento\Payment\Model\Method\Adapter
  *
  * @author DBS B.V.
  * @package Magento2
  *
  */
-class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
+class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
+
+	/**
+	 *
+	 * @var ObjectManagerInterface
+	 */
+	private $objectManager = null;
 
 	/**
 	 * See /web/js/view/payment/method-renderer
@@ -35,26 +52,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_unknown';
-
-	/**
-	 *
-	 * @var string
-	 */
-	protected $_infoBlockType = 'Cardgate\Payment\Block\Info\DefaultInfo';
-
-	/**
-	 * Availability option
-	 *
-	 * @var bool
-	 */
-	protected $_isOffline = false;
-
-	/**
-	 *
-	 * @var boolean
-	 */
-	protected $_canReviewPayment = true;
+	protected $code = 'cardgate_unknown';
 
 	/**
 	 * @var boolean
@@ -68,33 +66,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 
 	/**
 	 *
-	 * @var OrderSender
-	 */
-	protected $orderSender;
-
-	/**
-	 *
-	 * @var invoiceSender
-	 */
-	protected $invoiceSender;
-
-	/**
-	 *
-	 * @var \Magento\Tax\Model\Calculation
+	 * @var Calculation
 	 */
 	protected $taxCalculation;
-
-	/**
-	 *
-	 * @var \Magento\Sales\Model\Order\Payment\Transaction\Repository
-	 */
-	protected $transactionRepository;
-
-	/**
-	 *
-	 * @var \Cardgate\Payment\Model\Config\Master
-	 */
-	protected $cardgateConfig;
 
 	/**
 	 *
@@ -104,51 +78,28 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 
 	/**
 	 *
-	 * @param \Magento\Framework\Model\Context $context
-	 * @param \Magento\Framework\Registry $registry
-	 * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
-	 * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
-	 * @param \Magento\Payment\Helper\Data $paymentData
-	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-	 * @param \Magento\Tax\Model\Calculation $taxCalculation,
-	 * @param Logger $logger
-	 * @param \Cardgate\Payment\Model\Config\Master $master
+	 * @param Calculation $taxCalculation
 	 * @param \Cardgate\Payment\Model\Config $config
-	 * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
-	 * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
-	 * @param \Magento\Sales\Model\Order\Payment\Transaction\Repository $transactionRepository
-	 * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-	 * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-	 * @param array $data
+	 * @param ObjectManagerInterface $objectManager
+	 * @param ManagerInterface $eventManager
+	 * @param PaymentDataObjectFactory $paymentDataObjectFactory
+	 * @param CommandPoolInterface|null $commandPool
+	 * @param ValidatorPoolInterface|null $validatorPool
+	 * @param CommandManagerInterface|null $commandExecutor
 	 * @SuppressWarnings(PHPMD.ExcessiveParameterList)
 	 */
 	public function __construct (
-		\Magento\Framework\Model\Context $context,
-		\Magento\Framework\Registry $registry,
-		\Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
-		\Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
-		\Magento\Payment\Helper\Data $paymentData,
-		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-		\Magento\Tax\Model\Calculation $taxCalculation,
-		\Magento\Payment\Model\Method\Logger $logger,
-		\Cardgate\Payment\Model\Config\Master $master,
-		\Cardgate\Payment\Model\Config $config,
-		\Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-		\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
-		\Magento\Sales\Model\Order\Payment\Transaction\Repository $transactionRepository,
-		\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-		\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-		array $data = []
+		Calculation $taxCalculation,
+		Config $config,
+		ObjectManagerInterface $objectManager,
+		ManagerInterface $eventManager,
+		PaymentDataObjectFactory $paymentDataObjectFactory
 	) {
-		parent::__construct( $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data );
-
-		$this->taxCalculation = $taxCalculation;
-		$this->cardgateConfig = $master;
 		$this->config = $config;
-		$this->orderSender = $orderSender;
-		$this->invoiceSender = $invoiceSender;
-		$this->transactionRepository = $transactionRepository;
-
+		$this->taxCalculation = $taxCalculation;
+		$this->objectManager = $objectManager;
+		$valueHandlerPool = $this->getValueHandlerPool($this->code);
+		parent::__construct(    $eventManager, $valueHandlerPool, $paymentDataObjectFactory, $this->code, Form::class, DefaultInfo::class);
 	}
 
 	/**
@@ -157,7 +108,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 * @return boolean
 	 */
 	public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null) {
-		$customerGroups = $this->config->getField( $this->_code, 'specific_customer_groups' );
+		$customerGroups = $this->config->getField( $this->code, 'specific_customer_groups' );
 		$aCustomerGroups = str_getcsv($customerGroups,',');
 		$groupId = $quote->getCustomer()->getGroupId();
 
@@ -169,10 +120,10 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 
 	/**
 	 *
-	 * @param \Magento\Quote\Model\Quote $quote
-	 * @return \Cardgate\Payment\Model\Total\FeeData
+	 * @param Quote $quote
+	 * @return FeeData
 	 */
-	public function getFeeForQuote ( \Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total = null ) {
+	public function getFeeForQuote ( Quote $quote, Total $total = null ) {
 		if ( ! is_null( $total ) ) {
 			$calculatedTotal = array_sum( $total->getAllBaseTotalAmounts() );
 			foreach ( $total->getAllBaseTotalAmounts() as $k => $v ) {
@@ -188,7 +139,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		$debug[] = 'total: ' . $calculatedTotal;
 
 		$taxClassId = $this->config->getGlobal( 'paymentfee_tax_class' );
-		$request               = new \Magento\Framework\DataObject(
+		$request               = new DataObject(
 			[
 				'country_id'        => $quote->getBillingAddress()->getCountryId(),
 				'region_id'         => $quote->getBillingAddress()->getRegionId(),
@@ -199,8 +150,8 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 		$taxRate = $this->taxCalculation->getRate($request);
 
 		$paymentFeeIncludesTax = $this->config->getGlobal( 'paymentfee_includes_tax' );
-		$feeFixed      = floatval( $this->config->getField( $this->_code, 'paymentfee_fixed' ) );
-		$feePercentage = floatval( $this->config->getField( $this->_code, 'paymentfee_percentage' ) );
+		$feeFixed      = floatval( $this->config->getField( $this->code, 'paymentfee_fixed' ) );
+		$feePercentage = floatval( $this->config->getField( $this->code, 'paymentfee_percentage' ) );
 		$fee           = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
 
 		if ($paymentFeeIncludesTax){
@@ -219,8 +170,8 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 			'currency_converter' => $quote->getBaseToQuoteRate()
 		] ;
 
-		$amount = ( $paymentFeeIncludesTax == 1 ? $priceExcl:($priceExcl + $taxAmount));
-		return ObjectManager::getInstance()->create( 'Cardgate\\Payment\\Model\\Total\\FeeData',
+		$amount = ( $paymentFeeIncludesTax == 1 ? $priceExcl:($priceExcl + $taxAmount)); //var_dump('test'.$this->isActive(0));die;
+		return $this->objectManager->create( 'Cardgate\\Payment\\Model\\Total\\FeeData',
 			[
 				'amount'             => $amount,
 				'tax_amount'         => $taxAmount,
@@ -230,65 +181,29 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 			] );
 	}
 
-
 	/**
+	 * @inheritdoc
 	 *
-	 * {@inheritdoc}
 	 *
-	 * @see \Magento\Payment\Model\Method\AbstractMethod::assignData()
+	 * @return Boolean
 	 */
-	public function assignData ( \Magento\Framework\DataObject $data ) {
-		$additional = $data->getAdditionalData();
-		if ( ! is_array( $additional ) ) {
-			return $this;
-		}
-		$info = $this->getInfoInstance();
-		foreach ( $additional as $key => $value ) {
-			if ( is_scalar( $value ) ) {
-				$info->setAdditionalInformation( $key, $value );
-			}
-		}
-		return $this;
-	}
-
-	/**
-	 *
-	 * @return string
-	 */
-	public function getPayableTo () {
-		return $this->getConfigData( 'payable_to' );
-	}
-
-	/**
-	 *
-	 * @return string
-	 */
-	public function getMailingAddress () {
-		return $this->getConfigData( 'mailing_address' );
-	}
-
-	/**
-	 *
-	 * {@inheritdoc}
-	 *
-	 * @see \Magento\Payment\Model\Method\AbstractMethod::acceptPayment()
-	 */
-	public function acceptPayment ( InfoInterface $payment ) {
-		return true;
+	public function canUseCheckout()
+	{
+		return (bool)$this->config->getGLobal('can_use_checkout');
 	}
 
 	public function refund( InfoInterface $payment, $amount ) {
 		$order = $payment->getOrder();
 		try {
-			$gatewayClient = ObjectManager::getInstance()->get( \Cardgate\Payment\Model\GatewayClient::class );
+			$gatewayClient = $this->objectManager->get( GatewayClient::class );
 			$transaction = $gatewayClient->transactions()->get( $payment->getCardgateTransaction() );
 
 			if ( $transaction->canRefund() ) {
 				$transaction->refund( (int)( $amount * 100 ) );
 			} else {
-				throw new \Exception( 'refund not allowed' );
+				throw new Exception( 'refund not allowed' );
 			}
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			$order->addStatusHistoryComment( __( 'Error occurred while registering the refund (%1)', $e->getMessage() ) );
 			throw $e;
 		}
@@ -300,8 +215,23 @@ class PaymentMethods extends \Magento\Payment\Model\Method\AbstractMethod {
 	 * @return string
 	 */
 	public function getInstructions(){
-		$instructions = $this->config->getField( $this->_code, 'instructions' );
+		$instructions = $this->config->getField( $this->code, 'instructions' );
 		return nl2br($instructions);
+	}
+
+	private function getValueHandlerPool($configurationId)
+	{
+		$configInterface = $this->objectManager->create(MagentoConfig::class,
+			[
+				'methodCode' => $configurationId
+			]);
+		$valueHandler = $this->objectManager->create(ConfigValueHandler::class,
+			[
+				'configInterface' => $configInterface
+			]);
+		return $this->objectManager->create(ValueHandlerPool::class, [
+			'handler' => $valueHandler
+		]);
 	}
 
 }

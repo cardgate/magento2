@@ -10,8 +10,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
-use Cardgate\Payment\Model\PaymentMethods;
-use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
 
@@ -55,6 +53,12 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 	/**
 	 *
+	 * @var \Magento\Sales\Model\OrderRepository
+	 */
+	protected $orderRepository;
+
+	/**
+	 *
 	 * @var PaymentHelper
 	 */
 	protected $_paymentHelper;
@@ -88,6 +92,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 								    \Magento\Customer\Model\Session $customerSession,
 									\Magento\Checkout\Model\Session $checkoutSession,
 									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+									\Magento\Sales\Model\OrderRepository $orderRepository,
 									PaymentHelper $paymentHelper,
 									GatewayClient $gatewayClient,
 									Config $cardgateConfig,
@@ -95,6 +100,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 		$this->customerSession = $customerSession;
 		$this->checkoutSession = $checkoutSession;
 		$this->scopeConfig = $scopeConfig;
+		$this->orderRepository = $orderRepository;
 		$this->_paymentHelper = $paymentHelper;
 		$this->_gatewayClient = $gatewayClient;
 		$this->_cardgateConfig = $cardgateConfig;
@@ -277,7 +283,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			$payment->save();
 
 			$order->addCommentToStatusHistory( __( "Transaction registered. Transaction ID %1", $transaction->getId() ) );
-			$order->save();
+			$this->orderRepository->save($order);
 
 			$actionUrl = $transaction->getActionUrl();
 			if ( NULL !== $actionUrl ) {
@@ -291,7 +297,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 		} catch ( \Exception $e ) {
 			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
 			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
-			$order->save();
+			$this->orderRepository->save($order);
 			$this->checkoutSession->restoreQuote();
 			$this->_redirect( 'checkout/cart' );
 		}

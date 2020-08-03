@@ -18,6 +18,6 @@ class giftcard extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_giftcard';
+	protected $code = 'cardgate_giftcard';
 
 }

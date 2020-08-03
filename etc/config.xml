@@ -13,6 +13,7 @@
 				<debug>1</debug>
 				<active>0</active>
 				<testmode>1</testmode>
+				<can_use_checkout>1</can_use_checkout>
 				<gateway_locale>nl_NL</gateway_locale>
 				<order_description>Order %id%</order_description>
 				<notification_email>general</notification_email>

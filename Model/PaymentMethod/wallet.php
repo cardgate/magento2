@@ -18,6 +18,6 @@ class wallet extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_wallet';
+	protected $code = 'cardgate_wallet';
 
 }

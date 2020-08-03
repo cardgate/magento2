@@ -18,6 +18,6 @@ class giropay extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_giropay';
+	protected $code = 'cardgate_giropay';
 
 }

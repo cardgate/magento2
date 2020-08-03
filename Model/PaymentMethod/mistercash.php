@@ -18,6 +18,6 @@ class mistercash extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_mistercash';
+	protected $code = 'cardgate_mistercash';
 
 }

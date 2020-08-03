@@ -18,6 +18,6 @@ class eps extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_eps';
+	protected $code = 'cardgate_eps';
 
 }

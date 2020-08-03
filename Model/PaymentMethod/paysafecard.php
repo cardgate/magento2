@@ -18,6 +18,6 @@ class paysafecard extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_paysafecard';
+	protected $code = 'cardgate_paysafecard';
 
 }

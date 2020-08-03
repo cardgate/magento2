@@ -8,7 +8,4 @@
 	<type name="Magento\Config\Model\Config\Structure\Element\Field">
 		<plugin name="cardgate_system_configuration_field" type="Cardgate\Payment\Model\Config\Structure\Element\FieldPlugin" />
 	</type>
-	<type name="Magento\Config\Model\Config\Structure">
-		<plugin name="cardgate_system_configuration" type="Cardgate\Payment\Model\Config\StructurePlugin" />
-	</type>
 </config>

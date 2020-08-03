@@ -18,6 +18,6 @@ class billink extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_billink';
+	protected $code = 'cardgate_billink';
 
 }

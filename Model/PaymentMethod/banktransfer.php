@@ -18,6 +18,6 @@ class banktransfer extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_banktransfer';
+	protected $code = 'cardgate_banktransfer';
 
 }
