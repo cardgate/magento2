@@ -12,6 +12,7 @@ use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
+use Magento\Sales\Model\OrderRepository;
 
 /**
  * Start payment action
@@ -53,7 +54,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 	/**
 	 *
-	 * @var \Magento\Sales\Model\OrderRepository
+	 * @var OrderRepository
 	 */
 	protected $orderRepository;
 
@@ -87,12 +88,17 @@ class Start extends \Magento\Framework\App\Action\Action {
 	 * @param \Magento\Customer\Model\Session $customerSession
 	 * @param \Magento\Checkout\Model\Session $checkoutSession
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+	 * @param OrderRepository $orderRepository
+	 * @param PaymentHelper $paymentHelper
+	 * @param GatewayClient $gatewayClient
+	 * @param Config $cardgateConfig
+	 * @param Master $masterConfig
 	 */
 	public function __construct(    \Magento\Framework\App\Action\Context $context,
 								    \Magento\Customer\Model\Session $customerSession,
 									\Magento\Checkout\Model\Session $checkoutSession,
 									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-									\Magento\Sales\Model\OrderRepository $orderRepository,
+									OrderRepository $orderRepository,
 									PaymentHelper $paymentHelper,
 									GatewayClient $gatewayClient,
 									Config $cardgateConfig,

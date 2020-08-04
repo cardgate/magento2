@@ -83,9 +83,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 	 * @param ObjectManagerInterface $objectManager
 	 * @param ManagerInterface $eventManager
 	 * @param PaymentDataObjectFactory $paymentDataObjectFactory
-	 * @param CommandPoolInterface|null $commandPool
-	 * @param ValidatorPoolInterface|null $validatorPool
-	 * @param CommandManagerInterface|null $commandExecutor
 	 * @SuppressWarnings(PHPMD.ExcessiveParameterList)
 	 */
 	public function __construct (

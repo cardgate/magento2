@@ -11,7 +11,6 @@ use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\Config\Master as MasterConfig;
 use Cardgate\Payment\Model\Config;
-use Cardgate\Payment\Model\GatewayClient;
 use Magento\Framework\App\ObjectManager;
 
 /**
@@ -51,12 +50,14 @@ class ConfigProvider implements ConfigProviderInterface {
 	 * @param PaymentHelper $paymentHelper
 	 * @param Escaper $escaper
 	 * @param MasterConfig $masterConfig
+	 * @param Config $config
+	 * @param \Magento\Framework\App\Cache\Type\Collection $cache
 	 */
 	public function __construct ( PaymentHelper $paymentHelper, Escaper $escaper, MasterConfig $masterConfig, Config $config, \Magento\Framework\App\Cache\Type\Collection $cache ) {
 		$this->escaper = $escaper;
 		$this->config = $config;
-		$this->cache = $cache;
 		$this->masterConfig = $masterConfig;
+		$this->cache = $cache;
 	}
 
 	/**
