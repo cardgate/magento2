@@ -150,7 +150,7 @@ class Master {
 			'mistercash' => 'Bancontact',
 			'creditcard' => 'Creditcard',
 			'paysafecard' => 'PaySafeCard',
-		    'paysafecash' => 'Paysafecash',
+			'paysafecash' => 'Paysafecash',
 			'sofortbanking' => 'SofortBanking',
 			'paypal' => 'PayPal',
 			'klarna' => 'Klarna',
@@ -163,14 +163,14 @@ class Master {
 			'safeklick' => 'Safeklick',
 			'banktransfer' => 'Bank transfer',
 			'giropay' => 'Giropay',
-		    'giftcard' => 'Gift Card',
+			'giftcard' => 'Gift Card',
 			'pos' => 'POS',
 			'capayable' => 'Capayable',
 			'bitcoin' => 'Bitcoin',
 			'belfius' => 'Belfius',
 			'eps' => 'EPS',
-		    'billink' => 'Billink',
-		    'idealqr' => 'iDEAL QR',
+			'billink' => 'Billink',
+			'idealqr' => 'iDEAL QR',
 			'onlineueberweisen' => 'OnlineÜberweisen'
 		];
 		$this->cache->save( $this->serializer->serialize( $this->paymentMethodIds ), self::CACHEKEY, [], 24 * 3600 );
@@ -187,5 +187,4 @@ class Master {
 			return array_keys( $this->paymentMethodCodes );
 		}
 	}
-
 }

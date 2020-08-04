@@ -9,7 +9,6 @@ namespace Cardgate\Payment\Model\Config\Processor;
 use Magento\Config\Model\Placeholder\PlaceholderFactory;
 use Magento\Framework\App\Config\Spi\PreProcessorInterface;
 use Magento\Framework\Stdlib\ArrayManager;
-use Cardgate\Payment\Model\Config\Master;
 use Magento\Framework\App\ObjectManager;
 
 class PreProcessorCardgate implements PreProcessorInterface {

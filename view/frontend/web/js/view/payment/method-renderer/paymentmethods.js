@@ -43,7 +43,6 @@ define(
 			getImageSrc: function(type) {
 				if ( type == "small" ) {
 					return "https://cdn.curopayments.net/images/paymentmethods/" + this.item.method.substring(9) + ".svg";
-					//return "https://cdn.curopayments.net/thumb/100/20/paymentmethods/" + this.item.method.substring(9) + ".png";
 				} else {
 					return "https://cdn.curopayments.net/thumb/300/50/paymentmethods/" + this.item.method.substring(9) + ".png";
 				}

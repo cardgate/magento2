@@ -18,6 +18,6 @@ class onlineueberweisen extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_onlineueberweisen';
+	protected $code = 'cardgate_onlineueberweisen';
 
 }

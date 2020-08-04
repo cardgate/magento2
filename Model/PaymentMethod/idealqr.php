@@ -18,6 +18,6 @@ class idealqr extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_idealqr';
+	protected $code = 'cardgate_idealqr';
 
 }

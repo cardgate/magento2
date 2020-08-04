@@ -8,9 +8,7 @@
 
 ## Support
 
-This plugin supports Magento **2.2.x - 2.3.x**
-To see which of the extensions are compatible with which
-Magento2 releases, please see the details on our [Releases](https://github.com/cardgate/magento2/releases) page.
+This plugin supports Magento **2.1.x - 2.3.x**.
 
 ## Preparation
 

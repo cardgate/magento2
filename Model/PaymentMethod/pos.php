@@ -18,6 +18,6 @@ class pos extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_pos';
+	protected $code = 'cardgate_pos';
 
 }

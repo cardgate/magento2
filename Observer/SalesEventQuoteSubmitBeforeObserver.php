@@ -6,7 +6,6 @@
  */
 namespace Cardgate\Payment\Observer;
 
-use Magento\Framework\Event\Observer;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 
 /**

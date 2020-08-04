@@ -28,8 +28,6 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field {
 	/**
 	 *
 	 * @param \Magento\Backend\Block\Context $context
-	 * @param \Magento\Backend\Model\Auth\Session $authSession
-	 * @param \Magento\Framework\View\Helper\Js $jsHelper
 	 * @param \Magento\Config\Model\Config $backendConfig
 	 * @param array $data
 	 */

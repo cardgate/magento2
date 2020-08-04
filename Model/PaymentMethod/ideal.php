@@ -18,7 +18,7 @@ class ideal extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_ideal';
+	protected $code = 'cardgate_ideal';
 
 	/**
 	 * Renderer template name

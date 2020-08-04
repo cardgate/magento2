@@ -44,6 +44,7 @@ class Config implements ConfigInterface {
 	 *
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
 	 * @param Magento\Config\Model\ResourceModel\Config $configResource
+	 * @param Master $master
 	 */
 	public function __construct ( MutableScopeConfigInterface $scopeConfig, ConfigResource $configResource, Master $master ) {
 		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();

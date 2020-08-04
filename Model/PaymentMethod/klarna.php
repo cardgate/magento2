@@ -18,6 +18,6 @@ class klarna extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_klarna';
+	protected $code = 'cardgate_klarna';
 
 }
