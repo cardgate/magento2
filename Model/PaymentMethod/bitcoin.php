@@ -18,6 +18,6 @@ class bitcoin extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_bitcoin';
+	protected $code = 'cardgate_bitcoin';
 
 }

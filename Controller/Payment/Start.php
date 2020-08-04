@@ -10,10 +10,9 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
-use Cardgate\Payment\Model\PaymentMethods;
-use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
+use Magento\Sales\Model\OrderRepository;
 
 /**
  * Start payment action
@@ -55,6 +54,12 @@ class Start extends \Magento\Framework\App\Action\Action {
 
 	/**
 	 *
+	 * @var OrderRepository
+	 */
+	protected $orderRepository;
+
+	/**
+	 *
 	 * @var PaymentHelper
 	 */
 	protected $_paymentHelper;
@@ -83,11 +88,17 @@ class Start extends \Magento\Framework\App\Action\Action {
 	 * @param \Magento\Customer\Model\Session $customerSession
 	 * @param \Magento\Checkout\Model\Session $checkoutSession
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+	 * @param OrderRepository $orderRepository
+	 * @param PaymentHelper $paymentHelper
+	 * @param GatewayClient $gatewayClient
+	 * @param Config $cardgateConfig
+	 * @param Master $masterConfig
 	 */
 	public function __construct(    \Magento\Framework\App\Action\Context $context,
 								    \Magento\Customer\Model\Session $customerSession,
 									\Magento\Checkout\Model\Session $checkoutSession,
 									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+									OrderRepository $orderRepository,
 									PaymentHelper $paymentHelper,
 									GatewayClient $gatewayClient,
 									Config $cardgateConfig,
@@ -95,6 +106,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 		$this->customerSession = $customerSession;
 		$this->checkoutSession = $checkoutSession;
 		$this->scopeConfig = $scopeConfig;
+		$this->orderRepository = $orderRepository;
 		$this->_paymentHelper = $paymentHelper;
 		$this->_gatewayClient = $gatewayClient;
 		$this->_cardgateConfig = $cardgateConfig;
@@ -277,7 +289,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 			$payment->save();
 
 			$order->addCommentToStatusHistory( __( "Transaction registered. Transaction ID %1", $transaction->getId() ) );
-			$order->save();
+			$this->orderRepository->save($order);
 
 			$actionUrl = $transaction->getActionUrl();
 			if ( NULL !== $actionUrl ) {
@@ -291,7 +303,7 @@ class Start extends \Magento\Framework\App\Action\Action {
 		} catch ( \Exception $e ) {
 			$this->messageManager->addErrorMessage( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
 			$order->registerCancellation( __( 'Error occurred while registering the transaction' ) . ' (' . $e->getMessage() . ')' );
-			$order->save();
+			$this->orderRepository->save($order);
 			$this->checkoutSession->restoreQuote();
 			$this->_redirect( 'checkout/cart' );
 		}

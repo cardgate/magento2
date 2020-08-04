@@ -18,6 +18,6 @@ class focum extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_focum';
+	protected $code = 'cardgate_focum';
 
 }

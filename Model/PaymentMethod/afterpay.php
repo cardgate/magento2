@@ -18,6 +18,6 @@ class afterpay extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_afterpay';
+	protected $code = 'cardgate_afterpay';
 
 }

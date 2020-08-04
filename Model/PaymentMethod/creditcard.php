@@ -18,6 +18,6 @@ class creditcard extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_creditcard';
+	protected $code = 'cardgate_creditcard';
 
 }

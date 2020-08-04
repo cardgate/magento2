@@ -6,7 +6,6 @@
  */
 namespace Cardgate\Payment\Model;
 
-use Cardgate\Payment\Model\Config;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\App\ProductMetadata;

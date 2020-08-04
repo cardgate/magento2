@@ -18,6 +18,6 @@ class paypal extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_paypal';
+	protected $code = 'cardgate_paypal';
 
 }

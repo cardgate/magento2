@@ -18,6 +18,6 @@ class belfius extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_belfius';
+	protected $code = 'cardgate_belfius';
 
 }

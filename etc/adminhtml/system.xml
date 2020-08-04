@@ -1010,7 +1010,7 @@
 				</field>
 			</group>
 			<group id="cardgate_paysafecash" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
-				<label>CardGate paydsafecash</label>
+				<label>CardGate paysafecash</label>
 				<frontend_model>Cardgate\Payment\Block\Adminhtml\Config\GroupPaymentMethod</frontend_model>
 				<field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Enabled</label>
@@ -1280,6 +1280,5 @@
 				</field>
 			</group>
 		</section>
-		<include path="Cardgate_Payment::system/paymentmethod.xml" />
 	</system>
 </config>

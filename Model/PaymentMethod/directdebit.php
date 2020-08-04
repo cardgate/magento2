@@ -18,6 +18,6 @@ class directdebit extends \Cardgate\Payment\Model\PaymentMethods {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'cardgate_directdebit';
+	protected $code = 'cardgate_directdebit';
 
 }

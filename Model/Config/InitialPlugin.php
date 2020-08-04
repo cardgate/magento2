@@ -37,12 +37,12 @@ class InitialPlugin {
 	public function aroundGetData ( Initial $initialConfig, \Closure $proceed, $scope ) {
 		$data = $proceed( $scope );
 		foreach ( $this->_masterConfig->getPaymentMethods( true ) as $paymentMethod => $paymentMethodName ) {
-			$data['payment'][$paymentMethod] = [
-				'model' => $this->_masterConfig->getPMClassByCode( $paymentMethod ),
-				'label' => $paymentMethod,
-				'group' => 'cardgate',
-				'title' => $paymentMethodName
-			];
+				$data['payment'][ $paymentMethod ] = [
+					'model' => $this->_masterConfig->getPMClassByCode( $paymentMethod ),
+					'label' => $paymentMethod,
+					'group' => 'cardgate',
+					'title' => $paymentMethodName
+				];
 		}
 		return $data;
 	}
