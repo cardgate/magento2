@@ -55,12 +55,8 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal {
 		 * @var \Cardgate\Payment\Model\Total\FeeData $fee
 		 */
 		$fee = ObjectManager::getInstance()->create( 'Cardgate\\Payment\\Model\\Total\\FeeData' );
-		if ( ! empty( $quote->getPayment()->getMethod() ) && $this->_cardgateConfig->isCardgateCode( $quote->getPayment()
-			->getMethod() ) ) {
-			$fee = $quote->getPayment()
-				->getMethodInstance()
-				->getFeeForQuote( $quote, $total );
-
+		if ( ! empty( $quote->getPayment()->getMethod() ) && $this->_cardgateConfig->isCardgateCode( $quote->getPayment()->getMethod() ) ) {
+			$fee = $quote->getPayment()->getMethodInstance()->getFeeForQuote( $quote, $total );
 			$payment = $quote->getPayment();
 
 			$payment->setCardgatefeeAmount( $fee->getAmount() );
@@ -127,11 +123,8 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal {
 		 * @var \Cardgate\Payment\Model\Total\FeeData $fee
 		 */
 		$fee = ObjectManager::getInstance()->create( 'Cardgate\\Payment\\Model\\Total\\FeeData' );
-		if ( ! empty( $quote->getPayment()->getMethod() ) && $this->_cardgateConfig->isCardgateCode( $quote->getPayment()
-			->getMethod() ) ) {
-			$fee = $quote->getPayment()
-				->getMethodInstance()
-				->getFeeForQuote( $quote );
+		if ( ! empty( $quote->getPayment()->getMethod() ) && $this->_cardgateConfig->isCardgateCode( $quote->getPayment()->getMethod() ) ) {
+			$fee = $quote->getPayment()->getMethodInstance()->getFeeForQuote( $quote );
 		}
 		return [
 			'code' => 'cardgatefee',

@@ -12,12 +12,8 @@ use Exception;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Payment\Gateway\Config\Config as MagentoConfig;
 use Magento\Payment\Gateway\Config\ConfigValueHandler;
-use Magento\Payment\Gateway\Command\CommandManagerInterface;
-use Magento\Payment\Gateway\Command\CommandPoolInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
-use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Payment\Block\Form;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Quote\Model\Quote;
@@ -93,6 +89,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 		PaymentDataObjectFactory $paymentDataObjectFactory
 	) {
 		$this->config = $config;
+		$this->setConfig();
 		$this->taxCalculation = $taxCalculation;
 		$this->objectManager = $objectManager;
 		$valueHandlerPool = $this->getValueHandlerPool($this->code);
@@ -105,7 +102,10 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 	 * @return boolean
 	 */
 	public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null) {
-		$customerGroups = $this->config->getField( $this->code, 'specific_customer_groups' );
+		if (! parent::isAvailable($quote)){
+			return false;
+		};
+		$customerGroups = $this->config->getValue( 'specific_customer_groups', $quote->getStoreId() );
 		$aCustomerGroups = str_getcsv($customerGroups,',');
 		$groupId = $quote->getCustomer()->getGroupId();
 
@@ -116,11 +116,20 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 	}
 
 	/**
+	 * @return void
+	 */
+
+	public function setConfig(){
+		$this->config->setMethodCode($this->code);
+	}
+
+	/**
 	 *
 	 * @param Quote $quote
 	 * @return FeeData
 	 */
 	public function getFeeForQuote ( Quote $quote, Total $total = null ) {
+		$storeId = $quote->getStoreId();
 		if ( ! is_null( $total ) ) {
 			$calculatedTotal = array_sum( $total->getAllBaseTotalAmounts() );
 			foreach ( $total->getAllBaseTotalAmounts() as $k => $v ) {
@@ -135,7 +144,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 		}
 		$debug[] = 'total: ' . $calculatedTotal;
 
-		$taxClassId = $this->config->getGlobal( 'paymentfee_tax_class' );
+		$taxClassId = $this->config->getGlobal( 'paymentfee_tax_class' , $storeId);
 		$request               = new DataObject(
 			[
 				'country_id'        => $quote->getBillingAddress()->getCountryId(),
@@ -146,9 +155,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 			] );
 		$taxRate = $this->taxCalculation->getRate($request);
 
-		$paymentFeeIncludesTax = $this->config->getGlobal( 'paymentfee_includes_tax' );
-		$feeFixed      = floatval( $this->config->getField( $this->code, 'paymentfee_fixed' ) );
-		$feePercentage = floatval( $this->config->getField( $this->code, 'paymentfee_percentage' ) );
+		$paymentFeeIncludesTax = $this->config->getValue( 'paymentfee_includes_tax', $storeId );
+		$feeFixed      = floatval( $this->config->getValue( 'paymentfee_fixed', $storeId) );
+		$feePercentage = floatval( $this->config->getValue( 'paymentfee_percentage', $storeId ) );
 		$fee           = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
 
 		if ($paymentFeeIncludesTax){
@@ -173,20 +182,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 				'amount'             => $amount,
 				'tax_amount'         => $taxAmount,
 				'tax_class'          => $taxClassId,
-				'fee_includes_tax'   => $this->config->getGlobal( 'paymentfee_includes_tax' ),
+				'fee_includes_tax'   => $this->config->getValue( 'paymentfee_includes_tax', $storeId ),
 				'currency_converter' => $quote->getBaseToQuoteRate()
 			] );
-	}
-
-	/**
-	 * @inheritdoc
-	 *
-	 *
-	 * @return Boolean
-	 */
-	public function canUseCheckout()
-	{
-		return (bool)$this->config->getGLobal('can_use_checkout');
 	}
 
 	public function refund( InfoInterface $payment, $amount ) {
@@ -212,15 +210,15 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 	 * @return string
 	 */
 	public function getInstructions(){
-		$instructions = $this->config->getField( $this->code, 'instructions' );
+		$instructions = $this->config->getValue('instructions' );
 		return nl2br($instructions);
 	}
 
-	private function getValueHandlerPool($configurationId)
+	private function getValueHandlerPool($methodCode)
 	{
-		$configInterface = $this->objectManager->create(MagentoConfig::class,
+		$configInterface = $this->objectManager->create(Config::class,
 			[
-				'methodCode' => $configurationId
+				'methodCode' => $methodCode
 			]);
 		$valueHandler = $this->objectManager->create(ConfigValueHandler::class,
 			[
