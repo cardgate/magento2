@@ -64,7 +64,8 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
 	public function render ( \Magento\Framework\Data\Form\Element\AbstractElement $element ) {
 		$id = $element->getData( 'original_data' )['id'];
 		$this->pm_id = substr($id,9);
-		$this->pm_active = ( $this->config->getField( $id, 'active' ) == 1 );
+		$this->config->setMethodCode($id);
+		$this->pm_active = ( $this->config->getvalue( 'active' ) == 1 );
 		$activePms = $this->config->getActivePMIDs();
 		$this->pm_enabled = in_array( $this->pm_id, $activePms );
 		return parent::render( $element );

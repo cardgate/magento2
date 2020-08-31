@@ -18,7 +18,24 @@ use Cardgate\Payment\Model\Config\Master;
  * @author DBS B.V.
  * @package Magento2
  */
-class Config implements ConfigInterface {
+class Config implements ConfigInterface{
+
+	const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
+
+	/**
+	 * @var ScopeConfigInterface
+	 */
+	private $scopeConfig;
+
+	/**
+	 * @var string|null
+	 */
+	private $methodCode;
+
+	/**
+	 * @var string|null
+	 */
+	private $pathPattern;
 
 	/**
 	 * Active Payment methods as configured in my.cardgate.com (and fetched from
@@ -36,6 +53,12 @@ class Config implements ConfigInterface {
 
 	/**
 	 *
+	 * @var ConfigResource
+	 */
+	private $_configResource;
+
+	/**
+	 *
 	 * @var \Magento\Framework\Serialize\SerializerInterface
 	 */
 	public $serializer;
@@ -45,26 +68,38 @@ class Config implements ConfigInterface {
 	 * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
 	 * @param Magento\Config\Model\ResourceModel\Config $configResource
 	 * @param Master $master
+	 * @param string $methodCode
 	 */
-	public function __construct ( MutableScopeConfigInterface $scopeConfig, ConfigResource $configResource, Master $master ) {
-		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-		$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
-		$this->serializer = $serializer;
-		$this->_scopeConfig = $scopeConfig;
+	public function __construct ( MutableScopeConfigInterface $scopeConfig, ConfigResource $configResource, Master $master, $methodCode=null, $pathPattern = self::DEFAULT_PATH_PATTERN) {
+
+		$this->scopeConfig = $scopeConfig;
+		$this->methodCode = $methodCode;
+		$this->pathPattern = $pathPattern;
 		$this->_configResource = $configResource;
 		$this->_masterConfig = $master;
+		$this->setSerializer();;
 	}
 
 	/**
-	 * Retrieve information from CardGate configuration for given payment method
+	 * Sets method code
 	 *
-	 * @param string $method
-	 * @param string $field
-	 * @param int|null $storeId
-	 * @return mixed
+	 * @param string $methodCode
+	 * @return void
 	 */
-	public function getField ( $method, $field, $storeId = null ) {
-		return $this->_scopeConfig->getValue( 'payment/' . $method . '/' . $field, ScopeInterface::SCOPE_STORE, $storeId );
+	public function setMethodCode($methodCode)
+	{
+		$this->methodCode = $methodCode;
+	}
+
+	/**
+	 * Sets path pattern
+	 *
+	 * @param string $pathPattern
+	 * @return void
+	 */
+	public function setPathPattern($pathPattern)
+	{
+		$this->pathPattern = $pathPattern;
 	}
 
 	/**
@@ -78,8 +113,8 @@ class Config implements ConfigInterface {
 	 * @return void
 	 */
 	public function setField ( $method, $field, $value, $storeId = null ) {
-		$this->_scopeConfig->setValue( 'payment/' . $method . '/' . $field, $value, ScopeInterface::SCOPE_STORE, $storeId );
-		$this->_configResource->saveConfig( 'payment/' . $method . '/' . $field, $value, MutableScopeConfigInterface::SCOPE_TYPE_DEFAULT, 0 );
+		$this->scopeConfig->setValue( 'payment/' . $method . '/' . $field, $value, ScopeInterface::SCOPE_STORE, $storeId );
+		$this->_configResource->saveConfig( 'payment/' . $method . '/' . $field, $value, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, 0 );
 	}
 
 	/**
@@ -90,7 +125,7 @@ class Config implements ConfigInterface {
 	 * @return mixed
 	 */
 	public function getGlobal ( $field, $storeId = null ) {
-		return $this->_scopeConfig->getValue( 'cardgate/global/' . $field, ScopeInterface::SCOPE_STORE, $storeId );
+		return $this->scopeConfig->getValue( 'cardgate/global/' . $field, ScopeInterface::SCOPE_STORE, $storeId );
 	}
 
 	/**
@@ -102,7 +137,7 @@ class Config implements ConfigInterface {
 	 * @return void
 	 */
 	public function setGlobal ( $field, $value, $storeId = null ) {
-		$this->_scopeConfig->setValue( 'cardgate/global/' . $field, $value, ScopeInterface::SCOPE_STORE, $storeId );
+		$this->scopeConfig->setValue( 'cardgate/global/' . $field, $value, ScopeInterface::SCOPE_STORE, $storeId );
 		$this->_configResource->saveConfig( 'cardgate/global/' . $field, $value, MutableScopeConfigInterface::SCOPE_TYPE_DEFAULT, 0 );
 	}
 
@@ -113,11 +148,13 @@ class Config implements ConfigInterface {
 	 * @return mixed
 	 */
 	public function getActivePMIDs ( $storeId = 0 ) {
+
 		if ( isset( self::$activePMIDs[$storeId] ) && is_array( self::$activePMIDs[$storeId] ) ) {
 			return self::$activePMIDs[$storeId];
 		}
 		self::$activePMIDs[$storeId] = [];
 		try {
+
 			$activePmInfo = $this->serializer->unserialize( $this->getGlobal( 'active_pm', $storeId ) );
 		} catch (\Exception $e){
 			$activePmInfo = [];
@@ -131,32 +168,6 @@ class Config implements ConfigInterface {
 	}
 
 	/**
-	 * Sets method code
-	 *
-	 * @param string $methodCode
-	 * @return void
-	 */
-	public function setMethodCode($methodCode)
-	{
-		return null;
-		//$this->_methodCode = $methodCode;
-	}
-
-
-	/**
-	 * Sets path pattern
-	 *
-	 * @param string $pathPattern
-	 * @return void
-	 */
-	public function setPathPattern($pathPattern)
-	{
-		return null;
-		//$this->pathPattern = $pathPattern;
-	}
-
-
-	/**
 	 * Retrieve information from payment configuration
 	 *
 	 * @param string $field
@@ -164,8 +175,25 @@ class Config implements ConfigInterface {
 	 *
 	 * @return mixed
 	 */
-	public function getValue ( $field, $storeId = null ) {
-		return null;
-		//return $this->_scopeConfig->getValue( sprintf( $this->_pathPattern, $this->_methodCode, $field ), ScopeInterface::SCOPE_STORE, $storeId );
+	public function getValue($field, $storeId = null)
+	{
+		if ($this->methodCode === null || $this->pathPattern === null) {
+			return null;
+		}
+		$value = $this->scopeConfig->getValue( sprintf($this->pathPattern, $this->methodCode, $field), ScopeInterface::SCOPE_STORE, $storeId );
+		return (is_null($value) ? $this->getGlobal($field, $storeId) : $value);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function setSerializer(){
+		/**
+		 *
+		 * @var \Magento\Framework\Serialize\SerializerInterface
+		 */
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		$serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
+		$this->serializer = $serializer;
 	}
 }

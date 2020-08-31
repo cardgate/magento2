@@ -26,5 +26,4 @@ class ideal extends \Cardgate\Payment\Model\PaymentMethods {
 	 * @var string
 	 */
 	public static $renderer = 'ideal';
-
 }
