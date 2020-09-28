@@ -37,12 +37,8 @@ define(
 				return this.item.method;
 			},
 
-			getImageSrc: function(type) {
-				if ( type == "small" ) {
+			getImageSrc: function() {
 					return "https://cdn.curopayments.net/images/paymentmethods/" + this.item.method.substring(9) + ".svg";
-				} else {
-					return "https://cdn.curopayments.net/thumb/300/50/paymentmethods/" + this.item.method.substring(9) + ".svg";
-				}
 			},
 
 			getDescription: function() {
