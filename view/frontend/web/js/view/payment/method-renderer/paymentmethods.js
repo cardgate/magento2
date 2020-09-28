@@ -44,7 +44,7 @@ define(
 				if ( type == "small" ) {
 					return "https://cdn.curopayments.net/images/paymentmethods/" + this.item.method.substring(9) + ".svg";
 				} else {
-					return "https://cdn.curopayments.net/thumb/300/50/paymentmethods/" + this.item.method.substring(9) + ".png";
+					return "https://cdn.curopayments.net/thumb/300/50/paymentmethods/" + this.item.method.substring(9) + ".svg";
 				}
 			},
 
