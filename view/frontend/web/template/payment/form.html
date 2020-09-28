@@ -5,7 +5,7 @@
 		       class="radio" 
 		       data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
 		<label data-bind="attr: {'for': getCode()}" class="label" ><span data-bind="text: getTitle()"></span>
-		<img style="float:right; max-height:30px; max-width:70px;" data-bind="attr: {'src': getImageSrc('small'), 'alt': getDescription()}"/>	
+		<img style="float:right; max-height:30px; max-width:70px;" data-bind="attr: {'src': getImageSrc(), 'alt': getDescription()}"/>
 		</label>
 		
 	</div>
