@@ -3,7 +3,7 @@
 	All rights reserved.
 	See LICENSE for license details.
 -->
-<!-- ko if: quoteIsVirtual == 0 -->
+<!-- ko if: quoteIsVirtual == 0  && hasValue() -->
 	<!-- ko if: isExcludingDisplayed() -->
 	<tr class="totals cardgatefee excl">
 		<th class="mark" colspan="1" scope="row" data-bind="text: title"></th>
@@ -21,3 +21,4 @@
 	</tr>
 	<!-- /ko -->
 <!-- /ko -->
+
