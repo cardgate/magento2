@@ -125,6 +125,42 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 
 	/**
 	 *
+	 * {@inheritdoc}
+	 *
+	 * @see \Magento\Payment\Model\Method\AbstractMethod::assignData()
+	 */
+	public function assignData ( \Magento\Framework\DataObject $data ) {
+		$additional = $data->getAdditionalData();
+		if ( ! is_array( $additional ) ) {
+			return $this;
+		}
+		$info = $this->getInfoInstance();
+		foreach ( $additional as $key => $value ) {
+			if ( is_scalar( $value ) ) {
+				$info->setAdditionalInformation( $key, $value );
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function getPayableTo () {
+		return $this->getConfigData( 'payable_to' );
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function getMailingAddress () {
+		return $this->getConfigData( 'mailing_address' );
+	}
+
+	/**
+	 *
 	 * @param Quote $quote
 	 * @return FeeData
 	 */
