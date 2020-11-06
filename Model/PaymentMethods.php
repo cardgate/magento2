@@ -14,6 +14,8 @@ use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Payment\Gateway\Config\ConfigValueHandler;
 use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
+use Magento\Payment\Gateway\Validator\ValidatorPool;
+use Magento\Payment\Gateway\Validator\CountryValidator;
 use Magento\Payment\Block\Form;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Quote\Model\Quote;
@@ -93,7 +95,8 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 		$this->taxCalculation = $taxCalculation;
 		$this->objectManager = $objectManager;
 		$valueHandlerPool = $this->getValueHandlerPool($this->code);
-		parent::__construct(    $eventManager, $valueHandlerPool, $paymentDataObjectFactory, $this->code, Form::class, DefaultInfo::class);
+		$validatorPool = $this->getCardgateValidatorPool($this->code);
+		parent::__construct($eventManager, $valueHandlerPool, $paymentDataObjectFactory, $this->code, Form::class, DefaultInfo::class, null, $validatorPool);
 	}
 
 	/**
@@ -260,9 +263,11 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 			[
 				'configInterface' => $configInterface
 			]);
-		return $this->objectManager->create(ValueHandlerPool::class, [
-			'handler' => $valueHandler
-		]);
+		return $this->objectManager->create(ValueHandlerPool::class, [ 'handler' => $valueHandler ]);
+	}
+
+	public function getCardgateValidatorPool(){
+		return $this->objectManager->get('CardgateValidatorPool');
 	}
 
 }
