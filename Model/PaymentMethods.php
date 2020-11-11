@@ -194,34 +194,25 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 			] );
 		$taxRate = $this->taxCalculation->getRate($request);
 
-		$paymentFeeIncludesTax = $this->config->getValue( 'paymentfee_includes_tax', $storeId );
-		$feeFixed      = floatval( $this->config->getValue( 'paymentfee_fixed', $storeId) );
-		$feePercentage = floatval( $this->config->getValue( 'paymentfee_percentage', $storeId ) );
-		$fee           = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
+		$baseFeeFixed      = floatval( $this->config->getValue( 'paymentfee_fixed', $storeId) );
+		$baseFeePercentage = floatval( $this->config->getValue( 'paymentfee_percentage', $storeId ) );
+		$baseFee           = round( ( $calculatedTotal * ( $baseFeePercentage / 100 ) ) + $baseFeeFixed, 4 );
 
+		$paymentFeeIncludesTax = $this->config->getValue( 'paymentfee_includes_tax', $storeId );
 		if ($paymentFeeIncludesTax){
-			$taxAmount = $fee - round($fee/((100 + $taxRate)/100),4);
-			$priceExcl = $fee - $taxAmount;
+			$baseTaxAmount = $baseFee - round($baseFee/((100 + $taxRate)/100),4);
+			$basePriceExcl = $baseFee - $baseTaxAmount;
 		} else {
-			$priceExcl = $fee;
-			$taxAmount = round($fee * (1+($taxRate/100)),4) - $fee;
+			$baseTaxAmount = round($baseFee * (1+($taxRate/100)),4) - $baseFee;
+			$basePriceExcl = $baseFee;
 		}
 
-		$aFee = [
-			'amount'             => $priceExcl,
-			'tax_amount'         => $taxAmount,
-			'tax_class'          => $taxClassId,
-			'fee_includes_tax'   => $paymentFeeIncludesTax,
-			'currency_converter' => $quote->getBaseToQuoteRate()
-		] ;
-
-		$amount = ( $paymentFeeIncludesTax == 1 ? $priceExcl:($priceExcl + $taxAmount)); //var_dump('test'.$this->isActive(0));die;
 		return $this->objectManager->create( 'Cardgate\\Payment\\Model\\Total\\FeeData',
 			[
-				'amount'             => $amount,
-				'tax_amount'         => $taxAmount,
+				'amount'             => $basePriceExcl,
+				'tax_amount'         => $baseTaxAmount,
 				'tax_class'          => $taxClassId,
-				'fee_includes_tax'   => $this->config->getValue( 'paymentfee_includes_tax', $storeId ),
+				'fee_includes_tax'   => $paymentFeeIncludesTax,
 				'currency_converter' => $quote->getBaseToQuoteRate()
 			] );
 	}
