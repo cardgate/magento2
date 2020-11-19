@@ -46,14 +46,14 @@ class Fee extends \Magento\Sales\Model\Order\Creditmemo\Total\AbstractTotal {
 		$totalFeeAmount = $this->_order->getCardgatefeeAmount();
 		$baseTotalFeeAmount = $this->_order->getBaseCardgatefeeAmount();
 		$totalTaxAmount = $this->_order->getCardgatefeeTaxAmount();
-		$baseTotalTaxAmount = $this->_order->getCardgatefeeBaseTaxAmount();
+		$baseTotalTaxAmount = $this->_order->getCardgatefeeTaxAmount();
 		$totalFeeAmountInclTax = $this->_order->getCardgatefeeInclTax();
 		$baseTotalFeeAmountInclTax = $this->_order->getBaseCardgatefeeAmount();
 		// YYY: Creditmemo is not finished yet
 		//$totalFeeAmount = $baseTotalFeeAmount = $totalTaxAmount = $baseTotalTaxAmount = $totalFeeAmountInclTax = $baseTotalFeeAmountInclTax = 2;
 
-		$creditmemo->setSubtotal( $creditmemo->getSubtotal() + $totalFeeAmount );
-		$creditmemo->setBaseSubtotal( $creditmemo->getBaseSubtotal() + $baseTotalFeeAmount );
+		//$creditmemo->setSubtotal( $creditmemo->getSubtotal() + $totalFeeAmount );
+		//$creditmemo->setBaseSubtotal( $creditmemo->getBaseSubtotal() + $baseTotalFeeAmount );
 
 		$creditmemo->setTaxAmount( $creditmemo->getTaxAmount() + $totalTaxAmount );
 		$creditmemo->setBaseTaxAmount( $creditmemo->getBaseTaxAmount() + $baseTotalTaxAmount );

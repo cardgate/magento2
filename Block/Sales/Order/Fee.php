@@ -101,7 +101,6 @@ class Fee extends \Magento\Framework\View\Element\Template {
 		$this->_order = $parent->getOrder();
 		$this->_source = $parent->getSource();
 
-		$store = $this->getStore();
 		$value = $this->_order->getCardgatefeeAmount();
 		if ((float)$value > 0) {
 			$fee = new \Magento\Framework\DataObject(
@@ -113,7 +112,7 @@ class Fee extends \Magento\Framework\View\Element\Template {
 					'label'      => __( 'Checkout fee' )
 				] );
 
-			$parent->addTotal( $fee, 'shipping' );
+			$parent->addTotal( $fee, 'subtotal' );
 		}
 		return $this;
 	}

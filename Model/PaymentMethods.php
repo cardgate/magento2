@@ -207,6 +207,15 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 			$basePriceExcl = $baseFee;
 		}
 
+		$aFee = [
+			'amount'             => $basePriceExcl,
+			'tax_amount'         => $baseTaxAmount,
+			'tax_class'          => $taxClassId,
+			'fee_includes_tax'   => $paymentFeeIncludesTax,
+			'currency_converter' => $quote->getBaseToQuoteRate()
+		] ;
+
+		$amount = ( $paymentFeeIncludesTax == 1 ? $basePriceExcl:($basePriceExcl + $baseTaxAmount));
 		return $this->objectManager->create( 'Cardgate\\Payment\\Model\\Total\\FeeData',
 			[
 				'amount'             => $basePriceExcl,
