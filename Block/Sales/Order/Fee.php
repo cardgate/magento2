@@ -101,19 +101,19 @@ class Fee extends \Magento\Framework\View\Element\Template {
 		$this->_order = $parent->getOrder();
 		$this->_source = $parent->getSource();
 
-		$store = $this->getStore();
-
-		$fee = new \Magento\Framework\DataObject(
+		$value = $this->_order->getCardgatefeeAmount();
+		if ((float)$value > 0) {
+			$fee = new \Magento\Framework\DataObject(
 				[
-					'code' => 'cardgatefee',
-					'strong' => false,
-					'value' => $this->_order->getCardgatefeeAmount(),
+					'code'       => 'cardgatefee',
+					'strong'     => false,
+					'value'      => $value,
 					'base_value' => $this->_order->getBaseCardgatefeeAmount(),
-					'label' => __( 'Checkout fee' )
+					'label'      => __( 'Checkout fee' )
 				] );
 
-		$parent->addTotal( $fee, 'shipping' );
-
+			$parent->addTotal( $fee, 'subtotal' );
+		}
 		return $this;
 	}
 

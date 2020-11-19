@@ -23,5 +23,19 @@
 			</argument>
 		</arguments>
 	</type>
+
+	<virtualType name="CardgateCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+		<arguments>
+			<argument name="config" xsi:type="object">Cardgate\Payment\Model\Config</argument>
+		</arguments>
+	</virtualType>
+
+	<virtualType name="CardgateValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+		<arguments>
+			<argument name="validators" xsi:type="array">
+				<item name="country" xsi:type="string">CardgateCountryValidator</item>
+			</argument>
+		</arguments>
+	</virtualType>
 	<preference for="Magento\SalesRule\Model\Rule\Condition\Address" type="Cardgate\Payment\Model\Rule\Address" />
 </config>
