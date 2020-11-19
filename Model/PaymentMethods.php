@@ -14,6 +14,8 @@ use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Payment\Gateway\Config\ConfigValueHandler;
 use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
+use Magento\Payment\Gateway\Validator\ValidatorPool;
+use Magento\Payment\Gateway\Validator\CountryValidator;
 use Magento\Payment\Block\Form;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Quote\Model\Quote;
@@ -93,7 +95,8 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 		$this->taxCalculation = $taxCalculation;
 		$this->objectManager = $objectManager;
 		$valueHandlerPool = $this->getValueHandlerPool($this->code);
-		parent::__construct(    $eventManager, $valueHandlerPool, $paymentDataObjectFactory, $this->code, Form::class, DefaultInfo::class);
+		$validatorPool = $this->getCardgateValidatorPool($this->code);
+		parent::__construct($eventManager, $valueHandlerPool, $paymentDataObjectFactory, $this->code, Form::class, DefaultInfo::class, null, $validatorPool);
 	}
 
 	/**
@@ -191,34 +194,34 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 			] );
 		$taxRate = $this->taxCalculation->getRate($request);
 
-		$paymentFeeIncludesTax = $this->config->getValue( 'paymentfee_includes_tax', $storeId );
-		$feeFixed      = floatval( $this->config->getValue( 'paymentfee_fixed', $storeId) );
-		$feePercentage = floatval( $this->config->getValue( 'paymentfee_percentage', $storeId ) );
-		$fee           = round( ( $calculatedTotal * ( $feePercentage / 100 ) ) + $feeFixed, 4 );
+		$baseFeeFixed      = floatval( $this->config->getValue( 'paymentfee_fixed', $storeId) );
+		$baseFeePercentage = floatval( $this->config->getValue( 'paymentfee_percentage', $storeId ) );
+		$baseFee           = round( ( $calculatedTotal * ( $baseFeePercentage / 100 ) ) + $baseFeeFixed, 4 );
 
+		$paymentFeeIncludesTax = $this->config->getValue( 'paymentfee_includes_tax', $storeId );
 		if ($paymentFeeIncludesTax){
-			$taxAmount = $fee - round($fee/((100 + $taxRate)/100),4);
-			$priceExcl = $fee - $taxAmount;
+			$baseTaxAmount = $baseFee - round($baseFee/((100 + $taxRate)/100),4);
+			$basePriceExcl = $baseFee - $baseTaxAmount;
 		} else {
-			$priceExcl = $fee;
-			$taxAmount = round($fee * (1+($taxRate/100)),4) - $fee;
+			$baseTaxAmount = round($baseFee * (1+($taxRate/100)),4) - $baseFee;
+			$basePriceExcl = $baseFee;
 		}
 
 		$aFee = [
-			'amount'             => $priceExcl,
-			'tax_amount'         => $taxAmount,
+			'amount'             => $basePriceExcl,
+			'tax_amount'         => $baseTaxAmount,
 			'tax_class'          => $taxClassId,
 			'fee_includes_tax'   => $paymentFeeIncludesTax,
 			'currency_converter' => $quote->getBaseToQuoteRate()
 		] ;
 
-		$amount = ( $paymentFeeIncludesTax == 1 ? $priceExcl:($priceExcl + $taxAmount)); //var_dump('test'.$this->isActive(0));die;
+		$amount = ( $paymentFeeIncludesTax == 1 ? $basePriceExcl:($basePriceExcl + $baseTaxAmount));
 		return $this->objectManager->create( 'Cardgate\\Payment\\Model\\Total\\FeeData',
 			[
-				'amount'             => $amount,
-				'tax_amount'         => $taxAmount,
+				'amount'             => $basePriceExcl,
+				'tax_amount'         => $baseTaxAmount,
 				'tax_class'          => $taxClassId,
-				'fee_includes_tax'   => $this->config->getValue( 'paymentfee_includes_tax', $storeId ),
+				'fee_includes_tax'   => $paymentFeeIncludesTax,
 				'currency_converter' => $quote->getBaseToQuoteRate()
 			] );
 	}
@@ -260,9 +263,11 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 			[
 				'configInterface' => $configInterface
 			]);
-		return $this->objectManager->create(ValueHandlerPool::class, [
-			'handler' => $valueHandler
-		]);
+		return $this->objectManager->create(ValueHandlerPool::class, [ 'handler' => $valueHandler ]);
+	}
+
+	public function getCardgateValidatorPool(){
+		return $this->objectManager->get('CardgateValidatorPool');
 	}
 
 }
