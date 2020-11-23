@@ -228,6 +228,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 
 	public function refund( InfoInterface $payment, $amount ) {
 		$order = $payment->getOrder();
+		$baseToOrderRate = $order->getData()['base_to_order_rate'];
+		$amount = round(($amount * $baseToOrderRate),2);
+
 		try {
 			$gatewayClient = $this->objectManager->get( GatewayClient::class );
 			$transaction = $gatewayClient->transactions()->get( $payment->getCardgateTransaction() );
