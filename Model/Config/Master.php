@@ -168,7 +168,6 @@ class Master {
 			'capayable' => 'Capayable',
 			'bitcoin' => 'Bitcoin',
 			'belfius' => 'Belfius',
-			'eps' => 'EPS',
 			'billink' => 'Billink',
 			'idealqr' => 'iDEAL QR',
 			'onlineueberweisen' => 'OnlineÜberweisen'
