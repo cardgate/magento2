@@ -37,5 +37,11 @@
 			</argument>
 		</arguments>
 	</virtualType>
+	<virtualType name="CardgateCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+		<arguments>
+			<argument name="command" xsi:type="array">
+			</argument>
+		</arguments>
+	</virtualType>
 	<preference for="Magento\SalesRule\Model\Rule\Condition\Address" type="Cardgate\Payment\Model\Rule\Address" />
 </config>

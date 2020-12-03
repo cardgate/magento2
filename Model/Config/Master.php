@@ -7,7 +7,6 @@
 namespace Cardgate\Payment\Model\Config;
 
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\Filesystem\DirectoryList;
 
 /**
  *
