@@ -9,6 +9,7 @@ namespace Cardgate\Payment\Controller\Payment;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
 
 /**
@@ -17,9 +18,10 @@ use Magento\Sales\Api\Data\TransactionInterface;
  * @author DBS B.V.
  * @package Magento2
  */
-class Callback extends \Magento\Framework\App\Action\Action {
+class Callback implements ActionInterface {
 
 	/**
+	 *
 	 *
 	 * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
 	 */
@@ -32,10 +34,14 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	protected $invoiceSender;
 
 	/**
-	 *
-	 * @var \Magento\Framework\App\Config\ScopeConfigInterface
+	 * @var \Magento\Framework\Controller\ResultFactory
 	 */
-	protected $scopeConfig;
+	protected $resultFactory;
+
+	/**
+	 * @var \Magento\Framework\App\RequestInterface
+	 */
+	protected $_request;
 
 	/**
 	 *
@@ -64,15 +70,14 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	public function __construct (   \Magento\Framework\App\Action\Context $context,
 									\Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
 									\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
-									\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
 									\Magento\Framework\App\Cache\TypeListInterface $listInterface,
 									GatewayClient $client,
 	 	 							\Cardgate\Payment\Model\Config $config,
 									\Magento\Framework\Encryption\Encryptor $encryptor)	{
-		parent::__construct( $context );
+		$this->resultFactory = $context->getResultFactory();
+		$this->_request = $context->getRequest();
 		$this->orderSender = $orderSender;
 		$this->invoiceSender = $invoiceSender;
-		$this->scopeConfig = $scopeConfig;
 		$this->_listInterface = $listInterface;
 		$this->_cardgateConfig = $config;
 		$this->_cardgateClient = $client;
@@ -88,11 +93,11 @@ class Callback extends \Magento\Framework\App\Action\Action {
 	public function execute () {
 		$result = $this->resultFactory->create( \Magento\Framework\Controller\ResultFactory::TYPE_RAW );
 		$order = $payment = NULL;
-		$post = $this->getRequest()->getPostValue();
+		$post = $this->_request->getPostValue();
 		if ( ! is_array( $post ) ) {
 			$post = [];
 		}
-		$get = $this->getRequest()->getParams();
+		$get = $this->_request->getParams();
 		if ( ! is_array( $get ) ) {
 			$get = [];
 		}
@@ -128,12 +133,12 @@ class Callback extends \Magento\Framework\App\Action\Action {
 			}
 		}
 
-		$transactionId = empty( $post['transaction'] ) ? $this->getRequest()->getParam( 'transaction' ) : $post['transaction'];
-		$reference = empty( $post['reference'] ) ? $this->getRequest()->getParam( 'reference' ) : $post['reference'];
-		$code = (int)( empty( $post['code'] ) ? $this->getRequest()->getParam( 'code' ) : $post['code'] );
-		$currency = empty( $post['currency'] ) ? $this->getRequest()->getParam( 'currency' ) : $post['currency'];
-		$amount = (int)( empty( $post['amount'] ) ? $this->getRequest()->getParam( 'amount' ) : $post['amount'] );
-		$pt = empty( $post['pt'] ) ? $this->getRequest()->getParam( 'pt' ) : $post['pt'];
+		$transactionId = empty( $post['transaction'] ) ? $get['transaction'] : $post['transaction'];
+		$reference = empty( $post['reference'] ) ? $get['reference'] : $post['reference'];
+		$code = (int)( empty( $post['code'] ) ? $get['code'] : $post['code'] );
+		$currency = empty( $post['currency'] ) ? $get['currency'] : $post['currency'];
+		$amount = (int)( empty( $post['amount'] ) ? $get['amount'] : $post['amount'] );
+		$pt = empty( $post['pt'] ) ? $get['pt'] : $post['pt'];
 		$pmId = ( ! empty( $pt ) ? $pt : 'unknown' );
 
 		$manualProcessing = !!$this->_cardgateConfig->getGlobal( 'manually_process_order' );
