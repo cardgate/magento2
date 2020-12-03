@@ -9,7 +9,7 @@ namespace Cardgate\Payment\Controller\Payment;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\ActionInterface;;
+use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
 
 /**

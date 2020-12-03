@@ -30,45 +30,6 @@ define(
 					}
 				)
 			;
-
-			/*
-			var serviceUrl,
-				payload;
-
-			if (!customer.isLoggedIn()) {
-				serviceUrl = urlBuilder.createUrl('/guest-carts/:cartId/set-payment-information', {
-					cartId: quote.getQuoteId()
-				});
-				payload = {
-					cartId: quote.getQuoteId(),
-					email: quote.guestEmail,
-					paymentMethod: paymentData,
-					billingAddress: quote.billingAddress()
-				};
-			} else {
-				serviceUrl = urlBuilder.createUrl('/carts/mine/set-payment-information', {});
-				payload = {
-					cartId: quote.getQuoteId(),
-					paymentMethod: paymentData,
-					billingAddress: quote.billingAddress()
-				};
-			}
-
-			totals.isLoading( true );
-
-			return storage.post(
-				serviceUrl, JSON.stringify(payload)
-			).fail(
-				function (response) {
-					totals.isLoading( false );
-					errorProcessor.process(response, messageContainer);
-				}
-			).done(
-				function () {
-					getTotalsAction([]);
-				}
-			);
-			*/
 		};
 	}
 );
