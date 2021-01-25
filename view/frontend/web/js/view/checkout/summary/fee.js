@@ -33,6 +33,11 @@ define(
 			resourceUrlManager
 		) {
 
+		/*quote.setShippingInformation().subscribe(
+			function (){
+				setShippingInformation
+			}
+		);*/
 		quote.getPaymentMethod().subscribe(
 			function( selectedPM ){
 				setPaymentInformation( this.messageContainer, { 'method':selectedPM.method } );

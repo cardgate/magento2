@@ -8,11 +8,13 @@ define(
 		'Magento_Checkout/js/view/payment/default',
 		'Magento_Checkout/js/action/select-payment-method',
 		'Magento_Checkout/js/checkout-data',
+		'Magento_Checkout/js/model/quote',
 		'mage/url'
 	],
 	function (Component,
 			selectPaymentMethodAction,
 			checkoutData,
+			quote,
 			url) {
 		'use strict';
 
