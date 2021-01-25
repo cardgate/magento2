@@ -6,12 +6,13 @@
  */
 namespace Cardgate\Payment\Controller\Payment;
 
+use Magento\Framework\App\ActionInterface;
 use \Magento\Framework\App\ObjectManager;
 
 /**
  * Callback handler action.
  */
-class UpdatePM extends \Magento\Framework\App\Action\Action {
+class UpdatePM implements ActionInterface {
 
 	public function execute() {
 		$sPaymentMethod = htmlspecialchars($this->getRequest()->getParam( 'pm' ));
