@@ -141,7 +141,10 @@ class Start extends \Magento\Framework\App\Action\Action {
 				throw new \Exception( 'missing or invalid billing address' );
 			}
 			$consumer->setEmail( $billingAddress->getEmail() );
-			$consumer->setPhone( $billingAddress->getTelephone() );
+			$telephone =$billingAddress->getTelephone();
+			if (!(is_null($telephone) || empty($telephone))) {
+				$consumer->setPhone( $billingAddress->getTelephone() );
+			}
 			self::_convertAddress( $billingAddress, $consumer, 'address' );
 			$shippingAddress = $order->getShippingAddress();
 			if ( !$shippingAddress ) {
