@@ -110,9 +110,18 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter {
 		$customerGroups = $this->config->getValue( 'specific_customer_groups', $quote->getStoreId() );
 		$aCustomerGroups = str_getcsv($customerGroups,',');
 		$groupId = $quote->getCustomer()->getGroupId();
-
-		if ($groupId > 0 && strlen( $customerGroups > 0 ) && ! in_array( $groupId, $aCustomerGroups ) ) {
-			return false;
+		$loggedInIsGroup = $this->config->LoggedInIsGroup($quote->getStoreId());
+		$isLoggedIn = ($quote->getCustomer()->getId() <1 ? false : true);
+		if ($isLoggedIn) {
+			if ($groupId > 0 && strlen( $customerGroups) > 0  && ! in_array( $groupId, $aCustomerGroups ) ) {
+				return false;
+			}
+		} else {
+			if ($loggedInIsGroup) {
+				if (strlen($customerGroups) > 0 && in_array( '-1', $aCustomerGroups )) return true; else return false;
+			} else {
+				return true;
+			}
 		}
 		return true;
 	}

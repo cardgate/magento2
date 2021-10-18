@@ -168,6 +168,31 @@ class Config implements ConfigInterface{
 	}
 
 	/**
+	 * Show if not logged in is used as a group
+	 * @param int $storeId
+	 *
+	 * @return bool
+	 */
+	public function LoggedInIsGroup($storeId = 0)
+	{
+		$aActivePaymentIds = $this->getActivePMIDs($storeId);
+		$result = false;
+		foreach ($aActivePaymentIds as $id){
+			$methodCode = 'cardgate_'.$id;
+			$customerGroups = $this->scopeConfig->getValue( sprintf($this->pathPattern, $methodCode, 'specific_customer_groups'), ScopeInterface::SCOPE_STORE, $storeId );
+			if (is_null($customerGroups)){
+				continue;
+			}
+			$aCustomerGroups = str_getcsv($customerGroups,',');
+
+			if (strlen($customerGroups) > 0 && in_array('-1',$aCustomerGroups)){
+				$result = true;
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * Retrieve information from payment configuration
 	 *
 	 * @param string $field
