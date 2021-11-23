@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Bitcoin class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Billink
  */
-class billink extends \Cardgate\Payment\Model\PaymentMethods {
+class Billink extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_billink';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_billink';
 }

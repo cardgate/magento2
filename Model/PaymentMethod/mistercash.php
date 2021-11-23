@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * MisterCash/Bancontact class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate MisterCash
  */
-class mistercash extends \Cardgate\Payment\Model\PaymentMethods {
+class Mistercash extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_mistercash';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_mistercash';
 }

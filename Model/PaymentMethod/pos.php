@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * POS class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Pos
  */
-class pos extends \Cardgate\Payment\Model\PaymentMethods {
+class Pos extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_pos';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_pos';
 }

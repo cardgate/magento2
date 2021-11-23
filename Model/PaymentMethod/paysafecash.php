@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Paysafecash class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Paysafecash
  */
-class paysafecash extends \Cardgate\Payment\Model\PaymentMethods {
+class Paysafecash extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_paysafecash';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_paysafecash';
 }

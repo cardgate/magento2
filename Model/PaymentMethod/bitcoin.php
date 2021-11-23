@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Bitcoin class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Bitcoin
  */
-class bitcoin extends \Cardgate\Payment\Model\PaymentMethods {
+class Bitcoin extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_bitcoin';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_bitcoin';
 }

@@ -12,39 +12,41 @@ use Magento\Framework\App\Config\Initial;
  * Initial Config plugin to dynamically add all payment methods.
  *
  * @author DBS B.V.
- * @package Magento2
+ *
  */
-class InitialPlugin {
+class InitialPlugin
+{
 
-	/**
-	 *
-	 * @var Master $_masterConfig
-	 */
-	private $_masterConfig = null;
+    /**
+     *
+     * @var Master $_masterConfig
+     */
+    private $_masterConfig = null;
 
-	public function __construct ( Master $masterConfig ) {
-		$this->_masterConfig = $masterConfig;
-	}
+    public function __construct(Master $masterConfig)
+    {
+        $this->_masterConfig = $masterConfig;
+    }
 
-	/**
-	 * Alter getData's output
-	 *
-	 * @param Initial $initialConfig
-	 * @param \Closure $proceed
-	 * @param unknown $scope
-	 * @return array[]
-	 */
-	public function aroundGetData ( Initial $initialConfig, \Closure $proceed, $scope ) {
-		$data = $proceed( $scope );
-		foreach ( $this->_masterConfig->getPaymentMethods( true ) as $paymentMethod => $paymentMethodName ) {
-				$data['payment'][ $paymentMethod ] = [
-					'model' => $this->_masterConfig->getPMClassByCode( $paymentMethod ),
-					'label' => $paymentMethod,
-					'group' => 'cardgate',
-					'title' => $paymentMethodName
-				];
-		}
-		return $data;
-	}
-
+    /**
+     * Alter getData's output
+     *
+     * @param Initial $initialConfig
+     * @param \Closure $proceed
+     * @param unknown $scope
+     * @return array[]
+     */
+    public function aroundGetData(Initial $initialConfig, \Closure $proceed, $scope)
+    {
+        $data = $proceed($scope);
+        foreach ($this->_masterConfig->getPaymentMethods(true) as $paymentMethod => $paymentMethodName) {
+                $data['payment'][ $paymentMethod ] = [
+                    'model' => $this->_masterConfig->getPMClassByCode($paymentMethod),
+                    'label' => $paymentMethod,
+                    'group' => 'cardgate',
+                    'title' => $paymentMethodName
+                ];
+        }
+        return $data;
+    }
 }

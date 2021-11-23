@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Capayable class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Capayable
  */
-class capayable extends \Cardgate\Payment\Model\PaymentMethods {
+class Capayable extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_capayable';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_capayable';
 }

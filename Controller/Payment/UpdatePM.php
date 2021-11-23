@@ -12,14 +12,16 @@ use \Magento\Framework\App\ObjectManager;
 /**
  * Callback handler action.
  */
-class UpdatePM implements ActionInterface {
+class UpdatePM implements ActionInterface
+{
 
-	public function execute() {
-		$sPaymentMethod = htmlspecialchars($this->getRequest()->getParam( 'pm' ));
-		$oSession = ObjectManager::getInstance()->get( \Magento\Checkout\Model\Session::class );
-		$oQuote = $oSession->getQuote();
-		$oQuote->getPayment()->setMethod( $sPaymentMethod );
-		$oQuote->collectTotals()->save();
-		$oQuote->save();
-	}
+    public function execute()
+    {
+        $sPaymentMethod = htmlspecialchars($this->getRequest()->getParam('pm'));
+        $oSession = ObjectManager::getInstance()->get(\Magento\Checkout\Model\Session::class);
+        $oQuote = $oSession->getQuote();
+        $oQuote->getPayment()->setMethod($sPaymentMethod);
+        $oQuote->collectTotals()->save();
+        $oQuote->save();
+    }
 }

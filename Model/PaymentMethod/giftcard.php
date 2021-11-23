@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Gift Card class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Giftcard
  */
-class giftcard extends \Cardgate\Payment\Model\PaymentMethods {
+class Giftcard extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_giftcard';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_giftcard';
 }

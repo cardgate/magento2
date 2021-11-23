@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * SofortBanking class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Sofortbanking
  */
-class sofortbanking extends \Cardgate\Payment\Model\PaymentMethods {
+class Sofortbanking extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_sofortbanking';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_sofortbanking';
 }

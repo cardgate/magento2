@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * SprayPay class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Spraypay
  */
-class spraypay extends \Cardgate\Payment\Model\PaymentMethods {
+class Spraypay extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_spraypay';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_spraypay';
 }

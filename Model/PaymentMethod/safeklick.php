@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Safeklick class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Safeclick
  */
-class safeklick extends \Cardgate\Payment\Model\PaymentMethods {
+class Safeklick extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_safeklick';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_safeklick';
 }

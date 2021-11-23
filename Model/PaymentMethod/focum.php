@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Focum class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Focum
  */
-class focum extends \Cardgate\Payment\Model\PaymentMethods {
+class Focum extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_focum';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_focum';
 }
