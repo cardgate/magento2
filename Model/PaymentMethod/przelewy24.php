@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Przelewy24 class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Przelewy24
  */
-class przelewy24 extends \Cardgate\Payment\Model\PaymentMethods {
+class Przelewy24 extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_przelewy24';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_przelewy24';
 }

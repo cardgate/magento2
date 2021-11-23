@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * ClickAndBuy class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages Clickandbuy
  */
-class clickandbuy extends \Cardgate\Payment\Model\PaymentMethods {
+class Clickandbuy extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_clickandbuy';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_clickandbuy';
 }

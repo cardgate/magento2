@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * PayPal class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate PayPal
  */
-class paypal extends \Cardgate\Payment\Model\PaymentMethods {
+class Paypal extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_paypal';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_paypal';
 }

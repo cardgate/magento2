@@ -7,7 +7,7 @@
 namespace Cardgate\Payment;
 
 \Magento\Framework\Component\ComponentRegistrar::register(
-	\Magento\Framework\Component\ComponentRegistrar::MODULE,
-	'Cardgate_Payment',
-	__DIR__
+    \Magento\Framework\Component\ComponentRegistrar::MODULE,
+    'Cardgate_Payment',
+    __DIR__
 );

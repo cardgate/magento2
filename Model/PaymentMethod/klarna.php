@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Klarna class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Klarna
  */
-class klarna extends \Cardgate\Payment\Model\PaymentMethods {
+class Klarna extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_klarna';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_klarna';
 }

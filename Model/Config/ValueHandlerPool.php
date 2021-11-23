@@ -15,29 +15,29 @@ use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 class ValueHandlerPool implements ValueHandlerPoolInterface
 {
 
-	/**
-	 *
-	 * @var ValueHandlerInterface
-	 */
-	private $handler;
+    /**
+     *
+     * @var ValueHandlerInterface
+     */
+    private $handler;
 
-	/**
-	 *
-	 * @param ValueHandlerInterface $handler
-	 */
-	public function __construct(ValueHandlerInterface $handler)
-	{
-		$this->handler = $handler;
-	}
+    /**
+     *
+     * @param ValueHandlerInterface $handler
+     */
+    public function __construct(ValueHandlerInterface $handler)
+    {
+        $this->handler = $handler;
+    }
 
-	/**
-	 * Retrieves the configuration value handler
-	 *
-	 * @param string $field
-	 * @return ValueHandlerInterface
-	 */
-	public function get($field)
-	{
-		return $this->handler;
-	}
+    /**
+     * Retrieves the configuration value handler
+     *
+     * @param string $field
+     * @return ValueHandlerInterface
+     */
+    public function get($field)
+    {
+        return $this->handler;
+    }
 }

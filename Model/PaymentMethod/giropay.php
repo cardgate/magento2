@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Giropay class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Giropay
  */
-class giropay extends \Cardgate\Payment\Model\PaymentMethods {
+class Giropay extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_giropay';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_giropay';
 }

@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Wallet class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Wallet
  */
-class wallet extends \Cardgate\Payment\Model\PaymentMethods {
+class Wallet extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_wallet';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_wallet';
 }

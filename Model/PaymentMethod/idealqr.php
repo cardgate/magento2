@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * iDEAL QR class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate IDEAlQR
  */
-class idealqr extends \Cardgate\Payment\Model\PaymentMethods {
+class Idealqr extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_idealqr';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_idealqr';
 }

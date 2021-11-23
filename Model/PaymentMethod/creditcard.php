@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * CreditCard class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Cerditcard
  */
-class creditcard extends \Cardgate\Payment\Model\PaymentMethods {
+class Creditcard extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_creditcard';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_creditcard';
 }
