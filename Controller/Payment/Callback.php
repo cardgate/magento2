@@ -8,6 +8,7 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Exception\CallbackException;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
@@ -138,7 +139,7 @@ class Callback implements ActionInterface
                     $sResponse = 'Data retrieval failed.';
                 }
                     return $this->getResponse()->setBody($sResponse);
-            } catch (\Exception $e) {
+            } catch (CallbackException $e) {
                 return $this->getResponse()->setBody($e->getMessage());
             }
         }
@@ -160,7 +161,7 @@ class Callback implements ActionInterface
                     $this->_cardgateClient->getSiteKey()
                 )
             ) {
-                throw new \Exception('hash verification failure');
+                throw new CallbackException('hash verification failure');
             }
 
             $order = ObjectManager::getInstance()->create(
@@ -266,7 +267,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Transaction already processed.'));
                         $updateCardgateData = false;
-                        throw new \Exception('transaction already processed.');
+                        throw new CallbackException('transaction already processed.');
                     }
 
                     // Test if payment has been processed already.
@@ -275,7 +276,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Payment already processed in another transaction.'));
                         $updateCardgateData = false;
-                        throw new \Exception('payment already processed in another transaction.');
+                        throw new CallbackException('payment already processed in another transaction.');
                     }
 
                     if ($order->isCurrencyDifferent()) {
@@ -304,7 +305,7 @@ class Callback implements ActionInterface
                         $this->invoiceSender->send($invoice);
                     } else {
                         $order->addCommentToStatusHistory(__('Failed to create invoice.'));
-                        throw new \Exception('failed to create invoice.');
+                        throw new CallbackException('failed to create invoice.');
                     }
                 }
             } elseif ($code < 400) {
@@ -314,14 +315,14 @@ class Callback implements ActionInterface
                             $order->registerCancellation(__('Transaction canceled.'), false);
                             $order->setStatus("cardgate_payment_failure");
                             $order->addCommentToStatusHistory(__("Transaction failure."));
-                    } catch (\Exception $e) {
+                    } catch (CallbackException $e) {
                         $order->addCommentToStatusHistory(
                             __(
                                 "Failed to cancel order. Order state was : %1.",
                                 $order->getState() . '/' . $order->getStatus()
                             )
                         );
-                        throw new \Exception('failed to cancel order.');
+                        throw new CallbackException('failed to cancel order.');
                     }
                 }
             } elseif ($code < 500) {
@@ -345,9 +346,9 @@ class Callback implements ActionInterface
             // Set the output to a string that the gateway expects.
             $result->setContents($transactionId . '.' . $code);
 
-        } catch (\Exception $e) {
+        } catch (CallbackException $e) {
 
-            // Add the exception message to the output.
+            // Add the CallbackException message to the output.
             $result->setContents($e->getMessage());
         }
 

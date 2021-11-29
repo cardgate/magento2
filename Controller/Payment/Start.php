@@ -10,6 +10,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Exception\StartException;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\OrderRepository;
@@ -148,11 +149,11 @@ class Start extends \Magento\Framework\App\Action\Action
             $consumer = $transaction->getConsumer();
             $billingAddress = $order->getBillingAddress();
             if (!$billingAddress) {
-                throw new \Exception('missing or invalid billing address');
+                throw new StartException('missing or invalid billing address');
             }
             $consumer->setEmail($billingAddress->getEmail());
             $telephone =$billingAddress->getTelephone();
-            if (!(is_null($telephone) || empty($telephone))) {
+            if (!(($telephone === null) || empty($telephone))) {
                 $consumer->setPhone($billingAddress->getTelephone());
             }
             self::_convertAddress($billingAddress, $consumer, 'address');
@@ -190,8 +191,8 @@ class Start extends \Magento\Framework\App\Action\Action
                 $stockData = null;
                 try {
                     $stockData = $stock->get($item->getProduct()->getId())->getData();
-                } catch (\Exception $e) {
-/* ignore */
+                } catch (StartException $e) {
+                    /* ignore */
                 }
                 if (is_array($stockData)
                     && isset($stockData['manage_stock'])
@@ -316,10 +317,10 @@ class Start extends \Magento\Framework\App\Action\Action
                 $this->getResponse()->setRedirect($actionUrl);
             } else {
                 // Payment methods without user interaction are not yet supported.
-                throw new \Exception('unsupported payment action');
+                throw new StartException('unsupported payment action');
             }
 
-        } catch (\Exception $e) {
+        } catch (StartException $e) {
             $this->messageManager->addErrorMessage(
                 __('Error occurred while registering the transaction') . ' (' . $e->getMessage() . ')'
             );
@@ -336,7 +337,7 @@ class Start extends \Magento\Framework\App\Action\Action
      * Converts a Magento address object to a cardgate consumer address.
      * @return array
      */
-    private static function _convertAddress(Address &$oAddress_, \cardgate\api\Consumer &$oConsumer_, $sMethod_)
+    private function _convertAddress(Address &$oAddress_, \cardgate\api\Consumer &$oConsumer_, $sMethod_)
     {
         $oConsumer_->$sMethod_()->setFirstName($oAddress_->getFirstname());
         $oConsumer_->$sMethod_()->setLastName($oAddress_->getLastname());
@@ -382,7 +383,7 @@ class Start extends \Magento\Framework\App\Action\Action
      */
     public function getCustomerBeforeAuthUrl()
     {
-        return;
+        return null;
     }
 
     /**

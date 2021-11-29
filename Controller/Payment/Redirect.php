@@ -9,6 +9,7 @@ namespace Cardgate\Payment\Controller\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ObjectManager;
 use Cardgate\Payment\Model\Config;
+use Cardgate\Exception\RedirectException;
 
 /**
  * Client redirect after payment action
@@ -61,7 +62,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
                 || empty($code)
                 || empty($transactionId)
             ) {
-                throw new \Exception(__('Wrong parameters supplied.'));
+                throw new RedirectException(__('Wrong parameters supplied.'));
             }
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
@@ -85,10 +86,10 @@ class Redirect extends \Magento\Framework\App\Action\Action
                     $this->_checkoutSession->restoreQuote();
                     $resultRedirect->setPath('checkout');
                 } else {
-                    throw new \Exception(__('Transaction canceled.'));
+                    throw new RedirectException(__('Transaction canceled.'));
                 }
             } else {
-                throw new \Exception(__('Payment not completed.'));
+                throw new RedirectException(__('Payment not completed.'));
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
