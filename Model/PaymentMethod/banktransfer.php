@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Banktransfer class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Banktransfer
  */
-class banktransfer extends \Cardgate\Payment\Model\PaymentMethods {
+class Banktransfer extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_banktransfer';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_banktransfer';
 }

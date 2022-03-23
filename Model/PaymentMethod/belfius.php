@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * Belfius class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Belfius
  */
-class belfius extends \Cardgate\Payment\Model\PaymentMethods {
+class Belfius extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_belfius';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_belfius';
 }

@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * OnlineÜberweisen class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Onlineueberweisen
  */
-class onlineueberweisen extends \Cardgate\Payment\Model\PaymentMethods {
+class Onlineueberweisen extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_onlineueberweisen';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_onlineueberweisen';
 }

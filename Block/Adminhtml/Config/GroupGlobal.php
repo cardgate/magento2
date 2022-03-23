@@ -12,99 +12,110 @@ use Cardgate\Payment\Model\Config;
  * Render for "global" configuration group element
  *
  * @author DBS B.V.
- * @package Magento2
+ *
  */
-class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset {
+class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset
+{
 
-	/**
-	 *
-	 * @var Config
-	 */
-	private $config;
+    /**
+     *
+     * @var Config
+     */
+    private $config;
 
-	/**
-	 *
-	 * @param \Magento\Backend\Block\Context $context
-	 * @param \Magento\Backend\Model\Auth\Session $authSession
-	 * @param \Magento\Framework\View\Helper\Js $jsHelper
-	 * @param array $data
-	 */
-	public function __construct ( \Magento\Backend\Block\Context $context, \Magento\Backend\Model\Auth\Session $authSession, \Magento\Framework\View\Helper\Js $jsHelper, Config $backendConfig, array $data = [] ) {
-		$this->config = $backendConfig;
-		parent::__construct( $context, $authSession, $jsHelper, $data );
-	}
+    /**
+     *
+     * @param \Magento\Backend\Block\Context $context
+     * @param \Magento\Backend\Model\Auth\Session $authSession
+     * @param \Magento\Framework\View\Helper\Js $jsHelper
+     * @param array $data
+     */
+    public function __construct(
+        \Magento\Backend\Block\Context $context,
+        \Magento\Backend\Model\Auth\Session $authSession,
+        \Magento\Framework\View\Helper\Js $jsHelper,
+        Config $backendConfig,
+        array $data = []
+    ) {
+        $this->config = $backendConfig;
+        parent::__construct($context, $authSession, $jsHelper, $data);
+    }
 
-	/**
-	 * Return header title part of html for fieldset
-	 *
-	 * @param AbstractElement $element
-	 * @return string
-	 */
-	protected function _getHeaderTitleHtml ( $element ) {
-		$legend = $element->getLegend();
-		if ( ! $this->testConfigurationHealth() ) {
-			$legend .= " - <span style='color:red'>".__("Missing settings")."</span>";
-		}
-		$element->setLegend( $legend );
+    /**
+     * Return header title part of html for fieldset
+     *
+     * @param AbstractElement $element
+     * @return string
+     */
+    protected function _getHeaderTitleHtml($element)
+    {
+        $legend = $element->getLegend();
+        if (! $this->testConfigurationHealth()) {
+            $legend .= " - <span style='color:red'>".__("Missing settings")."</span>";
+        }
+        $element->setLegend($legend);
 
-		return parent::_getHeaderTitleHtml( $element );
-	}
+        return parent::_getHeaderTitleHtml($element);
+    }
 
-	/**
-	 * Tests configuration health
-	 *
-	 * @return boolean
-	 */
-	private function testConfigurationHealth () {
-		$extra = $this->_authSession->getUser()->getExtra();
-		if (
-			empty( $this->config->getGlobal( 'api_username' ) )
-			|| empty( $this->config->getGlobal( 'api_password' ) )
-			|| empty( $this->config->getGlobal( 'site_id' ) )
-			|| empty( $this->config->getGlobal( 'site_key' ) )
-		) {
-			$extra['configState']['cardgate_global'] = true;
-			$this->_authSession->getUser()->setExtra( $extra );
-			return false;
-		}
-		return true;
-	}
+    /**
+     * Tests configuration health
+     *
+     * @return boolean
+     */
+    private function testConfigurationHealth()
+    {
+        $extra = $this->_authSession->getUser()->getExtra();
+        if (empty($this->config->getGlobal('api_username'))
+            || empty($this->config->getGlobal('api_password'))
+            || empty($this->config->getGlobal('site_id'))
+            || empty($this->config->getGlobal('site_key'))
+        ) {
+            $extra['configState']['cardgate_global'] = true;
+            $this->_authSession->getUser()->setExtra($extra);
+            return false;
+        }
+        return true;
+    }
 
-	/**
-	 * Return header comment part of html for fieldset
-	 *
-	 * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
-	 * @return string
-	 */
-	protected function _getHeaderCommentHtml ( $element ) {
-		$groupConfig = $element->getGroup();
+    /**
+     * Return header comment part of html for fieldset
+     *
+     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
+     * @return string
+     */
+    protected function _getHeaderCommentHtml($element)
+    {
+        $groupConfig = $element->getGroup();
 
-		if ( empty( $groupConfig['help_url'] ) || ! $element->getComment() ) {
-			return parent::_getHeaderCommentHtml( $element );
-		}
+        if (empty($groupConfig['help_url']) || ! $element->getComment()) {
+            return parent::_getHeaderCommentHtml($element);
+        }
 
-		$html = '<div class="comment">' . $element->getComment() . ' <a target="_blank" href="' . $groupConfig['help_url'] . '">' . __( 'Help' ) . '</a></div>';
+        $html = '<div class="comment">' . $element->getComment() . ' <a target="_blank" href="' .
+                $groupConfig['help_url'] . '">' . __('Help') . '</a></div>';
 
-		return $html;
-	}
+        return $html;
+    }
 
-	/**
-	 * Return collapse state
-	 *
-	 * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
-	 * @return bool
-	 */
-	protected function _isCollapseState ( $element ) {
-		$extra = $this->_authSession->getUser()->getExtra();
-		if ( isset( $extra['configState'][$element->getId()] ) ) {
-			return $extra['configState'][$element->getId()];
-		}
+    /**
+     * Return collapse state
+     *
+     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
+     * @return bool
+     */
+    protected function _isCollapseState($element)
+    {
+        $extra = $this->_authSession->getUser()->getExtra();
+        if (isset($extra['configState'][$element->getId()])) {
+            return $extra['configState'][$element->getId()];
+        }
 
-		$groupConfig = $element->getGroup();
-		if ( ! empty( $groupConfig['expanded'] ) ) {
-			return true;
-		}
+        $groupConfig = $element->getGroup();
+        if (! empty($groupConfig['expanded'])) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

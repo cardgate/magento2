@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * AfterPay class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate Afterpay
  */
-class afterpay extends \Cardgate\Payment\Model\PaymentMethods {
+class Afterpay extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_afterpay';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_afterpay';
 }

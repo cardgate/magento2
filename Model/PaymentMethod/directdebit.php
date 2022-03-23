@@ -9,15 +9,15 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 /**
  * DirectDebit class.
  * @author DBS B.V.
- * @package Magento2
+ * Creates and manages CardGate DirectDebit
  */
-class directdebit extends \Cardgate\Payment\Model\PaymentMethods {
+class Directdebit extends \Cardgate\Payment\Model\PaymentMethods
+{
 
-	/**
-	 * Payment method code
-	 *
-	 * @var string
-	 */
-	protected $code = 'cardgate_directdebit';
-
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $code = 'cardgate_directdebit';
 }

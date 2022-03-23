@@ -6,18 +6,19 @@
  */
 ?>
 <dl class="payment-method purchase order">
-	<dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?> by <a href="https://www.cardgate.com/">CardGate</a></dt>
+    <dt class="title"><?= $block->escapeHtml($block->getMethod()->getTitle()) ?> by
+        <a href="https://www.cardgate.com/">CardGate</a></dt>
 <?php
-	// NOTE when the order is mailed the transaction has not yet been registered and there's no cardgate transaction
-	// id yet. When the invoice is sent, there is, so it gets included.
-	$sTransactionId = $block->getInfo()->getCardgateTransaction();
-	if ( ! empty( $sTransactionId ) ) {
-?>
-	<dd class="content">
-		<strong><?php echo $block->escapeHtml(__('Transaction ID')) ?></strong>
-		<span class="number"><?php echo $block->escapeHtml($block->getInfo()->getCardgateTransaction()) ?></span>
-	</dd>
-<?php
-	}
+    // NOTE when the order is mailed the transaction has not yet been registered and there's no cardgate transaction
+    // id yet. When the invoice is sent, there is, so it gets included.
+    $sTransactionId = $block->getInfo()->getCardgateTransaction();
+if (! empty($sTransactionId)) {
+    ?>
+    <dd class="content">
+        <strong><?= $block->escapeHtml(__('Transaction ID')) ?></strong>
+        <span class="number"><?= $block->escapeHtml($block->getInfo()->getCardgateTransaction()) ?></span>
+    </dd>
+    <?php
+}
 ?>
 </dl>
