@@ -14,7 +14,7 @@ use Cardgate\Payment\Model\Config;
  * Client redirect after payment action
  *
  * @author DBS B.V.
- *
+ * @package Magento2
  */
 class Redirect extends \Magento\Framework\App\Action\Action
 {
@@ -66,11 +66,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
             // of relying on the provided status in the url.
-            $order = ObjectManager::getInstance()->create(
-                \Magento\Sales\Model\Order::class
-            )->loadByIncrementId(
-                $orderId
-            );
+            $order = ObjectManager::getInstance()->create(\Magento\Sales\Model\Order::class)->loadByIncrementId($orderId);
             if (\Magento\Sales\Model\Order::STATE_NEW == $order->getState()) {
                 $gatewayClient = ObjectManager::getInstance()->get(\Cardgate\Payment\Model\GatewayClient::class);
                 $status = $gatewayClient->transactions()->status($transactionId);

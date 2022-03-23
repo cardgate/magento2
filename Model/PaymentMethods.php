@@ -6,10 +6,10 @@
  */
 namespace Cardgate\Payment\Model;
 
+use Cardgate\Exception\RefundException;
 use Cardgate\Payment\Model;
 use Cardgate\Payment\Model\Config\ValueHandlerPool;
 use Cardgate\Payment\Block\Info\DefaultInfo;
-use Exception;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\ObjectManagerInterface;
@@ -271,11 +271,11 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             if ($transaction->canRefund()) {
                 $transaction->refund((int)( $amount * 100 ));
             } else {
-                throw new Exception('refund not allowed');
+                throw new RefundException('refund not allowed');
             }
-        } catch (Exception $e) {
+        } catch (RefundException $e) {
             $order->addStatusHistoryComment(__('Error occurred while registering the refund (%1)', $e->getMessage()));
-            throw $e;
+            throw new RefundException($e);
         }
         return $this;
     }
