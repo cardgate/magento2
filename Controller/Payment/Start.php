@@ -10,7 +10,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
-use Cardgate\Exception\StartException;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\OrderRepository;
@@ -130,7 +129,7 @@ class Start extends \Magento\Framework\App\Action\Action
                 $order->getOrderCurrencyCode()
             );
 
-            $code = $order->getPayment()->getMethodInstance()->getCode();
+            $code = $order->getPayment()->getMethodInstance()->getCode(); 
             $paymentMethod = substr($code, 9);
             $transaction->setPaymentMethod($this->_gatewayClient->methods()->get($paymentMethod));
 

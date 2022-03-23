@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
-use Cardgate\Exception\CallbackException;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
@@ -17,7 +16,7 @@ use Magento\Sales\Api\Data\TransactionInterface;
  * Callback handler action
  *
  * @author DBS B.V.
- *
+ * @package Magento2
  */
 class Callback implements ActionInterface
 {
@@ -118,9 +117,7 @@ class Callback implements ActionInterface
                     $this->_cardgateConfig->setGlobal('testmode', $bIsTest);
                     $this->_listInterface->cleanType('config');
                 }
-                $this->_cardgateClient = ObjectManager::getInstance()->create(
-                    \Cardgate\Payment\Model\GatewayClient::class
-                );
+                $this->_cardgateClient = ObjectManager::getInstance()->create('\Cardgate\Payment\Model\GatewayClient');
                 $aResult = $this->_cardgateClient->pullConfig($get['token']);
                 if (isset($aResult['success']) && $aResult['success']==1) {
                     $aConfigData = $aResult['pullconfig']['content'];
@@ -128,18 +125,14 @@ class Callback implements ActionInterface
                     $this->_cardgateConfig->setGlobal('site_id', $aConfigData['site_id']);
                     $this->_cardgateConfig->setGlobal('site_key', $aConfigData['site_key']);
                     $this->_cardgateConfig->setGlobal('api_username', $aConfigData['merchant_id']);
-                    $this->_cardgateConfig->setGlobal(
-                        'api_password',
-                        $this->_encryptor->encrypt($aConfigData['api_key'])
-                    );
+                    $this->_cardgateConfig->setGlobal('api_password', $this->_encryptor->encrypt($aConfigData['api_key']));
                     $this->_listInterface->cleanType('config');
-                    $sResponse = $this->_cardgateConfig->getGlobal('api_username') .
-                                 '.' . $this->_cardgateConfig->getGlobal('site_id') . '.200';
+                    $sResponse = $this->_cardgateConfig->getGlobal('api_username') . '.' . $this->_cardgateConfig->getGlobal('site_id') . '.200';
                 } else {
                     $sResponse = 'Data retrieval failed.';
                 }
                     return $this->getResponse()->setBody($sResponse);
-            } catch (CallbackException $e) {
+            } catch (\Exception $e) {
                 return $this->getResponse()->setBody($e->getMessage());
             }
         }
@@ -156,25 +149,13 @@ class Callback implements ActionInterface
         $updateCardgateData = false;
         $payment = null;
         try {
-            if ( false == $this->_cardgateClient->transactions()->verifyCallback(
-                    empty($post) ? $get : $post,
-                    $this->_cardgateClient->getSiteKey()
-                )
-            ) {
-                throw new CallbackException('hash verification failure');
+            if (false == $this->_cardgateClient->transactions()->verifyCallback(empty($post) ? $get : $post, $this->_cardgateClient->getSiteKey())) {
+                throw new \Exception('hash verification failure');
             }
 
-            $order = ObjectManager::getInstance()->create(
-                \Magento\Sales\Model\Order::class
-            )->loadByIncrementId($reference);
+            $order = ObjectManager::getInstance()->create(\Magento\Sales\Model\Order::class)->loadByIncrementId($reference);
 
-            $order->addCommentToStatusHistory(
-                __(
-                    "Update for transaction %1. Received status code %2.",
-                    $transactionId,
-                    $code
-                )
-            );
+            $order->addCommentToStatusHistory(__("Update for transaction %1. Received status code %2.", $transactionId, $code));
 
             if (!$manualProcessing) {
                 $payment = $order->getPayment();
@@ -187,15 +168,7 @@ class Callback implements ActionInterface
                 // match the one from the gateway.
                 if ($payment->getCardgatePaymentmethod() != $pmId) {
                     $payment->setCardgatePaymentmethod($pmId);
-                    $order->addCommentToStatusHistory(
-                        __(
-                            "Callback received for transaction %1 with payment method '%2' but payment 
-                            method should be '%3'. Processing anyway.",
-                            $transactionId,
-                            $pmId,
-                            $order->getPayment()->getCardgatePaymentmethod()
-                        )
-                    );
+                    $order->addCommentToStatusHistory(__("Callback received for transaction %1 with payment method '%2' but payment method should be '%3'. Processing anyway.", $transactionId, $pmId, $order->getPayment()->getCardgatePaymentmethod()));
                 }
             }
 
@@ -225,22 +198,14 @@ class Callback implements ActionInterface
                             $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                         }
 
-                        $stockRegistry = ObjectManager::getInstance()->get(
-                            \Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface::class
-                        );
+                        $stockRegistry = ObjectManager::getInstance()->get(\Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface::class);
                         foreach ($order->getItems() as $item) {
                             foreach ($item->getChildrenItems() as $child) {
-                                $stockItem = $stockRegistry->getStockItem(
-                                    $child->getProductId(),
-                                    $order->getStore()->getWebsiteId()
-                                );
+                                $stockItem = $stockRegistry->getStockItem($child->getProductId(), $order->getStore()->getWebsiteId());
                                 $stockItem->setQty($stockItem->getQty() - $item->getQtyCanceled());
                                 $stockItem->save();
                             }
-                            $stockItem = $stockRegistry->getStockItem(
-                                $item->getProductId(),
-                                $order->getStore()->getWebsiteId()
-                            );
+                            $stockItem = $stockRegistry->getStockItem($item->getProductId(), $order->getStore()->getWebsiteId());
                             $stockItem->setQty($stockItem->getQty() - $item->getQtyCanceled());
                             $stockItem->save();
                             $item->setQtyCanceled(0);
@@ -248,26 +213,16 @@ class Callback implements ActionInterface
                             $item->setDiscountTaxCompensationCanceled(0);
                             $item->save();
                         }
-                        $order->addCommentToStatusHistory(
-                            __('Transaction rebooked. Product stock reclaimed from inventory.')
-                        );
+                        $order->addCommentToStatusHistory(__('Transaction rebooked. Product stock reclaimed from inventory.'));
                     }
 
                     // Test if transaction has been processed already.
-                    $paymentRepository = ObjectManager::getInstance()->get(
-                        \Magento\Sales\Model\Order\Payment\Transaction\Repository::class
-                    );
-                    $currentTransaction = $paymentRepository->getByTransactionId(
-                        $transactionId,
-                        $payment->getId(),
-                        $order->getId()
-                    );
-                    if (! empty($currentTransaction) &&
-                        $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE
-                    ) {
+                    $paymentRepository = ObjectManager::getInstance()->get(\Magento\Sales\Model\Order\Payment\Transaction\Repository::class);
+                    $currentTransaction = $paymentRepository->getByTransactionId($transactionId, $payment->getId(), $order->getId());
+                    if (! empty($currentTransaction) && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE) {
                         $order->addCommentToStatusHistory(__('Transaction already processed.'));
                         $updateCardgateData = false;
-                        throw new CallbackException('transaction already processed.');
+                        throw new \Exception('transaction already processed.');
                     }
 
                     // Test if payment has been processed already.
@@ -276,7 +231,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Payment already processed in another transaction.'));
                         $updateCardgateData = false;
-                        throw new CallbackException('payment already processed in another transaction.');
+                        throw new \Exception('payment already processed in another transaction.');
                     }
 
                     if ($order->isCurrencyDifferent()) {
@@ -305,7 +260,7 @@ class Callback implements ActionInterface
                         $this->invoiceSender->send($invoice);
                     } else {
                         $order->addCommentToStatusHistory(__('Failed to create invoice.'));
-                        throw new CallbackException('failed to create invoice.');
+                        throw new \Exception('failed to create invoice.');
                     }
                 }
             } elseif ($code < 400) {
@@ -315,25 +270,15 @@ class Callback implements ActionInterface
                             $order->registerCancellation(__('Transaction canceled.'), false);
                             $order->setStatus("cardgate_payment_failure");
                             $order->addCommentToStatusHistory(__("Transaction failure."));
-                    } catch (CallbackException $e) {
-                        $order->addCommentToStatusHistory(
-                            __(
-                                "Failed to cancel order. Order state was : %1.",
-                                $order->getState() . '/' . $order->getStatus()
-                            )
-                        );
-                        throw new CallbackException('failed to cancel order.');
+                    } catch (\Exception $e) {
+                        $order->addCommentToStatusHistory(__("Failed to cancel order. Order state was : %1.", $order->getState() . '/' . $order->getStatus()));
+                        throw new \Exception('failed to cancel order.');
                     }
                 }
             } elseif ($code < 500) {
                 // 4xx refund
                 if (!$manualProcessing) {
-                    $order->registerCancellation(
-                        __(
-                            "Transaction refund received. Amount %1.",
-                            $currency . ' ' . round($amount / 100, 2)
-                        )
-                    );
+                    $order->registerCancellation(__("Transaction refund received. Amount %1.", $currency . ' ' . round($amount / 100, 2)));
                 }
             } elseif ($code >= 600
                 && $code < 700
@@ -346,9 +291,9 @@ class Callback implements ActionInterface
             // Set the output to a string that the gateway expects.
             $result->setContents($transactionId . '.' . $code);
 
-        } catch (CallbackException $e) {
+        } catch (\Exception $e) {
 
-            // Add the CallbackException message to the output.
+            // Add the exception message to the output.
             $result->setContents($e->getMessage());
         }
 

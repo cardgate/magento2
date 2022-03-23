@@ -9,13 +9,12 @@ namespace Cardgate\Payment\Controller\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ObjectManager;
 use Cardgate\Payment\Model\Config;
-use Cardgate\Exception\RedirectException;
 
 /**
  * Client redirect after payment action
  *
  * @author DBS B.V.
- *
+ * @package Magento2
  */
 class Redirect extends \Magento\Framework\App\Action\Action
 {
@@ -62,16 +61,12 @@ class Redirect extends \Magento\Framework\App\Action\Action
                 || empty($code)
                 || empty($transactionId)
             ) {
-                throw new RedirectException(__('Wrong parameters supplied.'));
+                throw new \Exception(__('Wrong parameters supplied.'));
             }
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
             // of relying on the provided status in the url.
-            $order = ObjectManager::getInstance()->create(
-                \Magento\Sales\Model\Order::class
-            )->loadByIncrementId(
-                $orderId
-            );
+            $order = ObjectManager::getInstance()->create(\Magento\Sales\Model\Order::class)->loadByIncrementId($orderId);
             if (\Magento\Sales\Model\Order::STATE_NEW == $order->getState()) {
                 $gatewayClient = ObjectManager::getInstance()->get(\Cardgate\Payment\Model\GatewayClient::class);
                 $status = $gatewayClient->transactions()->status($transactionId);
@@ -86,10 +81,10 @@ class Redirect extends \Magento\Framework\App\Action\Action
                     $this->_checkoutSession->restoreQuote();
                     $resultRedirect->setPath('checkout');
                 } else {
-                    throw new RedirectException(__('Transaction canceled.'));
+                    throw new \Exception(__('Transaction canceled.'));
                 }
             } else {
-                throw new RedirectException(__('Payment not completed.'));
+                throw new \Exception(__('Payment not completed.'));
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
