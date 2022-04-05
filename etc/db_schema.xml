@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<!--
+	Copyright (c) 2022 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="quote_payment">
+        <column name="cardgatefee_incl_tax" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Incl Tax" default="0.0000" />
+        <column name="base_cardgatefee_incl_tax" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Incl Tax" default="0.0000" />
+        <column name="base_cardgatefee_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Excl Tax Amount" default="0.0000" />
+        <column name="base_cardgatefee_tax_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Tax Amount" default="0.0000" />
+        <column name="cardgatefee_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Excl Tax Amount" default="0.0000" />
+        <column name="cardgatefee_tax_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Tax Amount" default="0.0000" />
+    </table>
+
+    <table name="sales_order">
+        <column name="cardgatefee_incl_tax" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Incl Tax" default="0.0000" />
+        <column name="base_cardgatefee_incl_tax" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Incl Tax" default="0.0000" />
+        <column name="base_cardgatefee_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Excl Tax Amount" default="0.0000" />
+        <column name="base_cardgatefee_cancelled" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Excl Tax Cancelled" default="0.0000" />
+        <column name="base_cardgatefee_invoiced" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Excl Tax Invoiced" default="0.0000" />
+        <column name="base_cardgatefee_refunded" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Excl Tax Refunded" default="0.0000" />
+        <column name="base_cardgatefee_tax_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Tax Amount" default="0.0000" />
+        <column name="base_cardgatefee_tax_refunded" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Tax Refunded" default="0.0000" />
+        <column name="cardgatefee_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Excl Tax Amount" default="0.0000" />
+        <column name="cardgatefee_cancelled" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Excl Tax Cancelled" default="0.0000" />
+        <column name="cardgatefee_invoiced" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Excl Tax Invoiced" default="0.0000" />
+        <column name="cardgatefee_refunded" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Excl Tax Refunded" default="0.0000" />
+        <column name="cardgatefee_tax_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Tax Amount" default="0.0000" />
+        <column name="cardgatefee_tax_refunded" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Tax Refunded" default="0.0000" />
+    </table>
+
+    <table name="sales_invoice">
+        <column name="cardgatefee_incl_tax" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Incl Tax" default="0.0000" />
+        <column name="base_cardgatefee_incl_tax" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Incl Tax" default="0.0000" />
+        <column name="base_cardgatefee_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Excl Tax Amount" default="0.0000" />
+        <column name="base_cardgatefee_tax_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="Base CardGate Fee Tax Amount" default="0.0000" />
+        <column name="cardgatefee_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Excl Tax Amount" default="0.0000" />
+        <column name="cardgatefee_tax_amount" xsi:type="decimal" scale="4" precision="12" nullable="true" comment="CardGate Fee Tax Amount" default="0.0000" />
+    </table>
+
+    <table name="sales_order_payment">
+        <column xsi:type="varchar" name="cardgate_paymentmethod" nullable="true" length="64" comment="CardGate PaymentMethod"/>
+        <column xsi:type="varchar" name="cardgate_transaction" nullable="true" length="64" comment="CardGate TransactionID"/>
+        <column xsi:type="int" name="cardgate_status" unsigned="true" nullable="true" comment="CardGate StatusCode" default="0"/>
+        <column xsi:type="boolean" name="cardgate_testmode" nullable="true" default="false" comment="CardGate TestMode"/>
+    </table>
+</schema>
