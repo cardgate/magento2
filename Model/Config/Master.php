@@ -168,8 +168,6 @@ class Master
             'afterpay' => 'Afterpay',
             'directdebit' => 'DirectDebit',
             'przelewy24' => 'Przelewy24',
-            'focum' => 'Focum',
-            'wallet' => 'Wallet',
             'safeklick' => 'Safeklick',
             'banktransfer' => 'Bank transfer',
             'giropay' => 'Giropay',
