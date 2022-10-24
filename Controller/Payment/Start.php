@@ -13,6 +13,7 @@ use Cardgate\Payment\Model\Config\Master;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\OrderRepository;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 
 /**
  * Start payment action
@@ -85,6 +86,12 @@ class Start extends \Magento\Framework\App\Action\Action
 
     /**
      *
+     * @var StockRegistryInterface
+     */
+    private $stockRegistryInterface;
+
+    /**
+     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -94,6 +101,7 @@ class Start extends \Magento\Framework\App\Action\Action
      * @param GatewayClient $gatewayClient
      * @param Config $cardgateConfig
      * @param Master $masterConfig
+     * @param StockRegistryInterface $stockRegistryInterface
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -104,7 +112,9 @@ class Start extends \Magento\Framework\App\Action\Action
         PaymentHelper $paymentHelper,
         GatewayClient $gatewayClient,
         Config $cardgateConfig,
-        Master $masterConfig
+        Master $masterConfig,
+        StockRegistryInterface $stockRegistryInterface
+
     ) {
         $this->customerSession = $customerSession;
         $this->checkoutSession = $checkoutSession;
@@ -114,6 +124,8 @@ class Start extends \Magento\Framework\App\Action\Action
         $this->_gatewayClient = $gatewayClient;
         $this->_cardgateConfig = $cardgateConfig;
         $this->_masterConfig = $masterConfig;
+        $this->stockRegistryInterface = $stockRegistryInterface;
+
         parent::__construct($context);
     }
 
@@ -187,22 +199,20 @@ class Start extends \Magento\Framework\App\Action\Action
 
                 // Include stock in cart items will disable auto-capture on CardGate gateway if item
                 // is backordered.
-                $stockData = null;
+                $oStock = null;
                 try {
-                    $stockData = $stock->get($item->getProduct()->getId())->getData();
+                    $oStock = $this->stockRegistryInterface->getStockItem($product->getId());
+
                 } catch (StartException $e) {
                     /* ignore */
                 }
-                if (is_array($stockData)
-                    && isset($stockData['manage_stock'])
-                    && isset($stockData['qty'])
-                    && !!$stockData['manage_stock']
+                if (is_object($oStock) && $oStock->getManageStock()
                 ) {
-                    if ($stockData['qty'] <= -1) { // happens when backorders are allowed
+                    if ($oStock->getQty() <= -1) { // happens when backorders are allowed
                         $cartItem->setStock(0);
                     } else {
                         // The stock qty has already been lowered with the purchased quantity.
-                        $cartItem->setStock($itemQty + $stockData['qty']);
+                        $cartItem->setStock($itemQty + $oStock->getQty());
                     }
                 }
                 $calculatedGrandTotal += $item->getPrice() * $itemQty + round($item->getTaxAmount(), 2);
