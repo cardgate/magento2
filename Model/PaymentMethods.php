@@ -91,7 +91,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
         PaymentDataObjectFactory $paymentDataObjectFactory
     ) {
         $this->config = $config;
-        $this->setConfig();
+        $this->config->setMethodCode($this->code);
         $this->taxCalculation = $taxCalculation;
         $this->objectManager = $objectManager;
         $valueHandlerPool = $this->getValueHandlerPool($this->code);
@@ -143,15 +143,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     }
 
     /**
-     * @return void
-     */
-
-    public function setConfig()
-    {
-        $this->config->setMethodCode($this->code);
-    }
-
-    /**
      *
      * {@inheritdoc}
      *
@@ -197,6 +188,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
      */
     public function getFeeForQuote(Quote $quote, Total $total = null)
     {
+        $this->config->setMethodCode($this->code);
         $storeId = $quote->getStoreId();
         if (! ($total === null)) {
             $calculatedTotal = array_sum($total->getAllBaseTotalAmounts());
@@ -223,7 +215,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             ]
         );
         $taxRate = $this->taxCalculation->getRate($request);
-
         $baseFeeFixed      = floatval($this->config->getValue('paymentfee_fixed', $storeId));
         $baseFeePercentage = floatval($this->config->getValue('paymentfee_percentage', $storeId));
         $baseFee           = round(( $calculatedTotal * ( $baseFeePercentage / 100 ) ) + $baseFeeFixed, 4);
