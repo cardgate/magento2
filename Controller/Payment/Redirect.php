@@ -8,7 +8,11 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ObjectManager;
-use Cardgate\Payment\Model\Config;
+use Magento\Framework\App\ActionInterface;
+use Magento\Framework\Message\Manager;
+use Magento\Framework\App\RequestInterface as Request;
+use \Magento\Framework\Controller\Result\Redirect as ResultRedirect;
+use Cardgate\Payment\Model\Config as CardgateConfig;
 
 /**
  * Client redirect after payment action
@@ -16,7 +20,7 @@ use Cardgate\Payment\Model\Config;
  * @author DBS B.V.
  * @package Magento2
  */
-class Redirect extends \Magento\Framework\App\Action\Action
+class Redirect implements ActionInterface
 {
 
     /**
@@ -31,14 +35,36 @@ class Redirect extends \Magento\Framework\App\Action\Action
      */
     protected $_checkoutSession;
 
+    /**
+     *
+     * @var ResultRedirect
+     */
+    protected $resultRedirect;
+
+    /**
+     *
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     *
+     * @var Manager
+     */
+    protected $messageManager;
+
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
+        ResultRedirect $resultRedirect,
+        Request $request,
         Session $checkoutSession,
-        Config $cardgateConfig
+        CardgateConfig $cardgateConfig,
+        Manager $messageManager
     ) {
+        $this->resultRedirect = $resultRedirect;
+        $this->request = $request;
         $this->_checkoutSession = $checkoutSession;
         $this->_cardgateConfig = $cardgateConfig;
-        parent::__construct($context);
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -49,12 +75,11 @@ class Redirect extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-        $orderId = $this->getRequest()->getParam('reference');
-        $status = $this->getRequest()->getParam('status');
-        $code = $this->getRequest()->getParam('code');
-        $transactionId = $this->getRequest()->getParam('transaction');
+        $orderId = $this->request->getParam('reference');
+        $status = $this->request->getParam('status');
+        $code = $this->request->getParam('code');
+        $transactionId = $this->request->getParam('transaction');
 
-        $resultRedirect = $this->resultRedirectFactory->create();
         try {
             if (empty($orderId)
                 || empty($status)
@@ -75,11 +100,11 @@ class Redirect extends \Magento\Framework\App\Action\Action
                 || 'pending' == $status
             ) {
                 $this->_checkoutSession->start();
-                $resultRedirect->setPath('checkout/onepage/success');
+                $this->resultRedirect->setPath('checkout/onepage/success');
             } elseif ((int)$code == 309) {
                 if (!!$this->_cardgateConfig->getGlobal('return_to_checkout')) {
                     $this->_checkoutSession->restoreQuote();
-                    $resultRedirect->setPath('checkout');
+                    $this->resultRedirect->setPath('checkout');
                 } else {
                     throw new \Exception(__('Transaction canceled.'));
                 }
@@ -90,13 +115,13 @@ class Redirect extends \Magento\Framework\App\Action\Action
             $this->messageManager->addErrorMessage(__($e->getMessage()));
             if (!!$this->_cardgateConfig->getGlobal('always_show_success_page')) {
                 $this->_checkoutSession->start();
-                $resultRedirect->setPath('checkout/onepage/success');
+                $this->resultRedirect->setPath('checkout/onepage/success');
             } else {
                 $this->_checkoutSession->restoreQuote();
-                $resultRedirect->setPath('checkout/cart');
+                $this->resultRedirect->setPath('checkout/cart');
             }
         }
 
-        return $resultRedirect;
+        return $this->resultRedirect;
     }
 }
