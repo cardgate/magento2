@@ -2,7 +2,7 @@
 	"name": "cardgate/magento2",
 	"description": "CardGate Module for Magento 2",
 	"homepage": "https://www.cardgate.com",
-	"version": "2.0.48",
+	"version": "2.0.49",
 	"keywords": [ "cardgate", "ideal", "bancontact", "creditcard", "magento" ],
 	"require": {
 		"php": ">=7.2",

@@ -6,10 +6,13 @@
  */
 namespace Cardgate\Payment\Controller\Payment;
 
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Controller\Result\Redirect;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\OrderRepository;
@@ -21,7 +24,7 @@ use Magento\CatalogInventory\Api\StockRegistryInterface;
  * @author DBS B.V.
  *
  */
-class Start extends \Magento\Framework\App\Action\Action
+class Start implements ActionInterface
 {
 
     /**
@@ -35,12 +38,6 @@ class Start extends \Magento\Framework\App\Action\Action
      * @var \Magento\Checkout\Model\Session
      */
     protected $checkoutSession;
-
-    /**
-     *
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
 
     /**
      *
@@ -92,10 +89,15 @@ class Start extends \Magento\Framework\App\Action\Action
 
     /**
      *
-     * @param \Magento\Framework\App\Action\Context $context
+     * @var  Magento\Framework\Controller\Result\Redirect
+     */
+    private $redirect;
+
+    /**
+     *
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Redirect $redirect
      * @param OrderRepository $orderRepository
      * @param PaymentHelper $paymentHelper
      * @param GatewayClient $gatewayClient
@@ -104,10 +106,9 @@ class Start extends \Magento\Framework\App\Action\Action
      * @param StockRegistryInterface $stockRegistryInterface
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        Redirect $redirect,
         OrderRepository $orderRepository,
         PaymentHelper $paymentHelper,
         GatewayClient $gatewayClient,
@@ -118,15 +119,13 @@ class Start extends \Magento\Framework\App\Action\Action
     ) {
         $this->customerSession = $customerSession;
         $this->checkoutSession = $checkoutSession;
-        $this->scopeConfig = $scopeConfig;
+        $this->redirect = $redirect;
         $this->orderRepository = $orderRepository;
         $this->_paymentHelper = $paymentHelper;
         $this->_gatewayClient = $gatewayClient;
         $this->_cardgateConfig = $cardgateConfig;
         $this->_masterConfig = $masterConfig;
         $this->stockRegistryInterface = $stockRegistryInterface;
-
-        parent::__construct($context);
     }
 
     public function execute()
@@ -135,6 +134,12 @@ class Start extends \Magento\Framework\App\Action\Action
         $orderId = $order->getIncrementId();
 
         try {
+
+            $storeManager = ObjectManager::getInstance()->get(
+                \Magento\Store\Model\StoreManagerInterface::class
+            );
+            $url = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+
             $transaction = $this->_gatewayClient->transactions()->create(
                 $this->_gatewayClient->getSiteId(),
                 (int)round($order->getGrandTotal() * 100),
@@ -145,8 +150,8 @@ class Start extends \Magento\Framework\App\Action\Action
             $paymentMethod = substr($code, 9);
             $transaction->setPaymentMethod($this->_gatewayClient->methods()->get($paymentMethod));
 
-            $transaction->setCallbackUrl($this->_url->getUrl('cardgate/payment/callback'));
-            $transaction->setRedirectUrl($this->_url->getUrl('cardgate/payment/redirect'));
+            $transaction->setCallbackUrl($url.'cardgate/payment/callback');
+            $transaction->setRedirectUrl($url.'cardgate/payment/redirect');
             $transaction->setReference($orderId);
             $transaction->setDescription(
                 str_replace(
@@ -322,8 +327,8 @@ class Start extends \Magento\Framework\App\Action\Action
 
             $actionUrl = $transaction->getActionUrl();
             if (null !== $actionUrl) {
-                // Redirect the consumer to the CardGate payment gateway.
-                $this->getResponse()->setRedirect($actionUrl);
+                // Redirect the consumer to the CardGate payment gatew
+                return $this->redirect->setUrl($actionUrl);
             } else {
                 // Payment methods without user interaction are not yet supported.
                 throw new StartException('unsupported payment action');
