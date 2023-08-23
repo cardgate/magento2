@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Block\Adminhtml\Config;
 
-use Cardgate\Payment\Model\Config;
+use Cardgate\Payment\Model\Config as CardgateConfig;
 
 /**
  * Render for "paymentmethod" configuration group elements
@@ -19,9 +19,9 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
 
     /**
      *
-     * @var Config
+     * @var CardgateConfig
      */
-    private $config;
+    private $cardgateConfig;
 
     /**
      * payment method id
@@ -51,30 +51,30 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
      * @param \Magento\Backend\Model\Auth\Session $authSession
      * @param \Magento\Framework\View\Helper\Js $jsHelper
      * @param array $data
+     * @param CardgateConfig $cardgateConfig
      */
     public function __construct(
         \Magento\Backend\Block\Context $context,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
-        Config $backendConfig,
-        array $data = []
+        array $data = [],
+        CardgateConfig $cardgateConfig
     ) {
-        $this->config = $backendConfig;
+        $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $authSession, $jsHelper, $data);
     }
 
     /**
-     *
-     * {@inheritDoc}
+     * @inheritDoc
      * @see \Magento\Config\Block\System\Config\Form\Fieldset::render()
      */
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         $id = $element->getData('original_data')['id'];
         $this->pm_id = substr($id, 9);
-        $this->config->setMethodCode($id);
-        $this->pm_active = ( $this->config->getvalue('active') == 1 );
-        $activePms = $this->config->getActivePMIDs();
+        $this->cardgateConfig->setMethodCode($id);
+        $this->pm_active = ( $this->cardgateConfig->getValue('active') == 1 );
+        $activePms = $this->cardgateConfig->getActivePMIDs();
         $this->pm_enabled = in_array($this->pm_id, $activePms);
         return parent::render($element);
     }
@@ -102,6 +102,11 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
         return parent::_getHeaderTitleHtml($element);
     }
 
+    /**
+     * Test if payment method is enabled and active
+     *
+     * @return boolean
+     */
     private function testConfigurationHealth()
     {
 

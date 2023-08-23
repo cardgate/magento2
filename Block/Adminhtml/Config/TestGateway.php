@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Block\Adminhtml\Config;
 
-use Cardgate\Payment\Model\Config;
+use Cardgate\Payment\Model\Config as CardgateConfig;
 
 /**
  * Render for "test gateway settings" element
@@ -16,38 +16,38 @@ use Cardgate\Payment\Model\Config;
  */
 class TestGateway extends \Magento\Config\Block\System\Config\Form\Field
 {
-
-    private $config;
+    /**
+     * Config
+     *
+     * @var CardgateConfig
+     */
+    private $cardgateConfig;
 
     /**
      *
      * @param \Magento\Backend\Block\Context $context
-     * @param \Magento\Backend\Model\Auth\Session $authSession
-     * @param \Magento\Framework\View\Helper\Js $jsHelper
-     * @param \Magento\Config\Model\Config $backendConfig
-     * @param array $data
+     * @param array $data,
+     * @param CardgateConfig $cardgateConfig
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        Config $backendConfig,
-        array $data = []
+        array $data = [],
+        CardgateConfig $cardgateConfig
     ) {
-        $this->config = $backendConfig;
+        $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $data);
     }
 
     /**
-     *
-     * {@inheritdoc}
-     *
+     * @inheritdoc
      * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
      */
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-        if (! empty($this->config->getGlobal('api_username'))
-            && ! empty($this->config->getGlobal('api_password'))
-            && ! empty($this->config->getGlobal('site_id'))
-            && ! empty($this->config->getGlobal('site_key'))
+        if (! empty($this->cardgateConfig->getGlobal('api_username'))
+            && ! empty($this->cardgateConfig->getGlobal('api_password'))
+            && ! empty($this->cardgateConfig->getGlobal('site_id'))
+            && ! empty($this->cardgateConfig->getGlobal('site_key'))
         ) {
             $testGatewayUrl = $this->_urlBuilder->getUrl("cardgate/gateway/test", [
                 'section' => 'gateway'
