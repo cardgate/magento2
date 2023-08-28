@@ -88,6 +88,16 @@ class Callback implements ActionInterface
      * @param StockRegistryProviderInterface $stockRegistry
      */
 
+    /**
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+     * @param \Magento\Framework\App\Cache\TypeListInterface $listInterface
+     * @param GatewayClient $client
+     * @param \Cardgate\Payment\Model\Config $config
+     * @param \Magento\Framework\Encryption\Encryptor $encryptor
+     * @param StockRegistryProviderInterface $stockRegistry
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
