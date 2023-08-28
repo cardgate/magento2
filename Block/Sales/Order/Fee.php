@@ -69,12 +69,18 @@ class Fee extends \Magento\Framework\View\Element\Template
         return $this->_source;
     }
 
+    /**
+     * Retrieve application store object
+     *
+     * @return \Magento\Store\Api\Data\StoreInterface
+     */
     public function getStore()
     {
         return $this->_order->getStore();
     }
 
     /**
+     * Retrieve Order object
      *
      * @return Order
      */
@@ -84,6 +90,7 @@ class Fee extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Retrieve Label properties
      *
      * @return array
      */
@@ -93,6 +100,7 @@ class Fee extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Retrieve value properties
      *
      * @return array
      */

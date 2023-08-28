@@ -15,6 +15,8 @@ class FetchPM extends \Magento\Backend\App\Action
 {
 
     /**
+     * Retrieve CardGte payment methods
+     *
      * @return \Magento\Framework\Controller\Result\Raw\Interceptor
      */
     public function execute()
@@ -41,6 +43,9 @@ class FetchPM extends \Magento\Backend\App\Action
     }
 
     /**
+     *  Return CardGate payment methods
+     *
+     * @param  string $sResult_
      * @return array
      */
     protected function _fetch(&$sResult_)
@@ -71,6 +76,8 @@ class FetchPM extends \Magento\Backend\App\Action
     }
 
     /**
+     * Return serialized data
+     *
      * @param mixed $data
      * @return string
      */
