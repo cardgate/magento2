@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Block\Adminhtml\Config;
 
-use Cardgate\Payment\Model\Config;
+use Cardgate\Payment\Model\Config as CardgateConfig;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\App\ObjectManager;
 
@@ -20,27 +20,31 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
 {
 
     /**
-     * Config
+     * CardgateConfig
      *
-     * @var Config
+     * @var CardgateConfig
      */
-    private $config;
+    private $cardgateConfig;
 
     /**
      *
      * @param \Magento\Backend\Block\Context $context
-     * @param \Magento\Config\Model\Config $backendConfig
-     * @param array $data
+     * @param array $data,
+     * @paran CardgateConfig $cardgateConfig
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        Config $backendConfig,
-        array $data = []
+        array $data = [],
+        CardgateConfig $cardgateConfig
     ) {
-        $this->config = $backendConfig;
+        $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $data);
     }
 
+    /**
+     * @inheritdoc
+     * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
+     */
     public function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         /**
@@ -53,15 +57,12 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
         } catch (\Exception $e) {
             $pluginVersion = __("UNKOWN");
         }
+        $testmode = $this->cardgateConfig->getGlobal('testmode');
 
-        $testmode = $this->config->getGlobal('testmode');
-        $serverIsSet = isset($_SERVER['CG_API_URL']);
-        $apiUrl = ($serverIsSet ? $_SERVER['CG_API_URL']:'');
         return
             "Plugin <strong>v" . $pluginVersion . '</strong><br/>'
             . 'Client Library <strong>v' . \cardgate\api\Client::CLIENT_VERSION . '</strong>'
             . ( $testmode ? '<br/><span style="color:red">'. __("TESTMODE ENABLED").'</span>' : '' )
-            . ( $serverIsSet && $apiUrl != '' ? ' <span style="color:red">API OVERRIDE (' . $apiUrl . ')</span>' : '' )
         ;
     }
 }

@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Block\Adminhtml\Config;
 
-use Cardgate\Payment\Model\Config;
+use Cardgate\Payment\Model\Config as CardgateConfig;
 
 /**
  * Render for "global" configuration group element
@@ -19,9 +19,9 @@ class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset
 
     /**
      *
-     * @var Config
+     * @var CardgateConfig
      */
-    private $config;
+    private $cardgateConfig;
 
     /**
      *
@@ -29,15 +29,17 @@ class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset
      * @param \Magento\Backend\Model\Auth\Session $authSession
      * @param \Magento\Framework\View\Helper\Js $jsHelper
      * @param array $data
+     * @param CardgateConfig $cardgateConfig
      */
     public function __construct(
         \Magento\Backend\Block\Context $context,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
-        Config $backendConfig,
-        array $data = []
+        array $data = [],
+        CardgateConfig $cardgateConfig
+
     ) {
-        $this->config = $backendConfig;
+        $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $authSession, $jsHelper, $data);
     }
 
@@ -66,10 +68,10 @@ class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset
     private function testConfigurationHealth()
     {
         $extra = $this->_authSession->getUser()->getExtra();
-        if (empty($this->config->getGlobal('api_username'))
-            || empty($this->config->getGlobal('api_password'))
-            || empty($this->config->getGlobal('site_id'))
-            || empty($this->config->getGlobal('site_key'))
+        if (empty($this->cardgateConfig->getGlobal('api_username'))
+            || empty($this->cardgateConfig->getGlobal('api_password'))
+            || empty($this->cardgateConfig->getGlobal('site_id'))
+            || empty($this->cardgateConfig->getGlobal('site_key'))
         ) {
             $extra['configState']['cardgate_global'] = true;
             $this->_authSession->getUser()->setExtra($extra);

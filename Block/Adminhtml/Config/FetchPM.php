@@ -6,7 +6,8 @@
  */
 namespace Cardgate\Payment\Block\Adminhtml\Config;
 
-use Cardgate\Payment\Model\Config;
+use Cardgate\Payment\Model\Config as CardgateConfig;
+use Magento\Backend\Block\Template\Context as Context;
 
 /**
  * Fetch Payment methods HTML Block renderer
@@ -14,52 +15,47 @@ use Cardgate\Payment\Model\Config;
  * @author DBS B.V.
  *
  */
-class FetchPM extends \Magento\Config\Block\System\Config\Form\Field
-{
+class FetchPM extends \Magento\Config\Block\System\Config\Form\Field {
 
     /**
      *
-     * @var Config
+     * @var CardgateConfig
      */
-    private $config;
+    private $cardgateConfig;
 
     /**
      *
-     * @param \Magento\Backend\Block\Context $context
-     * @param \Magento\Backend\Model\Auth\Session $authSession
-     * @param \Magento\Framework\View\Helper\Js $jsHelper
-     * @param \Magento\Config\Model\Config $backendConfig
+     * @param Context $context
      * @param array $data
+     * @param CardgateConfig $cardgateConfig
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        Config $backendConfig,
-        array $data = []
+        Context $context,
+        array $data = [],
+        CardgateConfig $cardgateConfig
     ) {
-        $this->config = $backendConfig;
-        parent::__construct($context, $data);
+        $this->cardgateConfig = $cardgateConfig;
+        parent::__construct( $context, $data );
     }
 
     /**
-     *
-     * {@inheritdoc}
-     *
+     * @inheritdoc
      * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
      */
-    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
-    {
-        if (! empty($this->config->getGlobal('api_username'))
-            && ! empty($this->config->getGlobal('api_password'))
-            && ! empty($this->config->getGlobal('site_id'))
-            && ! empty($this->config->getGlobal('site_key'))
+    protected function _getElementHtml( \Magento\Framework\Data\Form\Element\AbstractElement $element ) {
+        if ( ! empty( $this->cardgateConfig->getGlobal( 'api_username' ) )
+             && ! empty( $this->cardgateConfig->getGlobal( 'api_password' ) )
+             && ! empty( $this->cardgateConfig->getGlobal( 'site_id' ) )
+             && ! empty( $this->cardgateConfig->getGlobal( 'site_key' ) )
         ) {
-            $fetchPMUrl = $this->_urlBuilder->getUrl("cardgate/gateway/fetchpm", [
+            $fetchPMUrl = $this->_urlBuilder->getUrl( "cardgate/gateway/fetchpm", [
                 'section' => 'gateway'
-            ]);
-            return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>".
-                   __("Refresh active payment methods")."</span></button>";
+            ] );
+
+            return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>" .
+                   __( "Refresh active payment methods" ) . "</span></button>";
         } else {
-            return __("Please enter Site Id, Hash key, Merchant Id and API key first");
+            return __( "Please enter Site Id, Hash key, Merchant Id and API key first" );
         }
     }
 }

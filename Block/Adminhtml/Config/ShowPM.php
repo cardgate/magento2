@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Block\Adminhtml\Config;
 
-use Cardgate\Payment\Model\Config;
+use Cardgate\Payment\Model\Config as CardgateConfig;
 
 /**
  * Render for "show payment method" element
@@ -18,39 +18,35 @@ class ShowPM extends \Magento\Config\Block\System\Config\Form\Field
 {
     /**
      *
-     * @var Config
+     * @var CardgateConfig
      */
-    private $config;
+    private $cardgateConfig;
 
     /**
      *
      * @param \Magento\Backend\Block\Context $context
-     * @param \Magento\Backend\Model\Auth\Session $authSession
-     * @param \Magento\Framework\View\Helper\Js $jsHelper
-     * @param \Magento\Config\Model\Config $backendConfig
-     * @param array $data
+     * @param array $data,
+     * @param  CardgateConfig $cardgateConfig
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        Config $backendConfig,
-        array $data = []
+        array $data = [],
+        CardgateConfig $cardgateConfig
     ) {
-        $this->config = $backendConfig;
+        $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $data);
     }
 
     /**
-     *
-     * {@inheritdoc}
-     *
+     * @inheritdoc
      * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
      */
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-        if (empty($this->config->getGlobal('active_pm'))) {
+        if (empty($this->cardgateConfig->getGlobal('active_pm'))) {
             return "<span style='color:#ff0000'>" . __("No active payment methods found") . "</span>";
         } else {
-            return implode(', ', $this->config->getActivePMIDs());
+            return implode(', ', $this->cardgateConfig->getActivePMIDs());
         }
     }
 }
