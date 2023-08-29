@@ -27,13 +27,13 @@ class MandatoryField extends \Magento\Config\Block\System\Config\Form\Field
     /**
      *
      * @param \Magento\Backend\Block\Context $context
-     * @param array $data
      * @param CardgateConfigg $cardgateConfig
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        array $data = [],
-        CardgateConfig $cardgateConfig
+        CardgateConfig $cardgateConfig,
+        array $data = []
     ) {
         $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $data);

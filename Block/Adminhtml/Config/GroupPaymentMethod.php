@@ -50,15 +50,15 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
      * @param \Magento\Backend\Block\Context $context
      * @param \Magento\Backend\Model\Auth\Session $authSession
      * @param \Magento\Framework\View\Helper\Js $jsHelper
-     * @param array $data
      * @param CardgateConfig $cardgateConfig
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Context $context,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
-        array $data = [],
-        CardgateConfig $cardgateConfig
+        CardgateConfig $cardgateConfig,
+        array $data = []
     ) {
         $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $authSession, $jsHelper, $data);

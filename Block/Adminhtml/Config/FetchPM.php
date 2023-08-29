@@ -26,13 +26,13 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field {
     /**
      *
      * @param Context $context
-     * @param array $data
      * @param CardgateConfig $cardgateConfig
+     * @param array $data
      */
     public function __construct(
         Context $context,
+        CardgateConfig $cardgateConfig,
         array $data = [],
-        CardgateConfig $cardgateConfig
     ) {
         $this->cardgateConfig = $cardgateConfig;
         parent::__construct( $context, $data );
