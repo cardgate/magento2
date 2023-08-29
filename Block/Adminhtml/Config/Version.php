@@ -27,15 +27,14 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
     private $cardgateConfig;
 
     /**
-     *
-     * @param \Magento\Backend\Block\Context $context
-     * @param array $data,
-     * @paran CardgateConfig $cardgateConfig
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param CardgateConfig $cardgateConfig
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        array $data = [],
-        CardgateConfig $cardgateConfig
+        CardgateConfig $cardgateConfig,
+        array $data = []
     ) {
         $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $data);
