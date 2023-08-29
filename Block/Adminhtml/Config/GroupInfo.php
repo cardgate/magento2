@@ -29,15 +29,15 @@ class GroupInfo extends Fieldset
      * @param \Magento\Backend\Block\Context $context
      * @param \Magento\Backend\Model\Auth\Session $authSession
      * @param \Magento\Framework\View\Helper\Js $jsHelper
-     * @param array $data
      * @param CardgateConfig $cardgateConfig
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Context $context,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
+        CardgateConfig $cardgateConfig,
         array $data = [],
-        CardgateConfig $cardgateConfig
     ) {
         $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $authSession, $jsHelper, $data);
