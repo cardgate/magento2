@@ -18,8 +18,7 @@ class SalesEventQuoteSubmitBeforeObserver extends AbstractDataAssignObserver
 {
 
     /**
-     *
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @see \Magento\Framework\Event\ObserverInterface::execute()
      */

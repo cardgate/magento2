@@ -20,7 +20,7 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
 {
 
     /**
-     * CardgateConfig
+     * Cardgate Configuration
      *
      * @var CardgateConfig
      */

@@ -11,6 +11,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\App\Helper\AbstractHelper;
 
 /**
  * Cardgate client wrapper, proxies all calls to a fully configured CardGate client instance.
@@ -36,11 +37,13 @@ class GatewayClient
     private $_sSiteKey;
 
     /**
-     * @param \Cardgate\Payment\Model\Config
-     * @param \Magento\Framework\Encryption\EncryptorInterface
-     * @param \Magento\Framework\Locale\Resolver
-     * @param \Magento\Framework\App\ProductMetadata
-     * @param \Magento\Framework\Module\ModuleListInterface
+     * @param Config $oConfig_
+     * @param EncryptorInterface $oEncryptor_
+     * @param Resolver $oLocaleResolver_
+     * @param ProductMetadata $oMetaData_
+     * @param ModuleListInterface $oModuleList_
+     *
+     * @throws Exception
      */
     public function __construct(
         Config $oConfig_,
@@ -85,21 +88,25 @@ class GatewayClient
 
     /**
      * Magic function proxying all calls to the client lib instance.
-     * @param string
-     * @param array
-     * @return mixed
+     *
+     * @param $sMethod_
+     * @param $aArgs_
+     *
+     * @return false|mixed
+     * @throws GatewayClientException
      */
     public function __call($sMethod_, $aArgs_)
     {
         if (is_callable([ $this->_oClient, $sMethod_ ])) {
             return call_user_func_array([ $this->_oClient, $sMethod_ ], $aArgs_);
         } else {
-            throw new \Exception("invalid call to {$sMethod_}");
+            throw new GatewayClientException("invalid call to {$sMethod_}");
         }
     }
 
     /**
      * Returns the configured site id.
+     *
      * @return int
      */
     public function getSiteId()
@@ -109,6 +116,7 @@ class GatewayClient
 
     /**
      * Returns the configured site key.
+     *
      * @return string
      */
     public function getSiteKey()

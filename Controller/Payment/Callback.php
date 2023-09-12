@@ -17,7 +17,6 @@ use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
  */
 class Callback implements ActionInterface
 {
-
     /**
      *
      *
@@ -87,17 +86,6 @@ class Callback implements ActionInterface
      * @param \Magento\Framework\Encryption\Encryptor $encryptor
      * @param StockRegistryProviderInterface $stockRegistry
      */
-
-    /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
-     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
-     * @param \Magento\Framework\App\Cache\TypeListInterface $listInterface
-     * @param GatewayClient $client
-     * @param \Cardgate\Payment\Model\Config $config
-     * @param \Magento\Framework\Encryption\Encryptor $encryptor
-     * @param StockRegistryProviderInterface $stockRegistry
-     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
@@ -150,7 +138,7 @@ class Callback implements ActionInterface
                     $this->_cardgateConfig->setGlobal('testmode', $bIsTest);
                     $this->_listInterface->cleanType('config');
                 }
-                $this->_cardgateClient = $this->_objectManager->create('\Cardgate\Payment\Model\GatewayClient');
+                $this->_cardgateClient = $this->_objectManager->get(\Cardgate\Payment\Model\GatewayClient::class);
                 $aResult = $this->_cardgateClient->pullConfig($get['token']);
                 if (isset($aResult['success']) && $aResult['success']==1) {
                     $aConfigData = $aResult['pullconfig']['content'];
@@ -168,7 +156,7 @@ class Callback implements ActionInterface
                     $sResponse = 'Data retrieval failed.';
                 }
                 return $result->setContents($sResponse);
-            } catch (\Exception $e) {
+            } catch (CallbackException $e) {
                 return $result->setContents($e->getMessage());
             }
         }
@@ -189,11 +177,11 @@ class Callback implements ActionInterface
             $sSiteKey = $this->_cardgateClient->getSiteKey();
 
             if (false == $this->_cardgateClient->transactions()->verifyCallback( $aData, $sSiteKey)) {
-                throw new \Exception('hash verification failure');
+                throw new CallbackException('hash verification failure');
             }
 
             $sHistoryComment = __("Update for transaction %1. Received status code %2.", $transactionId, $code);
-            $order = $this->_objectManager->create('\Magento\Sales\Model\Order')->loadByIncrementId($reference);
+            $order = $this->_objectManager->get(\Magento\Sales\Model\Order::class)->loadByIncrementId($reference);
             $order->addCommentToStatusHistory($sHistoryComment);
 
             if (!$manualProcessing) {
@@ -263,7 +251,7 @@ class Callback implements ActionInterface
                     }
 
                     // Test if transaction has been processed already.
-                    $paymentRepository = $this->_objectManager->create('\Magento\Sales\Model\Order\Payment\Transaction\Repository');
+                    $paymentRepository = $this->_objectManager->get(\Magento\Sales\Model\Order\Payment\Transaction\Repository::class);
                     $currentTransaction = $paymentRepository->getByTransactionId(
                         $transactionId,
                         $payment->getId(),
@@ -272,7 +260,7 @@ class Callback implements ActionInterface
                     if (! empty($currentTransaction) && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE) {
                         $order->addCommentToStatusHistory(__('Transaction already processed.'));
                         $updateCardgateData = false;
-                        throw new \Exception('transaction already processed.');
+                        throw new CallbackException('transaction already processed.');
                     }
 
                     // Test if payment has been processed already.
@@ -281,7 +269,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Payment already processed in another transaction.'));
                         $updateCardgateData = false;
-                        throw new \Exception('payment already processed in another transaction.');
+                        throw new CallbackException('payment already processed in another transaction.');
                     }
 
                     if ($order->isCurrencyDifferent()) {
@@ -310,7 +298,7 @@ class Callback implements ActionInterface
                         $this->invoiceSender->send($invoice);
                     } else {
                         $order->addCommentToStatusHistory(__('Failed to create invoice.'));
-                        throw new \Exception('failed to create invoice.');
+                        throw new CallbackException('failed to create invoice.');
                     }
                 }
             } elseif ($code < 400) {
@@ -320,10 +308,10 @@ class Callback implements ActionInterface
                         $order->registerCancellation(__('Transaction canceled.'), false);
                         $order->setStatus("cardgate_payment_failure");
                         $order->addCommentToStatusHistory(__("Transaction failure."));
-                    } catch (\Exception $e) {
+                    } catch (CallbackException $e) {
                         $order->addCommentToStatusHistory(__("Failed to cancel order. Order state was : %1.",
                             $order->getState() . '/' . $order->getStatus()));
-                        throw new \Exception('failed to cancel order.');
+                        throw new CallbackException('failed to cancel order.');
                     }
                 }
             } elseif ($code < 500) {
@@ -343,7 +331,7 @@ class Callback implements ActionInterface
             // Set the output to a string that the gateway expects.
             $result->setContents($transactionId . '.' . $code);
 
-        } catch (\Exception $e) {
+        } catch (CallbackException $e) {
 
             // Add the exception message to the output.
             $result->setContents($e->getMessage());

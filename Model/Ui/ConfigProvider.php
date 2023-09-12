@@ -69,9 +69,11 @@ class ConfigProvider implements Model\ConfigProviderInterface
     }
 
     /**
+     *  @inheritdoc
      *
-     * {@inheritdoc}
-     *
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getConfig()
     {
@@ -119,7 +121,7 @@ class ConfigProvider implements Model\ConfigProviderInterface
             $cacheID = "cgIDealIssuers" . ( $testmode ? 'test' : 'live' );
             if ($this->cache->test($cacheID) !== false) {
                 try {
-                    $issuers = $this->config->serializer->unserialize($this->cache->load($cacheID));
+                    $issuers = $this->config->_serializer->unserialize($this->cache->load($cacheID));
                     if (count($issuers) > 0) {
                         return $issuers;
                     }
@@ -128,7 +130,7 @@ class ConfigProvider implements Model\ConfigProviderInterface
                 }
             }
             $issuers = $gatewayClient->methods()->get(\cardgate\api\Method::IDEAL)->getIssuers();
-            $this->cache->save($this->config->serializer->serialize($issuers), $cacheID, [], 7200);
+            $this->cache->save($this->config->_serializer->serialize($issuers), $cacheID, [], 7200);
         } catch (\Exception $e) {
             // YYY: Log error here
             $issuers = [];

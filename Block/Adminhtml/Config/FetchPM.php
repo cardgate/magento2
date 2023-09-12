@@ -15,7 +15,8 @@ use Magento\Backend\Block\Template\Context as Context;
  * @author DBS B.V.
  *
  */
-class FetchPM extends \Magento\Config\Block\System\Config\Form\Field {
+class FetchPM extends \Magento\Config\Block\System\Config\Form\Field
+{
 
     /**
      *
@@ -32,30 +33,31 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field {
     public function __construct(
         Context $context,
         CardgateConfig $cardgateConfig,
-        array $data = [],
+        array $data = []
     ) {
         $this->cardgateConfig = $cardgateConfig;
-        parent::__construct( $context, $data );
+        parent::__construct($context, $data);
     }
 
     /**
      * @inheritdoc
      * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
      */
-    protected function _getElementHtml( \Magento\Framework\Data\Form\Element\AbstractElement $element ) {
-        if ( ! empty( $this->cardgateConfig->getGlobal( 'api_username' ) )
-             && ! empty( $this->cardgateConfig->getGlobal( 'api_password' ) )
-             && ! empty( $this->cardgateConfig->getGlobal( 'site_id' ) )
-             && ! empty( $this->cardgateConfig->getGlobal( 'site_key' ) )
+    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    {
+        if (! empty($this->cardgateConfig->getGlobal( 'api_username' ))
+             && ! empty($this->cardgateConfig->getGlobal('api_password'))
+             && ! empty($this->cardgateConfig->getGlobal('site_id'))
+             && ! empty($this->cardgateConfig->getGlobal('site_key'))
         ) {
             $fetchPMUrl = $this->_urlBuilder->getUrl( "cardgate/gateway/fetchpm", [
                 'section' => 'gateway'
             ] );
 
             return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>" .
-                   __( "Refresh active payment methods" ) . "</span></button>";
+                   __("Refresh active payment methods") . "</span></button>";
         } else {
-            return __( "Please enter Site Id, Hash key, Merchant Id and API key first" );
+            return __("Please enter Site Id, Hash key, Merchant Id and API key first");
         }
     }
 }

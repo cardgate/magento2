@@ -45,12 +45,14 @@ class FeeData
      */
     protected $currency_converter;
 
-    /**
+    /**\
+     * Calculate Fee and Tax amounts
      *
-     * @param float $amount
-     * @param float $tax_amount
-     * @param int $tax_class
-     * @param boolean $fee_includes_tax
+     * @param $amount
+     * @param $tax_amount
+     * @param $tax_class
+     * @param $fee_includes_tax
+     * @param $currency_converter
      */
     public function __construct(
         $amount = 0,
@@ -66,11 +68,21 @@ class FeeData
         $this->currency_converter = $currency_converter;
     }
 
+    /**
+     * Get Display amount
+     *
+     * @return float|int
+     */
     public function getDisplayAmount()
     {
             return $this->getAmount();
     }
 
+    /**
+     * Get base display amount
+     *
+     * @return float|int
+     */
     public function getBaseDisplayAmount()
     {
             return $this->getBaseAmount();
