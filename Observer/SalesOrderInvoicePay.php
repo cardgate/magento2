@@ -19,8 +19,7 @@ class SalesOrderInvoicePay implements ObserverInterface
 {
 
     /**
-     *
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @see \Magento\Framework\Event\ObserverInterface::execute()
      */

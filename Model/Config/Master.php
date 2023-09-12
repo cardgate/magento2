@@ -39,7 +39,7 @@ class Master
      */
     private $filesystem;
 
-    const CACHEKEY = "cgAllPM";
+    private const CACHEKEY = "cgAllPM";
 
     /**
      *
@@ -53,6 +53,10 @@ class Master
      */
     private $serializer;
 
+    /**
+     * @param \Magento\Framework\App\Cache\Type\Collection $cache
+     * @param \Magento\Framework\Filesystem $filesystem
+     */
     public function __construct(
         \Magento\Framework\App\Cache\Type\Collection $cache,
         \Magento\Framework\Filesystem $filesystem
@@ -183,11 +187,23 @@ class Master
         $this->cache->save($this->serializer->serialize($this->paymentMethodIds), self::CACHEKEY, [], 24 * 3600);
     }
 
+    /**
+     * get the CardGate Payment methods
+     *
+     * @return array
+     */
     public function getCardgateMethods()
     {
         return $this->paymentMethodIds;
     }
 
+    /**
+     *  Get the payment methods
+     *
+     * @param $bIncludingNames
+     *
+     * @return array|int[]|string[]
+     */
     public function getPaymentMethods($bIncludingNames = false)
     {
         if ($bIncludingNames) {

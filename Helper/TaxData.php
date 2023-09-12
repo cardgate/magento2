@@ -117,7 +117,6 @@ class TaxData extends \Magento\Tax\Helper\Data
                 $taxClassAmount[$taxCode]['base_tax_amount'] += $baseTaxAmount;
             }
         }
-
         return $taxClassAmount;
     }
 }

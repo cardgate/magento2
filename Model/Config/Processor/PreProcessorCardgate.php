@@ -27,15 +27,12 @@ class PreProcessorCardgate implements PreProcessorInterface
                 $config['default']['payment'][$paymentMethod] = [];
             }
             if (is_array($config['default']['payment'][$paymentMethod])) {
-                $config['default']['payment'][$paymentMethod] = array_merge(
-                    [
+                $config['default']['payment'][$paymentMethod] += [
                             'model' => $masterConfig->getPMClassByCode($paymentMethod),
                             'label' => $paymentMethod,
                             'group' => 'cardgate',
                             'title' => $paymentMethodName
-                        ],
-                    $config['default']['payment'][$paymentMethod]
-                );
+                        ];
             }
         }
         return $config;

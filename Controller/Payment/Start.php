@@ -115,7 +115,6 @@ class Start implements ActionInterface
         Config $cardgateConfig,
         Master $masterConfig,
         StockRegistryInterface $stockRegistryInterface
-
     ) {
         $this->customerSession = $customerSession;
         $this->checkoutSession = $checkoutSession;
@@ -128,6 +127,13 @@ class Start implements ActionInterface
         $this->stockRegistryInterface = $stockRegistryInterface;
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|Redirect|\Magento\Framework\Controller\ResultInterface|void
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute()
     {
         $order = $this->checkoutSession->getLastRealOrder();
@@ -146,7 +152,7 @@ class Start implements ActionInterface
                 $order->getOrderCurrencyCode()
             );
 
-            $code = $order->getPayment()->getMethodInstance()->getCode(); 
+            $code = $order->getPayment()->getMethodInstance()->getCode();
             $paymentMethod = substr($code, 9);
             $transaction->setPaymentMethod($this->_gatewayClient->methods()->get($paymentMethod));
 
@@ -349,7 +355,12 @@ class Start implements ActionInterface
 
     /**
      * Converts a Magento address object to a cardgate consumer address.
-     * @return array
+     *
+     * @param Address $oAddress_
+     * @param \cardgate\api\Consumer $oConsumer_
+     * @param $sMethod_
+     *
+     * @return void
      */
     private function _convertAddress(Address &$oAddress_, \cardgate\api\Consumer &$oConsumer_, $sMethod_)
     {
@@ -368,9 +379,12 @@ class Start implements ActionInterface
     }
 
     /**
+     *  /**
      * Return checkout quote object
      *
-     * @return \Magento\Quote\Model\Quote
+     * @return \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function getQuote()
     {

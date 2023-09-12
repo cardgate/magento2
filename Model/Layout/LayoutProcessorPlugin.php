@@ -24,6 +24,9 @@ class LayoutProcessorPlugin
      */
     private $_masterConfig = null;
 
+    /**
+     * @param Master $masterConfig
+     */
     public function __construct(Master $masterConfig)
     {
         $this->_masterConfig = $masterConfig;
