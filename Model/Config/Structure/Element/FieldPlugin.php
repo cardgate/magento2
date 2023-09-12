@@ -31,7 +31,7 @@ class FieldPlugin
     }
 
     /**
-     * alter getConfigPath's output
+     * Alter getConfigPath's output
      *
      * @param \Magento\Config\Model\Config\Structure\Element\Field $subject
      * @param \Closure $proceed

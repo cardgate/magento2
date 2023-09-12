@@ -27,7 +27,7 @@ class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset
      *
      * @param \Magento\Backend\Block\Context $context
      * @param \Magento\Backend\Model\Auth\Session $authSession
-     * @param \Magento\Framework\View\Helper\Js $jsHelpe
+     * @param \Magento\Framework\View\Helper\Js $jsHelper
      * @param CardgateConfig $cardgateConfig
      * @param array $data
      */

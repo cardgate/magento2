@@ -10,6 +10,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Config\Model\ResourceModel\Config as ConfigResource;
 use Magento\Framework\App\Config\MutableScopeConfigInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Cardgate\Payment\Model\Config\Master;
 
 /**
@@ -21,7 +22,7 @@ use Cardgate\Payment\Model\Config\Master;
 class Config implements ConfigInterface
 {
 
-    const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
+    private const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
 
     /**
      * @var ScopeConfigInterface
@@ -60,23 +61,24 @@ class Config implements ConfigInterface
 
     /**
      *
-     * @var \Magento\Framework\Serialize\SerializerInterface
+     * @var SerializerInterface
      */
-    public $serializer;
+    public $_serializer;
 
     /**
-     *
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param Magento\Config\Model\ResourceModel\Config $configResource
+     * @param MutableScopeConfigInterface $scopeConfig
+     * @param ConfigResource $configResource
      * @param Master $master
-     * @param string $methodCode
+     * @param $methodCode
+     * @param $pathPattern
      */
     public function __construct(
         MutableScopeConfigInterface $scopeConfig,
         ConfigResource $configResource,
         Master $master,
         $methodCode = null,
-        $pathPattern = self::DEFAULT_PATH_PATTERN
+        $pathPattern = self::DEFAULT_PATH_PATTERN,
+        SerializerInterface $serializer
     ) {
 
         $this->scopeConfig = $scopeConfig;
@@ -84,8 +86,7 @@ class Config implements ConfigInterface
         $this->pathPattern = $pathPattern;
         $this->_configResource = $configResource;
         $this->_masterConfig = $master;
-        $this->setSerializer();
-        ;
+        $this->_serializer = $serializer;
     }
 
     /**
@@ -111,8 +112,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     * Set information info CardGate configuration for given payment method and
-     * save configuration
+     * Set info CardGate configuration for given payment method and save it
      *
      * @param string $method
      * @param string $field
@@ -182,7 +182,7 @@ class Config implements ConfigInterface
         self::$activePMIDs[$storeId] = [];
         try {
 
-            $activePmInfo = $this->serializer->unserialize($this->getGlobal('active_pm', $storeId));
+            $activePmInfo = $this->_serializer->unserialize($this->getGlobal('active_pm', $storeId));
         } catch (\Exception $e) {
             $activePmInfo = [];
         }
@@ -196,6 +196,7 @@ class Config implements ConfigInterface
 
     /**
      * Show if not logged in is used as a group
+     *
      * @param int $storeId
      *
      * @return bool
@@ -250,19 +251,5 @@ class Config implements ConfigInterface
             $storeId
         );
         return (($value === null) ? $this->getGlobal($field, $storeId) : $value);
-    }
-
-    /**
-     * @return void
-     */
-    public function setSerializer()
-    {
-        /**
-         *
-         * @var \Magento\Framework\Serialize\SerializerInterface
-         */
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $serializer = $objectManager->create(\Magento\Framework\Serialize\SerializerInterface::class);
-        $this->serializer = $serializer;
     }
 }

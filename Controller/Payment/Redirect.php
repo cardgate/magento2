@@ -18,7 +18,6 @@ use Cardgate\Payment\Model\Config as CardgateConfig;
  * Client redirect after payment action
  *
  * @author DBS B.V.
- * @package Magento2
  */
 class Redirect implements ActionInterface
 {
@@ -53,6 +52,14 @@ class Redirect implements ActionInterface
      */
     protected $messageManager;
 
+    /**
+     *
+     * @param ResultRedirect $resultRedirect
+     * @param Request $request
+     * @param Session $checkoutSession
+     * @param CardgateConfig $cardgateConfig
+     * @param Manager $messageManager
+     */
     public function __construct(
         ResultRedirect $resultRedirect,
         Request $request,
@@ -68,8 +75,7 @@ class Redirect implements ActionInterface
     }
 
     /**
-     *
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @see \Magento\Framework\App\ActionInterface::execute()
      */
@@ -86,7 +92,7 @@ class Redirect implements ActionInterface
                 || empty($code)
                 || empty($transactionId)
             ) {
-                throw new \Exception(__('Wrong parameters supplied.'));
+                throw new RedirectException(__('Wrong parameters supplied.'));
             }
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
@@ -106,12 +112,12 @@ class Redirect implements ActionInterface
                     $this->_checkoutSession->restoreQuote();
                     $this->resultRedirect->setPath('checkout');
                 } else {
-                    throw new \Exception(__('Transaction canceled.'));
+                    throw new RedirectException(__('Transaction canceled.'));
                 }
             } else {
-                throw new \Exception(__('Payment not completed.'));
+                throw new RedirectException(__('Payment not completed.'));
             }
-        } catch (\Exception $e) {
+        } catch (RedirectException $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
             if (!!$this->_cardgateConfig->getGlobal('always_show_success_page')) {
                 $this->_checkoutSession->start();

@@ -19,17 +19,12 @@ use \Magento\Tax\Model\Sales\Total\Quote\CommonTaxCollector;
 class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
 
-    const TYPE_FEE = 'cardgatefee';
+    public const TYPE_FEE = 'cardgatefee';
 
-    const CODE_FEE = 'cardgatefee';
+    public const CODE_FEE = 'cardgatefee';
 
     /**
-     * Collect grand total address amount
-     *
-     * @param \Magento\Quote\Model\Quote $quote
-     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
-     * @param \Magento\Quote\Model\Quote\Address\Total $total
-     * @return $this
+     * @var \Magento\Quote\Model\QuoteValidator|null
      */
     protected $quoteValidator = null;
 
@@ -39,12 +34,23 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
      */
     protected $_cardgateConfig;
 
+    /**
+     * @param \Magento\Quote\Model\QuoteValidator $quoteValidator
+     * @param Master $cardgateConfig
+     */
     public function __construct(\Magento\Quote\Model\QuoteValidator $quoteValidator, Master $cardgateConfig)
     {
         $this->_cardgateConfig = $cardgateConfig;
         $this->quoteValidator = $quoteValidator;
     }
 
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     *
+     * @return $this|Fee
+     */
     public function collect(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
@@ -105,6 +111,13 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         return $this;
     }
 
+    /**
+     * Clear the totals
+     *
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     *
+     * @return void
+     */
     protected function clearValues(\Magento\Quote\Model\Quote\Address\Total $total)
     {
         $total->setTotalAmount('subtotal', 0);

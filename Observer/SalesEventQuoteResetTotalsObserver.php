@@ -22,8 +22,7 @@ class SalesEventQuoteResetTotalsObserver implements ObserverInterface
 {
 
     /**
-     *
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @see \Magento\Framework\Event\ObserverInterface::execute()
      */
@@ -53,7 +52,7 @@ class SalesEventQuoteResetTotalsObserver implements ObserverInterface
             $newAssociatedTaxables = [];
             foreach ($associatedTaxables as $extraTaxable) {
                 if ($extraTaxable[CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_TYPE] != Fee::TYPE_FEE &&
-                        $extraTaxable[CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_CODE] != Fee::CODE_FEE) {
+                    $extraTaxable[CommonTaxCollector::KEY_ASSOCIATED_TAXABLE_CODE] != Fee::CODE_FEE) {
                     $newAssociatedTaxables[] = $extraTaxable;
                 }
             }

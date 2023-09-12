@@ -15,6 +15,11 @@ class Address extends \Magento\SalesRule\Model\Rule\Condition\Address
     // plugin makes sure that it does, so this option is reinstated due to popular demand until it is re-added by the
     // Magento developers.
 
+    /**
+     * Load attribute options
+     *
+     * @return $this|Address
+     */
     public function loadAttributeOptions()
     {
         parent::loadAttributeOptions();

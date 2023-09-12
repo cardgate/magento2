@@ -23,11 +23,10 @@ use Magento\Tax\Model\Calculation;
 
 /**
  * Base Payment class from which all payment methods extend
+ *
  * Magento\Payment\Model\Method\Adapter
  *
  * @author DBS B.V.
- *
- *
  */
 class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
 {
@@ -110,6 +109,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     }
 
     /**
+     * Check payment method availability
      *
      * @param \Magento\Quote\Api\Data\CartInterface $quote
      * @return boolean
@@ -120,17 +120,17 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             return false;
         };
         $customerGroups = $this->config->getValue('specific_customer_groups', $quote->getStoreId());
-        $aCustomerGroups = isset($customerGroups) ? str_getcsv( $customerGroups, ',' ) : array();
+        $aCustomerGroups = isset($customerGroups) ? str_getcsv($customerGroups, ',') : [];
         $groupId         = $quote->getCustomer()->getGroupId();
-        $loggedInIsGroup = $this->config->loggedInIsGroup( $quote->getStoreId() );
-        $isLoggedIn      = ( $quote->getCustomer()->getId() < 1 ? false : true );
+        $loggedInIsGroup = $this->config->loggedInIsGroup($quote->getStoreId());
+        $isLoggedIn      = ($quote->getCustomer()->getId() < 1 ? false : true);
         if ( $isLoggedIn ) {
-            if ( $groupId > 0 && count($aCustomerGroups) > 0 && ! in_array( $groupId, $aCustomerGroups ) ) {
+            if ($groupId > 0 && count($aCustomerGroups) > 0 && ! in_array($groupId, $aCustomerGroups)){
                 return false;
             }
         } else {
-            if ( $loggedInIsGroup ) {
-                if ( in_array( '-1', $aCustomerGroups ) ) {
+            if ($loggedInIsGroup) {
+                if (in_array('-1', $aCustomerGroups)){
                     return true;
                 } else {
                     return false;
@@ -143,8 +143,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     }
 
     /**
+     * Assign Data to Payment method
      *
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @see \Magento\Payment\Model\Method\AbstractMethod::assignData()
      */
@@ -164,6 +165,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     }
 
     /**
+     * Get payable to data
      *
      * @return string
      */
@@ -173,6 +175,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     }
 
     /**
+     * Get mailing address
      *
      * @return string
      */
@@ -182,6 +185,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     }
 
     /**
+     * Get fee for quote
      *
      * @param Quote $quote
      * @return FeeData
@@ -249,6 +253,13 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
         );
     }
 
+    /**
+     * Refund a transaction
+     * @param InfoInterface $payment
+     * @param $amount
+     *
+     * @return $this|PaymentMethods|\Magento\Payment\Model\Method\Adapter
+     */
     public function refund(InfoInterface $payment, $amount)
     {
         $order = $payment->getOrder();
@@ -272,6 +283,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     }
 
     /**
+     * Get instructions
      *
      * @return string
      */
@@ -281,6 +293,13 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
         return nl2br(''.$instructions);
     }
 
+    /**
+     * Get Value handler pool
+     *
+     * @param $methodCode
+     *
+     * @return mixed
+     */
     private function getValueHandlerPool($methodCode)
     {
         $configInterface = $this->objectManager->create(
@@ -298,11 +317,21 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
         return $this->objectManager->create(ValueHandlerPool::class, [ 'handler' => $valueHandler ]);
     }
 
+    /**
+     * Get CardGate validator pool
+     *
+     * @return mixed
+     */
     public function getCardgateValidatorPool()
     {
         return $this->objectManager->get('CardgateValidatorPool');
     }
 
+    /**
+     * Get CardGate command pool
+     *
+     * @return mixed
+     */
     public function getCardgateCommandPool()
     {
         return $this->objectManager->get('CardgateCommandPool');

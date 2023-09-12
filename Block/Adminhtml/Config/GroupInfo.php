@@ -37,7 +37,7 @@ class GroupInfo extends Fieldset
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
         CardgateConfig $cardgateConfig,
-        array $data = [],
+        array $data = []
     ) {
         $this->cardgateConfig = $cardgateConfig;
         parent::__construct($context, $authSession, $jsHelper, $data);

@@ -23,10 +23,9 @@ class ShowPM extends \Magento\Config\Block\System\Config\Form\Field
     private $cardgateConfig;
 
     /**
-     *
-     * @param \Magento\Backend\Block\Context $context
-     * @param array $data,
-     * @param  CardgateConfig $cardgateConfig
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param CardgateConfig $cardgateConfig
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
