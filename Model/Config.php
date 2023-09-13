@@ -69,6 +69,7 @@ class Config implements ConfigInterface
      * @param MutableScopeConfigInterface $scopeConfig
      * @param ConfigResource $configResource
      * @param Master $master
+     * @param SerializerInterface $serializer
      * @param $methodCode
      * @param $pathPattern
      */
@@ -76,9 +77,9 @@ class Config implements ConfigInterface
         MutableScopeConfigInterface $scopeConfig,
         ConfigResource $configResource,
         Master $master,
+        SerializerInterface $serializer,
         $methodCode = null,
-        $pathPattern = self::DEFAULT_PATH_PATTERN,
-        SerializerInterface $serializer
+        $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
 
         $this->scopeConfig = $scopeConfig;
