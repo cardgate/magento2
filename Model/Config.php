@@ -22,36 +22,12 @@ use Cardgate\Payment\Model\Config\Master;
 class Config implements ConfigInterface
 {
 
-    private const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
+    public const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
 
     /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-
-    /**
-     * @var string|null
-     */
-    private $methodCode;
-
-    /**
-     * @var string|null
-     */
-    private $pathPattern;
-
-    /**
-     * Active Payment methods as configured in my.cardgate.com (and fetched from
-     * RESTful API)
-     *
-     * @var array
-     */
-    private static $activePMIDs = [];
-
-    /**
-     *
-     * @var Master
-     */
-    private $_masterConfig;
 
     /**
      *
@@ -61,16 +37,41 @@ class Config implements ConfigInterface
 
     /**
      *
+     * @var Master
+     */
+    private $_masterConfig;
+
+    /**
+     *
      * @var SerializerInterface
      */
     public $_serializer;
+
+    /**
+     * @var string|null
+     */
+    private $pathPattern;
+
+    /**
+     * @var string|null
+     */
+    private $methodCode;
+
+    /**
+     * Active Payment methods as configured in my.cardgate.com (and fetched from
+     * RESTful API)
+     *
+     * @var array
+     */
+    private static $activePMIDs = [];
+
+
 
     /**
      * @param MutableScopeConfigInterface $scopeConfig
      * @param ConfigResource $configResource
      * @param Master $master
      * @param SerializerInterface $serializer
-     * @param $methodCode
      * @param $pathPattern
      */
     public function __construct(
@@ -78,16 +79,13 @@ class Config implements ConfigInterface
         ConfigResource $configResource,
         Master $master,
         SerializerInterface $serializer,
-        $methodCode = null,
         $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
-
         $this->scopeConfig = $scopeConfig;
-        $this->methodCode = $methodCode;
-        $this->pathPattern = $pathPattern;
         $this->_configResource = $configResource;
         $this->_masterConfig = $master;
         $this->_serializer = $serializer;
+        $this->pathPattern = $pathPattern;
     }
 
     /**
