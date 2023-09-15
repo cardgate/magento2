@@ -53,7 +53,7 @@ class Config implements ConfigInterface
     private $pathPattern;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $methodCode;
 
@@ -73,19 +73,22 @@ class Config implements ConfigInterface
      * @param Master $master
      * @param SerializerInterface $serializer
      * @param $pathPattern
+     * @param $methodCode
      */
     public function __construct(
         MutableScopeConfigInterface $scopeConfig,
         ConfigResource $configResource,
         Master $master,
         SerializerInterface $serializer,
-        $pathPattern = self::DEFAULT_PATH_PATTERN
+        $pathPattern = self::DEFAULT_PATH_PATTERN,
+        $methodCode = ''
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->_configResource = $configResource;
         $this->_masterConfig = $master;
         $this->_serializer = $serializer;
         $this->pathPattern = $pathPattern;
+        $this->methodCode = $methodCode;
     }
 
     /**
