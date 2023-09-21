@@ -92,7 +92,7 @@ class Redirect implements ActionInterface
                 || empty($code)
                 || empty($transactionId)
             ) {
-                throw new RedirectException(__('Wrong parameters supplied.'));
+                throw new \Exception(__('Wrong parameters supplied.'));
             }
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
@@ -112,12 +112,12 @@ class Redirect implements ActionInterface
                     $this->_checkoutSession->restoreQuote();
                     $this->resultRedirect->setPath('checkout');
                 } else {
-                    throw new RedirectException(__('Transaction canceled.'));
+                    throw new \Exception(__('Transaction canceled.'));
                 }
             } else {
-                throw new RedirectException(__('Payment not completed.'));
+                throw new \Exception(__('Payment not completed.'));
             }
-        } catch (RedirectException $e) {
+        } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
             if (!!$this->_cardgateConfig->getGlobal('always_show_success_page')) {
                 $this->_checkoutSession->start();

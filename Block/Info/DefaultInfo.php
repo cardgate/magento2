@@ -5,7 +5,6 @@
  * See LICENSE for license details.
  */
 namespace Cardgate\Payment\Block\Info;
-
 /**
  * Default Checkout template
  *
@@ -14,6 +13,12 @@ namespace Cardgate\Payment\Block\Info;
  */
 class DefaultInfo extends \Magento\Payment\Block\Info
 {
+    /**
+     * Instructions text
+     *
+     * @var string
+     */
+    protected $_instructions;
 
     /**
      * Checkout template
@@ -21,4 +26,19 @@ class DefaultInfo extends \Magento\Payment\Block\Info
      * @var string
      */
     protected $_template = 'Cardgate_Payment::info/defaultinfo.phtml';
+
+    /**
+     * Get instructions text from config
+     *
+     * @return null|string
+     */
+    public function getInstructions()
+    {
+        if ( $this->_instructions === null ) {
+            $this->_instructions = $this->getInfo()->getAdditionalInformation(
+                'instructions'
+            ) ?: trim( $this->getMethod()->getConfigData( 'instructions' ) );
+        }
+        return $this->_instructions;
+    }
 }
