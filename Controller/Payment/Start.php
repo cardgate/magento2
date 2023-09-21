@@ -316,6 +316,8 @@ class Start implements ActionInterface
             // If there was an issuer present (most likely iDeal), configure the transaction with this issuer. The
             // issuer is stored as additional data in the assignData method from Model/PaymentMethod.php.
             $payment = $order->getPayment();
+            $instructions = $this->_cardgateConfig->getValue('instructions', $payment->getOrder()->getStoreId());
+            $payment->setAdditionalInformation('instructions',$instructions);
             $data = $payment->getAdditionalInformation();
             if (! empty($data['issuer_id'])) {
                 $transaction->setIssuer($data['issuer_id']);
