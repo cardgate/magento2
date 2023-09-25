@@ -11,4 +11,7 @@
         <strong><?= $block->escapeHtml(__('Transaction ID')) ?></strong>
         <span class="number"><?= $block->escapeHtml($block->getInfo()->getCardgateTransaction()) ?></span>
     </dt>
+    <?php if ($block->getInstructions()) : ?>
+        <dt class="content"><?= nl2br($block->escapeHtml($block->getInstructions())) ?></dt>
+    <?php endif; ?>
 </dl>
