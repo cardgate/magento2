@@ -82,15 +82,15 @@ class GatewayClient
                 \cardgate\api\Client::CLIENT_VERSION
             );
         } catch (\Exception $e) {
-/* ignore */
+            /* ignore */
         }
     }
 
     /**
      * Magic function proxying all calls to the client lib instance.
      *
-     * @param $sMethod_
-     * @param $aArgs_
+     * @param string $sMethod_
+     * @param array|string $aArgs_
      *
      * @return false|mixed
      * @throws GatewayClientException
@@ -126,6 +126,7 @@ class GatewayClient
 
     /**
      * Get the ip address of the client.
+     *
      * @return string
      */
     private function _determineIp()

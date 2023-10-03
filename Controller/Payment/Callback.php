@@ -95,7 +95,6 @@ class Callback implements ActionInterface
         \Cardgate\Payment\Model\Config $config,
         \Magento\Framework\Encryption\Encryptor $encryptor,
         StockRegistryProviderInterface $stockRegistry
-
     ) {
         $this->resultFactory = $context->getResultFactory();
         $this->_request = $context->getRequest();

@@ -65,15 +65,13 @@ class Config implements ConfigInterface
      */
     private static $activePMIDs = [];
 
-
-
     /**
      * @param MutableScopeConfigInterface $scopeConfig
      * @param ConfigResource $configResource
      * @param Master $master
      * @param SerializerInterface $serializer
-     * @param $pathPattern
-     * @param $methodCode
+     * @param string $pathPattern
+     * @param string $methodCode
      */
     public function __construct(
         MutableScopeConfigInterface $scopeConfig,

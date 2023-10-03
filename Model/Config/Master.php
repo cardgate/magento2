@@ -188,7 +188,7 @@ class Master
     }
 
     /**
-     * get the CardGate Payment methods
+     * Get the CardGate Payment methods
      *
      * @return array
      */
@@ -200,7 +200,7 @@ class Master
     /**
      *  Get the payment methods
      *
-     * @param $bIncludingNames
+     * @param bool $bIncludingNames
      *
      * @return array|int[]|string[]
      */
