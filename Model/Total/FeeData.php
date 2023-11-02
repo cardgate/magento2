@@ -48,11 +48,11 @@ class FeeData
     /**\
      * Calculate Fee and Tax amounts
      *
-     * @param $amount
-     * @param $tax_amount
-     * @param $tax_class
-     * @param $fee_includes_tax
-     * @param $currency_converter
+     * @param float|int $amount
+     * @param float|int $tax_amount
+     * @param int $tax_class
+     * @param boolean $fee_includes_tax
+     * @param float|int $currency_converter
      */
     public function __construct(
         $amount = 0,

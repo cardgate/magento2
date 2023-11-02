@@ -61,7 +61,7 @@ class TaxData extends \Magento\Tax\Helper\Data
 
                     // Aggregate taxable items associated with shipping
                     if ($itemTaxDetail->getType() == \Cardgate\Payment\Model\Total\Fee::TYPE_FEE) {
-                        $taxClassAmount = $this->__aggregateTaxes($taxClassAmount, $itemTaxDetail, $cardgatefeeRatio);
+                        $taxClassAmount = $this->_aggregateTaxes($taxClassAmount, $itemTaxDetail, $cardgatefeeRatio);
                     }
                 }
             }
@@ -95,7 +95,7 @@ class TaxData extends \Magento\Tax\Helper\Data
      * @param float $ratio
      * @return array
      */
-    private function __aggregateTaxes($taxClassAmount, OrderTaxDetailsItemInterface $itemTaxDetail, $ratio)
+    private function _aggregateTaxes($taxClassAmount, OrderTaxDetailsItemInterface $itemTaxDetail, $ratio)
     {
         $itemAppliedTaxes = $itemTaxDetail->getAppliedTaxes();
         foreach ($itemAppliedTaxes as $itemAppliedTax) {
