@@ -124,7 +124,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
         $groupId         = $quote->getCustomer()->getGroupId();
         $loggedInIsGroup = $this->config->loggedInIsGroup($quote->getStoreId());
         $isLoggedIn      = ($quote->getCustomer()->getId() < 1 ? false : true);
-        if ( $isLoggedIn ) {
+        if ($isLoggedIn) {
             if ($groupId > 0 && count($aCustomerGroups) > 0 && ! in_array($groupId, $aCustomerGroups)){
                 return false;
             }
@@ -188,6 +188,8 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
      * Get fee for quote
      *
      * @param Quote $quote
+     * @param Total $total
+     *
      * @return FeeData
      */
     public function getFeeForQuote(Quote $quote, Total $total = null)
@@ -296,7 +298,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     /**
      * Get Value handler pool
      *
-     * @param $methodCode
+     * @param mixed $methodCode
      *
      * @return mixed
      */

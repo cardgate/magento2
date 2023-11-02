@@ -69,7 +69,7 @@ class ConfigProvider implements Model\ConfigProviderInterface
     }
 
     /**
-     *  @inheritdoc
+     * @inheritdoc
      *
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -109,6 +109,7 @@ class ConfigProvider implements Model\ConfigProviderInterface
 
     /**
      * Get list of iDeal issuers.
+     *
      * Read from cache or fetch from CardGate if not cached.
      *
      * @return string|boolean|stdClass[id,name,list]

@@ -128,6 +128,8 @@ class Start implements ActionInterface
     }
 
     /**
+     * Initiate CardGate transaction
+     *
      * @return \Magento\Framework\App\ResponseInterface|Redirect|\Magento\Framework\Controller\ResultInterface|void
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
@@ -317,7 +319,7 @@ class Start implements ActionInterface
             // issuer is stored as additional data in the assignData method from Model/PaymentMethod.php.
             $payment = $order->getPayment();
             $instructions = $this->_cardgateConfig->getValue('instructions', $payment->getOrder()->getStoreId());
-            $payment->setAdditionalInformation('instructions',$instructions);
+            $payment->setAdditionalInformation('instructions', $instructions);
             $data = $payment->getAdditionalInformation();
             if (! empty($data['issuer_id'])) {
                 $transaction->setIssuer($data['issuer_id']);
@@ -360,7 +362,7 @@ class Start implements ActionInterface
      *
      * @param Address $oAddress_
      * @param \cardgate\api\Consumer $oConsumer_
-     * @param $sMethod_
+     * @param string $sMethod_
      *
      * @return void
      */
@@ -381,7 +383,6 @@ class Start implements ActionInterface
     }
 
     /**
-     *  /**
      * Return checkout quote object
      *
      * @return \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote
