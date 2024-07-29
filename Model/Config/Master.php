@@ -174,7 +174,6 @@ class Master
             'przelewy24' => 'Przelewy24',
             'safeklick' => 'Safeklick',
             'banktransfer' => 'Bank transfer',
-            'giropay' => 'Giropay',
             'giftcard' => 'Gift Card',
             'capayable' => 'Capayable',
             'bitcoin' => 'Bitcoin',
