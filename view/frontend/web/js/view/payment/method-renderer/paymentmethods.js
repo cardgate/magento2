@@ -36,7 +36,6 @@ define(
 			},
 
 			getCode: function() {
-				//console.log(this);
 				return this.item.method;
 			},
 

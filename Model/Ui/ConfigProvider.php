@@ -22,7 +22,6 @@ use Magento\Framework\App\ObjectManager;
  */
 class ConfigProvider implements Model\ConfigProviderInterface
 {
-
     /**
      *
      * @var \Magento\Framework\App\Cache\Type\Collection
@@ -86,6 +85,11 @@ class ConfigProvider implements Model\ConfigProviderInterface
         $config = [];
         $config['payment'] = [];
         $config['payment']['instructions'] = [];
+
+        // Get the Cardgate iDEAL config
+        $idealconfig = $this->config->getPayment('ideal');
+        $config['payment']['cardgate_ideal_showissuers'] = $idealconfig['showissuers'];
+
         // iDeal issuers are globally assigned to the UI config
         $config['payment']['cardgate_ideal_issuers'] = $this->getIDealIssuers();
 
