@@ -149,6 +149,18 @@ class Config implements ConfigInterface
     }
 
     /**
+     * Retrieve information from Cardgate Payment configuration
+     *
+     * @param string $field
+     * @param int|null $storeId
+     * @return mixed
+     */
+    public function getPayment($method, $storeId = null)
+    {
+        return $this->scopeConfig->getValue('payment/cardgate_' . $method, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    /**
      * Set information info Global CardGate configuration and save configuration
      *
      * @param string $field

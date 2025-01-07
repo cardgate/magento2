@@ -56,6 +56,14 @@ define(
 				};
 			},
 
+			showIDealIssuers: function() {
+				if ( window.checkoutConfig.payment.cardgate_ideal_showissuers == '1' ) {
+					return false; //attr hidden should be false
+				} else {
+					return true; //attr hidden should be true
+				}
+			},
+
 			getIDealIssuers: function() {
 				return window.checkoutConfig.payment.cardgate_ideal_issuers;
 			},
