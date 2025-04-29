@@ -7,7 +7,7 @@
 namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
- * iDeal class.
+ * Ideal class.
  * @author DBS B.V.
  * Creates and manages CardGate iDeal
  */
