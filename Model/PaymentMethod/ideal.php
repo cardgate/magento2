@@ -7,7 +7,7 @@
 namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
- * iDeal class with custom renderer.
+ * iDeal class.
  * @author DBS B.V.
  * Creates and manages CardGate iDeal
  */
@@ -20,11 +20,4 @@ class Ideal extends \Cardgate\Payment\Model\PaymentMethods
      * @var string
      */
     protected $code = 'cardgate_ideal';
-
-    /**
-     * Renderer template name
-     *
-     * @var string
-     */
-    public static $renderer = 'ideal';
 }
