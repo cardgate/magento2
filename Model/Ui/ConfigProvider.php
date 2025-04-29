@@ -88,10 +88,6 @@ class ConfigProvider implements Model\ConfigProviderInterface
 
         // Get the Cardgate iDEAL config
         $idealconfig = $this->config->getPayment('ideal');
-        $config['payment']['cardgate_ideal_showissuers'] = $idealconfig['showissuers'];
-
-        // iDeal issuers are globally assigned to the UI config
-        $config['payment']['cardgate_ideal_issuers'] = $this->getIDealIssuers();
 
         foreach ($this->masterConfig->getPaymentMethods() as $method) {
             $methodClass = $this->masterConfig->getPMClassByCode($method);
@@ -109,37 +105,5 @@ class ConfigProvider implements Model\ConfigProviderInterface
                 $this->masterConfig->getPMInstanceByCode($method)->getInstructions();
         }
         return $config;
-    }
-
-    /**
-     * Get list of iDeal issuers.
-     *
-     * Read from cache or fetch from CardGate if not cached.
-     *
-     * @return string|boolean|stdClass[id,name,list]
-     */
-    public function getIDealIssuers()
-    {
-        try {
-            $gatewayClient = ObjectManager::getInstance()->get(CardgateModel\GatewayClient::class);
-            $testmode = boolval($gatewayClient->getTestmode());
-            $cacheID = "cgIDealIssuers" . ( $testmode ? 'test' : 'live' );
-            if ($this->cache->test($cacheID) !== false) {
-                try {
-                    $issuers = $this->config->_serializer->unserialize($this->cache->load($cacheID));
-                    if (count($issuers) > 0) {
-                        return $issuers;
-                    }
-                } catch (\Exception $e) {
-                    // ignore
-                }
-            }
-            $issuers = $gatewayClient->methods()->get(\cardgate\api\Method::IDEAL)->getIssuers();
-            $this->cache->save($this->config->_serializer->serialize($issuers), $cacheID, [], 7200);
-        } catch (\Exception $e) {
-            // YYY: Log error here
-            $issuers = [];
-        }
-        return $issuers;
     }
 }
