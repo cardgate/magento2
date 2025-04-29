@@ -320,10 +320,6 @@ class Start implements ActionInterface
             $payment = $order->getPayment();
             $instructions = $this->_cardgateConfig->getValue('instructions', $payment->getOrder()->getStoreId());
             $payment->setAdditionalInformation('instructions', $instructions);
-            $data = $payment->getAdditionalInformation();
-            if (! empty($data['issuer_id'])) {
-                $transaction->setIssuer($data['issuer_id']);
-            }
 
             // Register the transaction and finish up.
             $transaction->register();

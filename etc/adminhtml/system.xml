@@ -615,10 +615,6 @@
 					<label>Title</label>
 					<comment>Shown on the payment page.</comment>
 				</field>
-				<field id="showissuers" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Show issuers</label>
-					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-				</field>
 				<field id="allowspecific" translate="label" type="allowspecific" sortOrder="130" showInDefault="9" showInWebsite="1"
 					   showInStore="0">
 					<label>Payment from Applicable Countries</label>
