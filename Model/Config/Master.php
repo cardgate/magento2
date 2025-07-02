@@ -177,6 +177,7 @@ class Master
             'giftcard' => 'Gift Card',
             'capayable' => 'Capayable',
             'bitcoin' => 'Bitcoin',
+            'crypto' => 'Crypto',
             'belfius' => 'Belfius',
             'billink' => 'Billink',
             'idealqr' => 'iDEAL QR',
