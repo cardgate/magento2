@@ -107,6 +107,31 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             $validatorPool
         );
     }
+    /**
+     *  Check if the currency is allowed for this payment method.
+     *
+     * @param $currency
+     * @param $payment_method
+     *
+     * @return bool
+     */
+    public function checkPaymentCurrency($currency,$payment_method):bool {
+        $strictly_euro = in_array($payment_method,['cardgateideal',
+            'cardgateidealqr',
+            'cardgatebancontact',
+            'cardgatebanktransfer',
+            'cardgatebillink',
+            'cardgatesofortbanking',
+            'cardgatedirectdebit',
+            'cardgateonlineueberweisen',
+            'cardgatespraypay']);
+        if ($strictly_euro && $currency != 'EUR') return false;
+
+        $strictly_pln = in_array($payment_method,['cardgateprzelewy24']);
+        if ($strictly_pln && $currency != 'PLN') return false;
+
+        return true;
+    }
 
     /**
      * Check payment method availability
@@ -119,6 +144,14 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
         if (! parent::isAvailable($quote)) {
             return false;
         };
+
+        if (!is_null($quote) && $quote->getData("quote_currency_code")){
+            $sCurrencyCode = $quote->getData("quote_currency_code");
+            $paymentMethod = 'cardgate'.substr($this->code,9 );
+            if (!$this->checkPaymentCurrency($sCurrencyCode,$paymentMethod)) {
+                return false;
+            }
+        }
         $customerGroups = $this->config->getValue('specific_customer_groups', $quote->getStoreId());
         $aCustomerGroups = isset($customerGroups) ? str_getcsv($customerGroups, ',') : [];
         $groupId         = $quote->getCustomer()->getGroupId();
