@@ -11,7 +11,7 @@
 <?php
     // NOTE when the order is mailed the transaction has not yet been registered and there's no cardgate transaction
     // id yet. When the invoice is sent, there is, so it gets included.
-    $sTransactionId = $escaper->escapeHtml(getInfo()->getCardgateTransaction());
+    $sTransactionId = $escaper->escapeHtml($block->getInfo()->getCardgateTransaction());
 if (! empty($sTransactionId)) {
     ?>
     <dd class="content">
