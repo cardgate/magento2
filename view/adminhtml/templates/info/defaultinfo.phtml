@@ -11,7 +11,7 @@
         <strong><?= $escaper->escapeHtml(__('Transaction ID')) ?></strong>
         <span class="number"><?= $escaper->escapeHtml($block->getInfo()->getCardgateTransaction()) ?></span>
     </dt>
-    <?php if ($block->getInstructions()) : ?>
-        <dt class="content"><?= nl2br($escaper->escapeHtml($block->getInstructions())) ?></dt>
+    <?php if ($block->getInstructions()):?>
+        <dt class="content"><?= $escaper->escapeHtml(nl2br(($block->getInstructions()))) ?></dt>
     <?php endif; ?>
 </dl>
