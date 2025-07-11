@@ -21,7 +21,7 @@ if (! empty($sTransactionId)) {
     <?php
 }
 ?>
-    <?php if ($block->getInstructions()) : ?>
-        <dd class="content"><?= nl2br($escaper->escapeHtml($block->getInstructions())) ?></dd>
+    <?php if ($block->getInstructions()):?>
+        <dd class="content"><?= $escaper->escapeHtml(nl2br($block->getInstructions())) ?></dd>
     <?php endif; ?>
 </dl>

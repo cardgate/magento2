@@ -139,7 +139,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
      * @param \Magento\Quote\Api\Data\CartInterface $quote
      * @return boolean
      */
-    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
+    public function isAvailable(?\Magento\Quote\Api\Data\CartInterface $quote = null)
     {
         if (! parent::isAvailable($quote)) {
             return false;
