@@ -225,7 +225,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
      *
      * @return FeeData
      */
-    public function getFeeForQuote(Quote $quote, Total $total = null)
+    public function getFeeForQuote(Quote $quote, ?Total $total = null)
     {
         $this->config->setMethodCode($this->code);
         $storeId = $quote->getStoreId();
