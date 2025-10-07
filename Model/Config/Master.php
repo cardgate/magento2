@@ -161,6 +161,7 @@ class Master
         // YYY: Make dynamic
         $this->paymentMethodIds = [
             'ideal' => 'iDeal',
+            'mistercash' => 'Bancontact',
             'creditcard' => 'Creditcard',
             'paysafecard' => 'PaySafeCard',
             'paysafecash' => 'Paysafecash',
