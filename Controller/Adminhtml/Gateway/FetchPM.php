@@ -15,7 +15,7 @@ class FetchPM extends \Magento\Backend\App\Action
 {
 
     /**
-     * Retrieve CardGte payment methods
+     * Retrieve CardGate payment methods
      *
      * @return \Magento\Framework\Controller\Result\Raw\Interceptor
      */
