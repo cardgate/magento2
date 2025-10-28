@@ -60,7 +60,7 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
 
         return
             "Plugin <strong>v" . $pluginVersion . '</strong><br/>'
-            . 'Client Library <strong>v' . \cardgate\api\Client::CLIENT_VERSION . '</strong>'
+            . 'Client Library <strong>v' . \Cardgate\Payment\Api\Client::CLIENT_VERSION . '</strong>'
             . ( $testmode ? '<br/><span style="color:red">'. __("TESTMODE ENABLED").'</span>' : '' )
         ;
     }
