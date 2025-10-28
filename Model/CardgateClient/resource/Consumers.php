@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resource {
 
 	/**
 	 * CardGate resource object.
@@ -34,12 +34,12 @@ namespace Cardgate\Payment\Api\resource {
 
 		/**
 		 * This method can be used to create a new consumer.
-		 * @return \Cardgate\Payment\Api\Consumer
+		 * @return \Cardgate\Payment\Model\CardgateClient\Consumer
 		 * @access public
 		 * @api
 		 */
 		public function create() {
-			return new \Cardgate\Payment\Api\Consumer();
+			return new \Cardgate\Payment\Model\CardgateClient\Consumer();
 		}
 
 	}

@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api {
+namespace Cardgate\Payment\Model\CardgateClient {
 
 	/**
 	 * Item instance.
@@ -149,7 +149,7 @@ namespace Cardgate\Payment\Api {
 		}
 
 		/**
-		 * Sets the type (must be one of the {@link \Cardgate\Payment\Api\Item::TYPE_*}} constants.
+		 * Sets the type (must be one of the {@link \Cardgate\Payment\Model\CardgateClient\Item::TYPE_*}} constants.
 		 * @param int $iType_ The cart item type to set.
 		 * @return Item Returns this, makes the call chainable.
 		 * @throws Exception|\ReflectionException
@@ -159,7 +159,7 @@ namespace Cardgate\Payment\Api {
 		function setType( $iType_ ) {
 			if (
 				! is_integer( $iType_ )
-				|| ! in_array( $iType_, ( new \ReflectionClass( '\Cardgate\Payment\Api\Item' ) )->getConstants() )
+				|| ! in_array( $iType_, ( new \ReflectionClass( '\Cardgate\Payment\Model\CardgateClient\Item' ) )->getConstants() )
 			) {
 				throw new Exception( 'Item.Type.Invalid', 'invalid cart item type: ' . $iType_ );
 			}

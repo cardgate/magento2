@@ -199,7 +199,7 @@ class Start implements ActionInterface
                 $product = $item->getProduct();
                 $url = $product->getUrlModel()->getUrl($product);
                 $cartItem = $cart->addItem(
-                    \Cardgate\Payment\Api\Item::TYPE_PRODUCT,
+                    \Cardgate\Payment\Model\CardgateClient\Item::TYPE_PRODUCT,
                     $item->getSku(),
                     $item->getName(),
                     $itemQty,
@@ -235,7 +235,7 @@ class Start implements ActionInterface
             $shippingAmount = $order->getShippingAmount();
             if ($shippingAmount > 0) {
                 $cartItem = $cart->addItem(
-                    \Cardgate\Payment\Api\Item::TYPE_SHIPPING,
+                    \Cardgate\Payment\Model\CardgateClient\Item::TYPE_SHIPPING,
                     'shipping',
                     'Shipping Costs',
                     1,
@@ -251,7 +251,7 @@ class Start implements ActionInterface
             $discountAmount = $order->getDiscountAmount();
             if ($discountAmount < 0) {
                 $cartItem = $cart->addItem(
-                    \Cardgate\Payment\Api\Item::TYPE_DISCOUNT,
+                    \Cardgate\Payment\Model\CardgateClient\Item::TYPE_DISCOUNT,
                     'discount',
                     'Discount',
                     1,
@@ -270,7 +270,7 @@ class Start implements ActionInterface
             $cardGateFeeAmount = $order->getCardgatefeeAmount();
             if ($cardGateFeeAmount > 0) {
                 $cartItem = $cart->addItem(
-                    \Cardgate\Payment\Api\Item::TYPE_HANDLING,
+                    \Cardgate\Payment\Model\CardgateClient\Item::TYPE_HANDLING,
                     'cardgatefee',
                     'Payment Fee',
                     1,
@@ -287,7 +287,7 @@ class Start implements ActionInterface
             if (abs($calculatedVatTotal - $order->getTaxAmount()) >= 0.01) {
                 $vatCorrection = $order->getTaxAmount() - $calculatedVatTotal;
                 $cartItem = $cart->addItem(
-                    \Cardgate\Payment\Api\Item::TYPE_VAT_CORRECTION,
+                    \Cardgate\Payment\Model\CardgateClient\Item::TYPE_VAT_CORRECTION,
                     'cg-vatcorrection',
                     'VAT Correction',
                     1,
@@ -304,7 +304,7 @@ class Start implements ActionInterface
             $grandTotalCorrection = round(( $order->getGrandTotal() - $calculatedGrandTotal ) * 100, 0);
             if (abs($grandTotalCorrection) > 0) {
                 $cartItem = $cart->addItem(
-                    \Cardgate\Payment\Api\Item::TYPE_CORRECTION,
+                    \Cardgate\Payment\Model\CardgateClient\Item::TYPE_CORRECTION,
                     'cg-correction',
                     'Correction',
                     1,
@@ -357,12 +357,12 @@ class Start implements ActionInterface
      * Converts a Magento address object to a cardgate consumer address.
      *
      * @param Address $oAddress_
-     * @param \Cardgate\Payment\Api\Consumer $oConsumer_
+     * @param \Cardgate\Payment\Model\CardgateClient\Consumer $oConsumer_
      * @param string $sMethod_
      *
      * @return void
      */
-    private function _convertAddress(Address &$oAddress_, \Cardgate\Payment\Api\Consumer &$oConsumer_, $sMethod_)
+    private function _convertAddress(Address &$oAddress_, \Cardgate\Payment\Model\CardgateClient\Consumer &$oConsumer_, $sMethod_)
     {
         $oConsumer_->$sMethod_()->setFirstName($oAddress_->getFirstname());
         $oConsumer_->$sMethod_()->setLastName($oAddress_->getLastname());

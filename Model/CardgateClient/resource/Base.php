@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resource {
 
 	/**
 	 * CardGate resource object.
@@ -34,18 +34,18 @@ namespace Cardgate\Payment\Api\resource {
 
 		/**
 		 * The client associated with this resource.
-		 * @var \Cardgate\Payment\Api\Client
+		 * @var \Cardgate\Payment\Model\CardgateClient\Client
 		 * @access private
 		 */
 		protected $_oClient;
 
 		/**
 		 * The constructor.
-		 * @param \Cardgate\Payment\Api\Client $oClient_ The client to associate the resource with.
+		 * @param \Cardgate\Payment\Model\CardgateClient\Client $oClient_ The client to associate the resource with.
 		 * @access public
 		 * @api
 		 */
-		function __construct( \Cardgate\Payment\Api\Client $oClient_ ) {
+		function __construct( \Cardgate\Payment\Model\CardgateClient\Client $oClient_ ) {
 			$this->_oClient = $oClient_;
 		}
 
