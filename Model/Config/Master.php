@@ -162,6 +162,7 @@ class Master
         $this->paymentMethodIds = [
             'ideal' => 'iDeal',
             'mistercash' => 'Bancontact',
+            'bancontact' => 'Bancontact',
             'creditcard' => 'Creditcard',
             'paysafecard' => 'PaySafeCard',
             'paysafecash' => 'Paysafecash',

@@ -118,6 +118,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     public function checkPaymentCurrency($currency,$payment_method):bool {
         $strictly_euro = in_array($payment_method,['cardgateideal',
             'cardgateidealqr',
+            'cardgatemistercash',
             'cardgatebancontact',
             'cardgatebanktransfer',
             'cardgatebillink',
