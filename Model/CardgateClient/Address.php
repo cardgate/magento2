@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api {
+namespace Cardgate\Payment\Model\CardgateClient {
 
 	/**
 	 * Address instance.

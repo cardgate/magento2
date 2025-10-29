@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api {
+namespace Cardgate\Payment\Model\CardgateClient {
 
 	/**
 	 * Paymentmethod instance.
@@ -181,7 +181,7 @@ namespace Cardgate\Payment\Api {
 			static $aValidMethods; // use static cache for this
 
 			if ( ! isset( $aValidMethods ) ) {
-				$aValidMethods  = ( new \ReflectionClass( '\Cardgate\Payment\Api\Method' ) )->getConstants();
+				$aValidMethods  = ( new \ReflectionClass( '\Cardgate\Payment\Model\CardgateClient\Method' ) )->getConstants();
 			}
 			$this->_oClient = $oClient_;
             /*

@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resource {
 
 	/**
 	 * Version instance.
@@ -50,7 +50,7 @@ namespace Cardgate\Payment\Api\resource {
 	 * @method bool hasPluginVersion() Checks for existence of plugin version.
 	 * @method Version unsetPluginVersion() Unsets the plugin version.
 	 */
-	final class Version extends \Cardgate\Payment\Api\Entity {
+	final class Version extends \Cardgate\Payment\Model\CardgateClient\Entity {
 
 		/**
 		 * @ignore

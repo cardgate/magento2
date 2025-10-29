@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resource {
 
 	/**
 	 * CardGate resource object.
@@ -33,28 +33,28 @@ namespace Cardgate\Payment\Api\resource {
 	final class Methods extends Base {
 
 		/**
-		 * This method can be used to receive a {@link \Cardgate\Payment\Api\Method} instance.
+		 * This method can be used to receive a {@link \Cardgate\Payment\Model\CardgateClient\Method} instance.
 		 * @param string $sId_ Method id to receive method instance for.
-		 * @return \Cardgate\Payment\Api\Method
-		 * @throws \Cardgate\Payment\Api\Exception|\ReflectionException
+		 * @return \Cardgate\Payment\Model\CardgateClient\Method
+		 * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
 		 * @access public
 		 * @api
 		 */
 		public function get( $sId_ ) {
-			return new \Cardgate\Payment\Api\Method( $this->_oClient, $sId_, $sId_ );
+			return new \Cardgate\Payment\Model\CardgateClient\Method( $this->_oClient, $sId_, $sId_ );
 		}
 
 		/**
 		 * This method can be used to retrieve a list of all available payment methods for a site.
 		 * @param int $iSiteId_ The site to retrieve payment methods for.
 		 * @return array
-		 * @throws \Cardgate\Payment\Api\Exception|\ReflectionException
+		 * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
 		 * @access public
 		 * @api
 		 */
 		public function all( $iSiteId_ ) {
 			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new \Cardgate\Payment\Api\Exception( 'Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_ );
+				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_ );
 			}
 
 			$sResource = "options/{$iSiteId_}/";
@@ -62,10 +62,10 @@ namespace Cardgate\Payment\Api\resource {
 			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
 
 			if ( empty( $aResult['options'] ) ) {
-				throw new \Cardgate\Payment\Api\Exception( 'Method.Options.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE )	);
+				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Method.Options.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE )	);
 			}
 
-            $aValidMethods  = ( new \ReflectionClass( '\Cardgate\Payment\Api\Method' ) )->getConstants();
+            $aValidMethods  = ( new \ReflectionClass( '\Cardgate\Payment\Model\CardgateClient\Method' ) )->getConstants();
 			$aMethods = [];
 			foreach( $aResult['options'] as $aOption ) {
 
@@ -74,8 +74,8 @@ namespace Cardgate\Payment\Api\resource {
                 }
 
 				try {
-					$aMethods[] = new \Cardgate\Payment\Api\Method( $this->_oClient, $aOption['id'], $aOption['name'] );
-				} catch ( \Cardgate\Payment\Api\Exception $oException_ ) {
+					$aMethods[] = new \Cardgate\Payment\Model\CardgateClient\Method( $this->_oClient, $aOption['id'], $aOption['name'] );
+				} catch ( \Cardgate\Payment\Model\CardgateClient\Exception $oException_ ) {
 					trigger_error( $oException_->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING );
 				}
 			}
