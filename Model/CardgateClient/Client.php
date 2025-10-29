@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api {
+namespace Cardgate\Payment\Model\CardgateClient {
 
 	/**
 	 * CardGate client object.
@@ -35,7 +35,7 @@ namespace Cardgate\Payment\Api {
 		/**
 		 * Client version.
 		 */
-		const CLIENT_VERSION = "1.1.22";
+		const CLIENT_VERSION = "custom_magento";
 
 		/**
 		 * Url to use for production.

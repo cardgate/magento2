@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Api\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resource {
 
 	/**
 	 * CardGate resource object.
@@ -36,14 +36,14 @@ namespace Cardgate\Payment\Api\resource {
 		 * This method can be used to retrieve subscription details.
 		 * @param string $sSubscriptionId_ The subscription identifier.
 		 * @param array $aDetails_ Array that gets filled with additional subscription details.
-		 * @return \Cardgate\Payment\Api\Subscription
-		 * @throws \Cardgate\Payment\Api\Exception
+		 * @return \Cardgate\Payment\Model\CardgateClient\Subscription
+		 * @throws \Cardgate\Payment\Model\CardgateClient\Exception
 		 * @access public
 		 * @api
 		 */
 		public function get( $sSubscriptionId_, &$aDetails_ = NULL ) {
 			if ( ! is_string( $sSubscriptionId_ ) ) {
-				throw new \Cardgate\Payment\Api\Exception( 'Subscription.Id.Invalid', 'invalid subscription id: ' . $sSubscriptionId_ );
+				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Subscription.Id.Invalid', 'invalid subscription id: ' . $sSubscriptionId_ );
 			}
 
 			$sResource = "subscription/{$sSubscriptionId_}/";
@@ -51,14 +51,14 @@ namespace Cardgate\Payment\Api\resource {
 			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
 
 			if ( empty( $aResult['subscription'] ) ) {
-				throw new \Cardgate\Payment\Api\Exception( 'Subscription.Details.Invalid', 'invalid subscription data returned' );
+				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Subscription.Details.Invalid', 'invalid subscription data returned' );
 			}
 
 			if ( ! is_null( $aDetails_ ) ) {
 				$aDetails_ = array_merge( $aDetails_, $aResult['subscription'] );
 			}
 
-			$oSubscription = new \Cardgate\Payment\Api\Subscription(
+			$oSubscription = new \Cardgate\Payment\Model\CardgateClient\Subscription(
 				$this->_oClient,
 				(int) $aResult['subscription']['site_id'],
 				(int) $aResult['subscription']['period'],
@@ -101,13 +101,13 @@ namespace Cardgate\Payment\Api\resource {
 		 * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).
 		 * @param int $iPeriodAmount_ The period amount of the subscription in cents.
 		 * @param string $sCurrency_ Currency (ISO 4217)
-		 * @return \Cardgate\Payment\Api\Subscription
-		 * @throws \Cardgate\Payment\Api\Exception
+		 * @return \Cardgate\Payment\Model\CardgateClient\Subscription
+		 * @throws \Cardgate\Payment\Model\CardgateClient\Exception
 		 * @access public
 		 * @api
 		 */
 		public function create( $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR' ) {
-			return new \Cardgate\Payment\Api\Subscription( $this->_oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ );
+			return new \Cardgate\Payment\Model\CardgateClient\Subscription( $this->_oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ );
 		}
 
 	}
