@@ -141,6 +141,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 			}
 			return (
 				(
+                    // phpcs:ignore Magento2.Security.InsecureFunction
 					NULL !== $sSiteKey_
 					&& md5(
 						$sPrefix
