@@ -25,7 +25,7 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Model\CardgateClient\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resources {
 
 	/**
 	 * CardGate resource object.
