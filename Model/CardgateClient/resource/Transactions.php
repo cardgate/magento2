@@ -143,7 +143,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 				(
                     // phpcs:ignore Magento2.Security.InsecureFunction
 					NULL !== $sSiteKey_
-					&& md5(
+					&& hash('md5',
 						$sPrefix
 						. $aData_['transaction']
 						. $aData_['currency']
@@ -153,7 +153,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 						. $sSiteKey_
 					) == $aData_['hash']
 				)
-				|| md5(
+				|| hash('md5',
 					$sPrefix
 					. $aData_['transaction']
 					. $aData_['currency']
