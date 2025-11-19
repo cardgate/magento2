@@ -25,15 +25,16 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
+
 namespace Cardgate\Payment\Model\CardgateClient {
 
 	/**
 	 * Class for all exceptions specific to the CardGate client library.
 	 */
-	final class Exception extends \Exception {
+	class Exception extends \Exception {
 
 		/**
-		 * The unified string code of the exception.
+		 * The unified stringvariable of the exception.
 		 * @var string
 		 * @access private
 		 */
@@ -48,7 +49,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 		 * @access public
 		 * @api
 		 */
-		function __construct( $sError_, $sMessage_, $iCode_ = 0, \Throwable $oPrevious_ = NULL ) {
+		function __construct( $sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = NULL ) {
 			$this->_sError = $sError_;
 			parent::__construct( $sMessage_, $iCode_, $oPrevious_ );
 		}

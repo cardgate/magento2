@@ -30,12 +30,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	/**
 	 * CardGate client object.
 	 */
-	final class Client {
+	class Client {
 
 		/**
 		 * Client version.
 		 */
-		const CLIENT_VERSION = "custom_magento";
+		const CLIENT_VERSION = "built_in_clientlib";
 
 		/**
 		 * Url to use for production.

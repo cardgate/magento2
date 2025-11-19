@@ -30,7 +30,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 	/**
 	 * CardGate resource object.
 	 */
-	final class Consumers extends Base {
+	class Consumers extends Base {
 
 		/**
 		 * This method can be used to create a new consumer.

@@ -50,7 +50,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 	 * @method bool hasPluginVersion() Checks for existence of plugin version.
 	 * @method Version unsetPluginVersion() Unsets the plugin version.
 	 */
-	final class Version extends \Cardgate\Payment\Model\CardgateClient\Entity {
+	class Version extends \Cardgate\Payment\Model\CardgateClient\Entity {
 
 		/**
 		 * @ignore
