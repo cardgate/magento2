@@ -34,11 +34,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	class Exception extends \Exception {
 
 		/**
-		 * The unified stringvariable of the exception.
-		 * @var string
-		 * @access private
-		 */
-		private $_sError;
+			 * The unified string variable of the exception.
+			 * @var string
+			 * @access private
+			 * @phpcsSuppress Magento2.NamingConvention.ReservedWords.ForbiddenAsNameSpace
+			 */
+			private $_sError;
 
 		/**
 		 * Constructs the exception.
