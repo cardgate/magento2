@@ -25,12 +25,12 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Model\CardgateClient {
+namespace Cardgate\Payment\Model\CardgateClient;
 
 	/**
 	 * Subscription instance.
 	 */
-	final class Subscription extends Transaction {
+	class Subscription extends Transaction {
 
 		/**
 		 * The subscription id.
@@ -510,5 +510,3 @@ namespace Cardgate\Payment\Model\CardgateClient {
 		}
 
 	}
-
-}
