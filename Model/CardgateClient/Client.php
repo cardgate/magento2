@@ -35,7 +35,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 		/**
 		 * Client version.
 		 */
-		const CLIENT_VERSION = "built_in_clientlib";
+		const CLIENT_VERSION = "0";
 
 		/**
 		 * Url to use for production.
