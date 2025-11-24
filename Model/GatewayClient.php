@@ -74,7 +74,7 @@ class GatewayClient
             }
             $this->_oClient->version()->setPlatformName('PHP, Magento2');
             $this->_oClient->version()->setPlatformVersion(phpversion() . ', ' . $oMetaData_->getVersion());
-            $this->_oClient->version()->setPluginName('cardgate/magento2, cardgate/cardgate-clientlib-php');
+            $this->_oClient->version()->setPluginName('cardgate/magento2, built_in_clientlib');
             $this->_oClient->version()->setPluginVersion(
                 $oModuleList_->getOne(
                     'Cardgate_Payment'

@@ -25,19 +25,20 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Model\CardgateClient {
+namespace Cardgate\Payment\Model\CardgateClient;
 
 	/**
 	 * Class for all exceptions specific to the CardGate client library.
 	 */
-	final class Exception extends \Exception {
+	class Exception extends \Exception {
 
 		/**
-		 * The unified string code of the exception.
-		 * @var string
-		 * @access private
-		 */
-		private $_sError;
+			 * The unified string variable of the exception.
+			 * @var string
+			 * @access private
+			 * @phpcsSuppress Magento2.NamingConvention.ReservedWords.ForbiddenAsNameSpace
+			 */
+			private $_sError;
 
 		/**
 		 * Constructs the exception.
@@ -48,7 +49,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 		 * @access public
 		 * @api
 		 */
-		function __construct( $sError_, $sMessage_, $iCode_ = 0, \Throwable $oPrevious_ = NULL ) {
+		function __construct( $sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = NULL ) {
 			$this->_sError = $sError_;
 			parent::__construct( $sMessage_, $iCode_, $oPrevious_ );
 		}
@@ -64,5 +65,3 @@ namespace Cardgate\Payment\Model\CardgateClient {
 		}
 
 	}
-
-}

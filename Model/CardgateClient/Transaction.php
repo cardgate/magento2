@@ -707,7 +707,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 				throw new Exception( 'Transaction.CanRefund.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE ) );
 			}
 
-			$iRemainder_ = (int) @$aResult['transaction']['refund_remainder'];
+            $iRemainder_ = (int) ($aResult['transaction']['refund_remainder'] ?? 0);
 
 			return !empty( $aResult['transaction']['can_refund'] );
 		}

@@ -25,12 +25,12 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Model\CardgateClient\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resources {
 
 	/**
 	 * CardGate resource object.
 	 */
-	final class Transactions extends Base {
+	class Transactions extends Base {
 
 		/**
 		 * This method can be used to retrieve transaction details.
@@ -41,7 +41,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 		 * @access public
 		 * @api
 		 */
-		public function get( $sTransactionId_, &$aDetails_ = NULL ) {
+		public function get( $sTransactionId_, &$aDetails_ = [] ) {
 			if ( ! is_string( $sTransactionId_ ) ) {
 				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_ );
 			}
@@ -54,7 +54,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Transaction.Details.Invalid', 'invalid transaction data returned' . $this->_oClient->getDebugInfo() );
 			}
 
-			if ( ! is_null( $aDetails_ ) ) {
+			if ( count( $aDetails_ ) > 0 ) {
 				$aDetails_ = array_merge( $aDetails_, $aResult['transaction'] );
 			}
 
@@ -141,8 +141,9 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 			}
 			return (
 				(
+                    // phpcs:ignore Magento2.Security.InsecureFunction
 					NULL !== $sSiteKey_
-					&& md5(
+					&& hash('md5',
 						$sPrefix
 						. $aData_['transaction']
 						. $aData_['currency']
@@ -152,7 +153,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 						. $sSiteKey_
 					) == $aData_['hash']
 				)
-				|| md5(
+				|| hash('md5',
 					$sPrefix
 					. $aData_['transaction']
 					. $aData_['currency']

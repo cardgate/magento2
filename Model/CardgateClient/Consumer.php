@@ -40,7 +40,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	 * @method bool hasPhone()
 	 * @method Consumer unsetPhone()
 	 */
-	final class Consumer extends Entity {
+	class Consumer extends Entity {
 
 		/**
 		 * @ignore
