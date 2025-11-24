@@ -25,28 +25,21 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Model\CardgateClient\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resources {
 
 	/**
 	 * CardGate resource object.
 	 */
-	class Base {
+	class Consumers extends Base {
 
 		/**
-		 * The client associated with this resource.
-		 * @var \Cardgate\Payment\Model\CardgateClient\Client
-		 * @access private
-		 */
-		protected $_oClient;
-
-		/**
-		 * The constructor.
-		 * @param \Cardgate\Payment\Model\CardgateClient\Client $oClient_ The client to associate the resource with.
+		 * This method can be used to create a new consumer.
+		 * @return \Cardgate\Payment\Model\CardgateClient\Consumer
 		 * @access public
 		 * @api
 		 */
-		function __construct( \Cardgate\Payment\Model\CardgateClient\Client $oClient_ ) {
-			$this->_oClient = $oClient_;
+		public function create() {
+			return new \Cardgate\Payment\Model\CardgateClient\Consumer();
 		}
 
 	}

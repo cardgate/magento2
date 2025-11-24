@@ -30,7 +30,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	/**
 	 * Paymentmethod instance.
 	 */
-	final class Method {
+	class Method {
 
 		/**
 		 * iDeal.

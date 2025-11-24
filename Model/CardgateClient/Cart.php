@@ -30,7 +30,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	/**
 	 * Cart instance.
 	 */
-	final class Cart {
+	class Cart {
 
 		/**
 		 * The items in this cart.

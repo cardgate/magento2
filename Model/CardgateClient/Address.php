@@ -82,7 +82,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	 * @method bool hasCountry() Checks for existence of country.
 	 * @method Address unsetCountry() Unsets the country.
 	 */
-	final class Address extends Entity {
+	class Address extends Entity {
 
 		/**
 		 * @ignore
@@ -135,7 +135,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 			) {
 				throw new Exception( 'Address.DayOfBirth.Invalid', 'invalid day of birth: ' . $sDayOfBirth_ );
 			}
-			return parent::setDayOfBirth( strftime( '%m/%d/%Y', $iDayOfBirthUnix ) );
+			return parent::setDayOfBirth( date( '%m/%d/%Y', $iDayOfBirthUnix ) );
 		}
 
 		/**

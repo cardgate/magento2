@@ -25,23 +25,23 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Model\CardgateClient\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resources {
 
 	/**
 	 * CardGate resource object.
 	 */
-	final class Subscriptions extends Base {
+	class Subscriptions extends Base {
 
-		/**
+        /**
 		 * This method can be used to retrieve subscription details.
-		 * @param string $sSubscriptionId_ The subscription identifier.
+		 * @param $sSubscriptionId_ The subscription identifier.
 		 * @param array $aDetails_ Array that gets filled with additional subscription details.
 		 * @return \Cardgate\Payment\Model\CardgateClient\Subscription
 		 * @throws \Cardgate\Payment\Model\CardgateClient\Exception
 		 * @access public
 		 * @api
 		 */
-		public function get( $sSubscriptionId_, &$aDetails_ = NULL ) {
+		public function get( $sSubscriptionId_, &$aDetails_ = [] ) {
 			if ( ! is_string( $sSubscriptionId_ ) ) {
 				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Subscription.Id.Invalid', 'invalid subscription id: ' . $sSubscriptionId_ );
 			}
@@ -54,7 +54,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resource {
 				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Subscription.Details.Invalid', 'invalid subscription data returned' );
 			}
 
-			if ( ! is_null( $aDetails_ ) ) {
+			if ( count( $aDetails_ ) > 0 ) {
 				$aDetails_ = array_merge( $aDetails_, $aResult['subscription'] );
 			}
 

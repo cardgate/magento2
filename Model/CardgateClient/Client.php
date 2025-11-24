@@ -30,12 +30,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	/**
 	 * CardGate client object.
 	 */
-	final class Client {
+	class Client {
 
 		/**
 		 * Client version.
 		 */
-		const CLIENT_VERSION = "custom_magento";
+		const CLIENT_VERSION = "0";
 
 		/**
 		 * Url to use for production.
@@ -84,35 +84,35 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
 		/**
 		 * The version resource.
-		 * @var resource\Version
+		 * @var resources\Version
 		 * @access private
 		 */
 		private $_oVersion = NULL;
 
 		/**
 		 * The transactions resource.
-		 * @var resource\Transactions
+		 * @var resources\Transactions
 		 * @access private
 		 */
 		private $_oTransactions = NULL;
 
 		/**
 		 * The subscriptions resource.
-		 * @var resource\Subscriptions
+		 * @var resources\Subscriptions
 		 * @access private
 		 */
 		private $_oSubscriptions = NULL;
 
 		/**
 		 * The consumers resource.
-		 * @var resource\Consumers
+		 * @var resources\Consumers
 		 * @access private
 		 */
 		private $_oConsumers = NULL;
 
 		/**
 		 * The methods resource.
-		 * @var resource\Methods
+		 * @var resources\Methods
 		 * @access private
 		 */
 		private $_oMethods = NULL;
@@ -392,65 +392,65 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
 		/**
 		 * Accessor for the versioning resource.
-		 * @return resource\Version
+		 * @return resources\Version
 		 * @access public
 		 * @api
 		 */
 		public function version() {
 			if ( NULL == $this->_oVersion ) {
-				$this->_oVersion = new resource\Version();
+				$this->_oVersion = new resources\Version();
 			}
 			return $this->_oVersion;
 		}
 
 		/**
 		 * Accessor for the transactions resource.
-		 * @return resource\Transactions
+		 * @return resources\Transactions
 		 * @access public
 		 * @api
 		 */
 		public function transactions() {
 			if ( NULL == $this->_oTransactions ) {
-				$this->_oTransactions = new resource\Transactions( $this );
+				$this->_oTransactions = new resources\Transactions( $this );
 			}
 			return $this->_oTransactions;
 		}
 
 		/**
 		 * Accessor for the subscriptions resource.
-		 * @return resource\Subscriptions
+		 * @return resources\Subscriptions
 		 * @access public
 		 * @api
 		 */
 		public function subscriptions() {
 			if ( NULL == $this->_oSubscriptions ) {
-				$this->_oSubscriptions = new resource\Subscriptions( $this );
+				$this->_oSubscriptions = new resources\Subscriptions( $this );
 			}
 			return $this->_oSubscriptions;
 		}
 
 		/**
 		 * Accessor for the consumers resource.
-		 * @return resource\Consumers
+		 * @return resources\Consumers
 		 * @access public
 		 * @api
 		 */
 		public function consumers() {
 			if ( NULL == $this->_oConsumers ) {
-				$this->_oConsumers = new resource\Consumers( $this );
+				$this->_oConsumers = new resources\Consumers( $this );
 			}
 			return $this->_oConsumers;
 		}
 
 		/**
 		 * Accessor for the payment methods resource.
-		 * @return resource\Methods
+		 * @return resources\Methods
 		 * @access public
 		 * @api
 		 */
 		public function methods() {
 			if ( NULL == $this->_oMethods ) {
-				$this->_oMethods = new resource\Methods( $this );
+				$this->_oMethods = new resources\Methods( $this );
 			}
 			return $this->_oMethods;
 		}

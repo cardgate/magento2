@@ -25,12 +25,12 @@
  * @copyright   CardGate B.V.
  * @link        https://www.cardgate.com
  */
-namespace Cardgate\Payment\Model\CardgateClient\resource {
+namespace Cardgate\Payment\Model\CardgateClient\resources {
 
 	/**
 	 * CardGate resource object.
 	 */
-	final class Methods extends Base {
+	class Methods extends Base {
 
 		/**
 		 * This method can be used to receive a {@link \Cardgate\Payment\Model\CardgateClient\Method} instance.

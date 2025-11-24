@@ -75,7 +75,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 	 * @method bool hasStock() Checks for existence of stock.
 	 * @method Item unsetStock() Unsets the stock.
 	 */
-	final class Item extends Entity {
+	class Item extends Entity {
 
 		/**
 		 * Product.
