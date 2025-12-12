@@ -11,7 +11,6 @@ use Magento\Sales\Model\Order\Creditmemo;
 /**
  * Inject CardGate fee into Creditmemo
  *
- * @author DBS B.V.
  *
  */
 class Fee extends \Magento\Sales\Model\Order\Creditmemo\Total\AbstractTotal

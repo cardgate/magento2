@@ -14,7 +14,6 @@ use Magento\Framework\Event\ObserverInterface;
 /**
  * Resets quote totals
  *
- * @author DBS B.V.
  *
  *
  */

@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Bancontact class.
- * @author DBS B.V.
  * Creates and manages CardGate Bancontact
  */
 class Bancontact extends \Cardgate\Payment\Model\PaymentMethods

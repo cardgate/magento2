@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Przelewy24 class.
- * @author DBS B.V.
  * Creates and manages CardGate Przelewy24
  */
 class Przelewy24 extends \Cardgate\Payment\Model\PaymentMethods

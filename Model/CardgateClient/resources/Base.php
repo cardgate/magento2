@@ -27,28 +27,29 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient\resources {
 
-	/**
-	 * CardGate resource object.
-	 */
-	class Base {
+    /**
+     * CardGate resource object.
+     */
+    class Base
+    {
 
-		/**
-		 * The client associated with this resource.
-		 * @var \Cardgate\Payment\Model\CardgateClient\Client
-		 * @access private
-		 */
-		protected $_oClient;
+        /**
+         * The client associated with this resource.
+         * @var \Cardgate\Payment\Model\CardgateClient\Client
+         * @access private
+         */
+        protected $_oClient;
 
-		/**
-		 * The constructor.
-		 * @param \Cardgate\Payment\Model\CardgateClient\Client $oClient_ The client to associate the resource with.
-		 * @access public
-		 * @api
-		 */
-		function __construct( \Cardgate\Payment\Model\CardgateClient\Client $oClient_ ) {
-			$this->_oClient = $oClient_;
-		}
-
-	}
+        /**
+         * The constructor.
+         * @param \Cardgate\Payment\Model\CardgateClient\Client $oClient_ The client to associate the resource with.
+         * @access public
+         * @api
+         */
+        function __construct(\Cardgate\Payment\Model\CardgateClient\Client $oClient_)
+        {
+            $this->_oClient = $oClient_;
+        }
+    }
 
 }

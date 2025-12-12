@@ -27,47 +27,50 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient {
 
-	/**
-	 * Cart instance.
-	 */
-	class Cart {
+    /**
+     * Cart instance.
+     */
+    class Cart
+    {
 
-		/**
-		 * The items in this cart.
-		 * @var Client
-		 * @access private
-		 */
-		private $_aItems = [];
+        /**
+         * The items in this cart.
+         * @var Client
+         * @access private
+         */
+        private $_aItems = [];
 
-		/**
-		 * Add a cart item to the cart.
-		 * @param int $iType_ The cart item type.
-		 * @param string $sSKU_ The SKU of the cart item.
-		 * @param string $sName_ The name of the cart item (productname).
-		 * @param string $iPrice_ The price of the cart item.
-		 * @param string $sLink_ An optional link to the product.
-		 * @return Item Returns the item that was added.
-		 * @throws Exception|\ReflectionException
-		 * @access public
-		 * @api
-		 */
-		function addItem( $iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = NULL ) {
-			$oItem = new Item( $iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ );
-			$this->_aItems[] = $oItem;
-			return $oItem;
-		}
+        /**
+         * Add a cart item to the cart.
+         * @param int $iType_ The cart item type.
+         * @param string $sSKU_ The SKU of the cart item.
+         * @param string $sName_ The name of the cart item (productname).
+         * @param string $iPrice_ The price of the cart item.
+         * @param string $sLink_ An optional link to the product.
+         * @return Item Returns the item that was added.
+         * @throws Exception|\ReflectionException
+         * @access public
+         * @api
+         */
+        function addItem($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
+        {
+            $oItem = new Item($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_);
+            $this->_aItems[] = $oItem;
+            return $oItem;
+        }
 
-		function getAll() {
-		}
+        function getAll()
+        {
+        }
 
-		function getData() {
-			$aData = [];
-			foreach( $this->_aItems as $oItem ) {
-				$aData[] = $oItem->getData();
-			}
-			return $aData;
-		}
-
-	}
+        function getData()
+        {
+            $aData = [];
+            foreach ($this->_aItems as $oItem) {
+                $aData[] = $oItem->getData();
+            }
+            return $aData;
+        }
+    }
 
 }

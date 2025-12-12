@@ -27,25 +27,26 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient {
 
-	/**
-	 * Paymentmethod instance.
-	 */
-	class Method {
+    /**
+     * Paymentmethod instance.
+     */
+    class Method
+    {
 
-		/**
-		 * iDeal.
-		 */
-		const IDEAL = 'ideal';
+        /**
+         * iDeal.
+         */
+        const IDEAL = 'ideal';
 
-		/**
-		 * iDeal (legacy).
-		 */
-		const IDEALPRO = 'idealpro';
+        /**
+         * iDeal (legacy).
+         */
+        const IDEALPRO = 'idealpro';
 
-		/**
-		 * BanContact.
-		 */
-		const BANCONTACT = 'bancontact';
+        /**
+         * BanContact.
+         */
+        const BANCONTACT = 'bancontact';
 
         /**
          * MisterCash (legacy)
@@ -53,216 +54,219 @@ namespace Cardgate\Payment\Model\CardgateClient {
         const MISTERCASH = 'mistercash';
 
         /**
-		 * CreditCard.
-		 */
-		const CREDITCARD = 'creditcard';
+         * CreditCard.
+         */
+        const CREDITCARD = 'creditcard';
 
-		/**
-		 * Afterpay.
-		 */
-		const AFTERPAY = 'afterpay';
+        /**
+         * Afterpay.
+         */
+        const AFTERPAY = 'afterpay';
 
-		/**
-		 * Giropay.
-		 */
-		const GIROPAY = 'giropay';
+        /**
+         * Giropay.
+         */
+        const GIROPAY = 'giropay';
 
-		/**
-		 * Giropay.
-		 */
-		const BANKTRANSFER = 'banktransfer';
+        /**
+         * Giropay.
+         */
+        const BANKTRANSFER = 'banktransfer';
 
-		/**
-		 * Bitcoins.
-		 */
-		const BITCOIN = 'bitcoin';
+        /**
+         * Bitcoins.
+         */
+        const BITCOIN = 'bitcoin';
 
-		/**
-		 * DirectDebit.
-		 */
-		const DIRECTDEBIT = 'directdebit';
+        /**
+         * DirectDebit.
+         */
+        const DIRECTDEBIT = 'directdebit';
 
-		/**
-		 * Klarna.
-		 */
-		const KLARNA = 'klarna';
+        /**
+         * Klarna.
+         */
+        const KLARNA = 'klarna';
 
-		/**
-		 * PayPal.
-		 */
-		const PAYPAL = 'paypal';
+        /**
+         * PayPal.
+         */
+        const PAYPAL = 'paypal';
 
-		/**
-		 * Przelewy24.
-		 */
-		const PRZELEWY24 = 'przelewy24';
+        /**
+         * Przelewy24.
+         */
+        const PRZELEWY24 = 'przelewy24';
 
-		/**
-		 * SofortBanking.
-		 */
-		const SOFORTBANKING = 'sofortbanking';
+        /**
+         * SofortBanking.
+         */
+        const SOFORTBANKING = 'sofortbanking';
 
-		/**
-		 * Paysafecard
-		 */
-		const PAYSAFECARD = 'paysafecard';
+        /**
+         * Paysafecard
+         */
+        const PAYSAFECARD = 'paysafecard';
 
-		/**
-		 * Billink
-		 */
-		const BILLINK = 'billink';
-		
-		/**
-		 * IDEALQR
-		 */
-		const IDEALQR = 'idealqr';
+        /**
+         * Billink
+         */
+        const BILLINK = 'billink';
+        
+        /**
+         * IDEALQR
+         */
+        const IDEALQR = 'idealqr';
 
-		/**
-		 * Paysafecash
-		 */
-		const PAYSAFECASH = 'paysafecash';
-		
-		/**
-		 * OnlineUberweisen
-		 */
-		const ONLINEUEBERWEISEN = 'onlineueberweisen';
-		
-		/**
-		 * Gift Card
-		 */
-		const GIFTCARD = 'giftcard';
+        /**
+         * Paysafecash
+         */
+        const PAYSAFECASH = 'paysafecash';
+        
+        /**
+         * OnlineUberweisen
+         */
+        const ONLINEUEBERWEISEN = 'onlineueberweisen';
+        
+        /**
+         * Gift Card
+         */
+        const GIFTCARD = 'giftcard';
 
-		/**
-		 * EPS
-		 */
-		const EPS = 'eps';
+        /**
+         * EPS
+         */
+        const EPS = 'eps';
 
-		/**
-		 * SprayPay
-		 */
-		const SPRAYPAY = 'spraypay';
+        /**
+         * SprayPay
+         */
+        const SPRAYPAY = 'spraypay';
 
         /**
          * Crypto
          */
         const CRYPTO = 'crypto';
 
-		/**
-		 * The client associated with this payment method.
-		 * @var Client
-		 * @access private
-		 */
-		private $_oClient;
+        /**
+         * The client associated with this payment method.
+         * @var Client
+         * @access private
+         */
+        private $_oClient;
 
-		/**
-		 * The payment method.
-		 * @var string
-		 * @access private
-		 */
-		private $_sId;
+        /**
+         * The payment method.
+         * @var string
+         * @access private
+         */
+        private $_sId;
 
-		/**
-		 * The payment method name.
-		 * @var string
-		 * @access private
-		 */
-		private $_sName;
+        /**
+         * The payment method name.
+         * @var string
+         * @access private
+         */
+        private $_sName;
 
-		/**
-		 * The constructor.
-		 * @param Client $oClient_ The client associated with this transaction.
-		 * @param string $sId_ The payment method identifier to create a method instance for.
-		 * @throws Exception|\ReflectionException
-		 * @access public
-		 * @api
-		 * @throws
-		 */
-		function __construct( Client $oClient_, $sId_, $sName_ ) {
-			static $aValidMethods; // use static cache for this
+        /**
+         * The constructor.
+         * @param Client $oClient_ The client associated with this transaction.
+         * @param string $sId_ The payment method identifier to create a method instance for.
+         * @throws Exception|\ReflectionException
+         * @access public
+         * @api
+         * @throws
+         */
+        function __construct(Client $oClient_, $sId_, $sName_)
+        {
+            static $aValidMethods; // use static cache for this
 
-			if ( ! isset( $aValidMethods ) ) {
-				$aValidMethods  = ( new \ReflectionClass( '\Cardgate\Payment\Model\CardgateClient\Method' ) )->getConstants();
-			}
-			$this->_oClient = $oClient_;
+            if (! isset($aValidMethods)) {
+                $aValidMethods  = ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Method') )->getConstants();
+            }
+            $this->_oClient = $oClient_;
             /*
-			if ( ! in_array( $sId_, $aValidMethods ) ) {
-				throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
-			}
+            if ( ! in_array( $sId_, $aValidMethods ) ) {
+                throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
+            }
             */
-			$this->setId( $sId_ );
-			$this->setName( $sName_ );
-		}
+            $this->setId($sId_);
+            $this->setName($sName_);
+        }
 
-		/**
-		 * Set the method id.
-		 * @param string $sId_ Method id to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setId( $sId_ ) {
-			if (
-				! is_string( $sId_ )
-				|| empty( $sId_ )
-			) {
-				throw new Exception( 'Method.Id.Invalid', 'invalid id: ' . $sId_ );
-			}
-			$this->_sId = $sId_;
-			return $this;
-		}
+        /**
+         * Set the method id.
+         * @param string $sId_ Method id to set.
+         * @return $this
+         * @throws Exception
+         * @access public
+         * @api
+         */
+        public function setId($sId_)
+        {
+            if (! is_string($sId_)
+                || empty($sId_)
+            ) {
+                throw new Exception('Method.Id.Invalid', 'invalid id: ' . $sId_);
+            }
+            $this->_sId = $sId_;
+            return $this;
+        }
 
-		/**
-		 * Get the payment method id.
-		 * @return string The payment method id for this instance.
-		 * @access public
-		 * @api
-		 */
-		public function getId() {
-			return $this->_sId;
-		}
+        /**
+         * Get the payment method id.
+         * @return string The payment method id for this instance.
+         * @access public
+         * @api
+         */
+        public function getId()
+        {
+            return $this->_sId;
+        }
 
-		/**
-		 * Set the method name.
-		 * @param string $sName_ Method name to set.
-		 * @return $this
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function setName( $sName_ ) {
-			if (
-				! is_string( $sName_ )
-				|| empty( $sName_ )
-			) {
-				throw new Exception( 'Method.Name.Invalid', 'invalid name: ' . $sName_ );
-			}
-			$this->_sName = $sName_;
-			return $this;
-		}
+        /**
+         * Set the method name.
+         * @param string $sName_ Method name to set.
+         * @return $this
+         * @throws Exception
+         * @access public
+         * @api
+         */
+        public function setName($sName_)
+        {
+            if (! is_string($sName_)
+                || empty($sName_)
+            ) {
+                throw new Exception('Method.Name.Invalid', 'invalid name: ' . $sName_);
+            }
+            $this->_sName = $sName_;
+            return $this;
+        }
 
-		/**
-		 * Get the payment method name.
-		 * @return string The payment method name for this instance.
-		 * @access public
-		 * @api
-		 */
-		public function getName() {
-			return $this->_sName;
-		}
+        /**
+         * Get the payment method name.
+         * @return string The payment method name for this instance.
+         * @access public
+         * @api
+         */
+        public function getName()
+        {
+            return $this->_sName;
+        }
 
-		/**
-		 * This method returns all the issuers available for the current payment method.
-		 * @return array An array with issuers
-		 * @throws Exception
-		 * @access public
-		 * @api
-		 */
-		public function getIssuers() {
+        /**
+         * This method returns all the issuers available for the current payment method.
+         * @return array An array with issuers
+         * @throws Exception
+         * @access public
+         * @api
+         */
+        public function getIssuers()
+        {
             $aIssuers   = [0=>["id"=>"ZERO", "name"=>"Deprecated"]];
-			return  $aIssuers; //Deprecated since iDEAL2
-		}
-
-	}
+            return  $aIssuers; //Deprecated since iDEAL2
+        }
+    }
 
 }

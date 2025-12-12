@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * iDEAL QR class.
- * @author DBS B.V.
  * Creates and manages CardGate IDEAlQR
  */
 class Idealqr extends \Cardgate\Payment\Model\PaymentMethods

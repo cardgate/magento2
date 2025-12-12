@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Safeklick class.
- * @author DBS B.V.
  * Creates and manages CardGate Safeclick
  */
 class Safeklick extends \Cardgate\Payment\Model\PaymentMethods

@@ -11,7 +11,6 @@ use Cardgate\Payment\Model\Config as CardgateConfig;
 /**
  * Render for "global" configuration group element
  *
- * @author DBS B.V.
  *
  */
 class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset

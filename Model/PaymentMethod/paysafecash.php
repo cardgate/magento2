@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Paysafecash class.
- * @author DBS B.V.
  * Creates and manages CardGate Paysafecash
  */
 class Paysafecash extends \Cardgate\Payment\Model\PaymentMethods

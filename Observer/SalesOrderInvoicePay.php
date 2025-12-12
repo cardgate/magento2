@@ -12,7 +12,6 @@ use Magento\Framework\Event\ObserverInterface;
 /**
  * Event to copy CardGate Fee data from an order to an invoice.
  *
- * @author DBS B.V.
  *
  */
 class SalesOrderInvoicePay implements ObserverInterface

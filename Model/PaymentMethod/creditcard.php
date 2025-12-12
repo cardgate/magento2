@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * CreditCard class.
- * @author DBS B.V.
  * Creates and manages CardGate Cerditcard
  */
 class Creditcard extends \Cardgate\Payment\Model\PaymentMethods

@@ -12,7 +12,6 @@ use Magento\Backend\Block\Template\Context as Context;
 /**
  * Fetch Payment methods HTML Block renderer
  *
- * @author DBS B.V.
  *
  */
 class FetchPM extends \Magento\Config\Block\System\Config\Form\Field
@@ -50,9 +49,9 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field
              && ! empty($this->cardgateConfig->getGlobal('site_id'))
              && ! empty($this->cardgateConfig->getGlobal('site_key'))
         ) {
-            $fetchPMUrl = $this->_urlBuilder->getUrl( "cardgate/gateway/fetchpm", [
+            $fetchPMUrl = $this->_urlBuilder->getUrl("cardgate/gateway/fetchpm", [
                 'section' => 'gateway'
-            ] );
+            ]);
 
             return "<button onclick='window.open(\"{$fetchPMUrl}\");return false;'><span>" .
                    __("Refresh active payment methods") . "</span></button>";

@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Giropay class.
- * @author DBS B.V.
  * Creates and manages CardGate Giropay
  */
 class Giropay extends \Cardgate\Payment\Model\PaymentMethods

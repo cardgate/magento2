@@ -12,7 +12,6 @@ use Magento\Config\Block\System\Config\Form\Fieldset;
 /**
  * Render for "global" configuration group element
  *
- * @author DBS B.V.
  *
  */
 class GroupInfo extends Fieldset

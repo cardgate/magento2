@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * OnlineÜberweisen class.
- * @author DBS B.V.
  * Creates and manages CardGate Onlineueberweisen
  */
 class Onlineueberweisen extends \Cardgate\Payment\Model\PaymentMethods

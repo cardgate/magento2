@@ -9,7 +9,6 @@ namespace Cardgate\Payment\Model\Config\Structure\Element;
 /**
  * Config Field plugin for rewriting ConfigPaths
  *
- * @author DBS B.V.
  *
  */
 class FieldPlugin

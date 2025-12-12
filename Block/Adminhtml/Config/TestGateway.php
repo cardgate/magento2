@@ -11,7 +11,6 @@ use Cardgate\Payment\Model\Config as CardgateConfig;
 /**
  * Render for "test gateway settings" element
  *
- * @author DBS B.V.
  *
  */
 class TestGateway extends \Magento\Config\Block\System\Config\Form\Field

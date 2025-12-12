@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Ideal class.
- * @author DBS B.V.
  * Creates and manages CardGate Ideal
  */
 class Ideal extends \Cardgate\Payment\Model\PaymentMethods
