@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Klarna class.
- * @author DBS B.V.
  * Creates and manages CardGate Klarna
  */
 class Klarna extends \Cardgate\Payment\Model\PaymentMethods

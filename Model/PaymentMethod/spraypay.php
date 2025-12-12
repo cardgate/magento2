@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * SprayPay class.
- * @author DBS B.V.
  * Creates and manages CardGate Spraypay
  */
 class Spraypay extends \Cardgate\Payment\Model\PaymentMethods

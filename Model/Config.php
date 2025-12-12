@@ -16,7 +16,6 @@ use Cardgate\Payment\Model\Config\Master;
 /**
  * CardGate Magento2 module config
  *
- * @author DBS B.V.
  *
  */
 class Config implements ConfigInterface

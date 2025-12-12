@@ -17,7 +17,6 @@ use Cardgate\Payment\Model\Config as CardgateConfig;
 /**
  * Client redirect after payment action
  *
- * @author DBS B.V.
  */
 class Redirect implements ActionInterface
 {

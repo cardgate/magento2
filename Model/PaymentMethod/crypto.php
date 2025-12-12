@@ -10,10 +10,10 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Crypto class.
- * @author DBS B.V.
  * Creates and manages CardGate Crypto
  */
-class Crypto extends \Cardgate\Payment\Model\PaymentMethods {
+class Crypto extends \Cardgate\Payment\Model\PaymentMethods
+{
 
     /**
      * Payment method code

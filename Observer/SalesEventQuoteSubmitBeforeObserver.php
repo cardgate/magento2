@@ -11,7 +11,6 @@ use Magento\Payment\Observer\AbstractDataAssignObserver;
 /**
  * Event to copy CardGate Fee data from a quote to an order.
  *
- * @author DBS B.V.
  *
  */
 class SalesEventQuoteSubmitBeforeObserver extends AbstractDataAssignObserver

@@ -12,7 +12,6 @@ use Magento\Checkout\Block\Checkout\LayoutProcessor;
 /**
  * Layout Processor plugin to inject payment methods in checkout billing-step section
  *
- * @author DBS B.V.
  *
  */
 class LayoutProcessorPlugin

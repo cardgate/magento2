@@ -11,7 +11,6 @@ use Cardgate\Payment\Model\Config as CardgateConfig;
 /**
  * Render for "show payment method" element
  *
- * @author DBS B.V.
  *
  */
 class ShowPM extends \Magento\Config\Block\System\Config\Form\Field

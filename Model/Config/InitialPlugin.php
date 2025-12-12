@@ -11,7 +11,6 @@ use Magento\Framework\App\Config\Initial;
 /**
  * Initial Config plugin to dynamically add all payment methods.
  *
- * @author DBS B.V.
  *
  */
 class InitialPlugin

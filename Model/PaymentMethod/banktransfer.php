@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Banktransfer class.
- * @author DBS B.V.
  * Creates and manages CardGate Banktransfer
  */
 class Banktransfer extends \Cardgate\Payment\Model\PaymentMethods

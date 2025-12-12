@@ -27,41 +27,43 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient;
 
-	/**
-	 * Class for all exceptions specific to the CardGate client library.
-	 */
-	class Exception extends \Exception {
+    /**
+     * Class for all exceptions specific to the CardGate client library.
+     */
+class Exception extends \Exception
+{
 
-		/**
-			 * The unified string variable of the exception.
-			 * @var string
-			 * @access private
-			 * @phpcsSuppress Magento2.NamingConvention.ReservedWords.ForbiddenAsNameSpace
-			 */
-			private $_sError;
+    /**
+     * The unified string variable of the exception.
+     * @var string
+     * @access private
+     * @phpcsSuppress Magento2.NamingConvention.ReservedWords.ForbiddenAsNameSpace
+     */
+        private $_sError;
 
-		/**
-		 * Constructs the exception.
-		 * @param string $sError_ A unified string code of the exception to throw.
-		 * @param string $sMessage_ The exception message to throw.
-		 * @param int $iCode_ The numeric exception code.
-		 * @param \Throwable $oPrevious_ The previous exception used for the exception chaining.
-		 * @access public
-		 * @api
-		 */
-		function __construct( $sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = NULL ) {
-			$this->_sError = $sError_;
-			parent::__construct( $sMessage_, $iCode_, $oPrevious_ );
-		}
+    /**
+     * Constructs the exception.
+     * @param string $sError_ A unified string code of the exception to throw.
+     * @param string $sMessage_ The exception message to throw.
+     * @param int $iCode_ The numeric exception code.
+     * @param \Throwable $oPrevious_ The previous exception used for the exception chaining.
+     * @access public
+     * @api
+     */
+    function __construct($sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = null)
+    {
+        $this->_sError = $sError_;
+        parent::__construct($sMessage_, $iCode_, $oPrevious_);
+    }
 
-		/**
-		 * Get the unified string code associated with this exception.
-		 * @return string The unified string code of the exception.
-		 * @access public
-		 * @api
-		 */
-		public function getError() {
-			return $this->_sError;
-		}
-
-	}
+    /**
+     * Get the unified string code associated with this exception.
+     * @return string The unified string code of the exception.
+     * @access public
+     * @api
+     */
+    public function getError()
+    {
+        return $this->_sError;
+    }
+}

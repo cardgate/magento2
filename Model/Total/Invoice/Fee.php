@@ -9,7 +9,6 @@ namespace Cardgate\Payment\Model\Total\Invoice;
 /**
  * Inject Fee into invoice (for tax injection see Helper/TaxData)
  *
- * @author DBS B.V.
  *
  */
 class Fee extends \Magento\Sales\Model\Order\Invoice\Total\AbstractTotal

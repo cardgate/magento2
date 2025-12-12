@@ -21,7 +21,6 @@ use Magento\CatalogInventory\Api\StockRegistryInterface;
 /**
  * Start payment action
  *
- * @author DBS B.V.
  *
  */
 class Start implements ActionInterface

@@ -11,7 +11,6 @@ use Cardgate\Payment\Model\Config as CardgateConfig;
 /**
  * Render for "paymentmethod" configuration group elements
  *
- * @author DBS B.V.
  *
  */
 class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fieldset

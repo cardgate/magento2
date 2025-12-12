@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * AfterPay class.
- * @author DBS B.V.
  * Creates and manages CardGate Afterpay
  */
 class Afterpay extends \Cardgate\Payment\Model\PaymentMethods

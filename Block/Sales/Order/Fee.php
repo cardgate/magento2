@@ -9,7 +9,6 @@ namespace Cardgate\Payment\Block\Sales\Order;
 /**
  * Fee block in "Totals"
  *
- * @author DBS B.V.
  *
  */
 class Fee extends \Magento\Framework\View\Element\Template

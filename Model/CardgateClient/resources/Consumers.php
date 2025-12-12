@@ -27,21 +27,22 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient\resources {
 
-	/**
-	 * CardGate resource object.
-	 */
-	class Consumers extends Base {
+    /**
+     * CardGate resource object.
+     */
+    class Consumers extends Base
+    {
 
-		/**
-		 * This method can be used to create a new consumer.
-		 * @return \Cardgate\Payment\Model\CardgateClient\Consumer
-		 * @access public
-		 * @api
-		 */
-		public function create() {
-			return new \Cardgate\Payment\Model\CardgateClient\Consumer();
-		}
-
-	}
+        /**
+         * This method can be used to create a new consumer.
+         * @return \Cardgate\Payment\Model\CardgateClient\Consumer
+         * @access public
+         * @api
+         */
+        public function create()
+        {
+            return new \Cardgate\Payment\Model\CardgateClient\Consumer();
+        }
+    }
 
 }
