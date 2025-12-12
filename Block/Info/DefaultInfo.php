@@ -9,7 +9,6 @@ namespace Cardgate\Payment\Block\Info;
 /**
  * Default Checkout template
  *
- * @author DBS B.V.
  *
  */
 class DefaultInfo extends \Magento\Payment\Block\Info
@@ -35,10 +34,10 @@ class DefaultInfo extends \Magento\Payment\Block\Info
      */
     public function getInstructions()
     {
-        if ( $this->_instructions === null ) {
+        if ($this->_instructions === null) {
             $this->_instructions = $this->getInfo()->getAdditionalInformation(
                 'instructions'
-            ).' ' ?: trim( $this->getMethod()->getConfigData( 'instructions' ) ).' ';
+            ).' ' ?: trim($this->getMethod()->getConfigData('instructions')).' ';
         }
         return $this->_instructions;
     }

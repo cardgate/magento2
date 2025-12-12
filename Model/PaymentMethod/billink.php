@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Bitcoin class.
- * @author DBS B.V.
  * Creates and manages CardGate Billink
  */
 class Billink extends \Cardgate\Payment\Model\PaymentMethods

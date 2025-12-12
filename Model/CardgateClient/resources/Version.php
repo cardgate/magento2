@@ -27,42 +27,42 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient\resources {
 
-	/**
-	 * Version instance.
-	 *
-	 * @method Version setPlatformName( \string $sName_ ) Sets the platform name.
-	 * @method string getPlatformName() Returns the platform name.
-	 * @method bool hasPlatformName() Checks for existence of platform name.
-	 * @method Version unsetPlatformName() Unsets the platform name.
-	 *
-	 * @method Version setPlatformVersion( \string $sVersion_ ) Sets the platform version.
-	 * @method string getPlatformVersion() Returns the platform version.
-	 * @method bool hasPlatformVersion() Checks for existence of platform version.
-	 * @method Version unsetPlatformVersion() Unsets the platform version.
-	 *
-	 * @method Version setPluginName( \string $sName_ ) Sets the plugin name.
-	 * @method string getPluginName() Returns the plugin name.
-	 * @method bool hasPluginName() Checks for existence of plugin name.
-	 * @method Version unsetPluginName() Unsets the plugin name.
-	 *
-	 * @method Version setPluginVersion( \string $sVersion_ ) Sets the plugin version.
-	 * @method string getPluginVersion() Returns the plugin version.
-	 * @method bool hasPluginVersion() Checks for existence of plugin version.
-	 * @method Version unsetPluginVersion() Unsets the plugin version.
-	 */
-	class Version extends \Cardgate\Payment\Model\CardgateClient\Entity {
+    /**
+     * Version instance.
+     *
+     * @method Version setPlatformName( \string $sName_ ) Sets the platform name.
+     * @method string getPlatformName() Returns the platform name.
+     * @method bool hasPlatformName() Checks for existence of platform name.
+     * @method Version unsetPlatformName() Unsets the platform name.
+     *
+     * @method Version setPlatformVersion( \string $sVersion_ ) Sets the platform version.
+     * @method string getPlatformVersion() Returns the platform version.
+     * @method bool hasPlatformVersion() Checks for existence of platform version.
+     * @method Version unsetPlatformVersion() Unsets the platform version.
+     *
+     * @method Version setPluginName( \string $sName_ ) Sets the plugin name.
+     * @method string getPluginName() Returns the plugin name.
+     * @method bool hasPluginName() Checks for existence of plugin name.
+     * @method Version unsetPluginName() Unsets the plugin name.
+     *
+     * @method Version setPluginVersion( \string $sVersion_ ) Sets the plugin version.
+     * @method string getPluginVersion() Returns the plugin version.
+     * @method bool hasPluginVersion() Checks for existence of plugin version.
+     * @method Version unsetPluginVersion() Unsets the plugin version.
+     */
+    class Version extends \Cardgate\Payment\Model\CardgateClient\Entity
+    {
 
-		/**
-		 * @ignore
-		 * @internal The methods these fields expose are configured in the class phpdoc.
-		 */
-		static $_aFields = [
-			'PlatformName'		=> 'platform_name',
-			'PlatformVersion'	=> 'platform_version',
-			'PluginName'		=> 'plugin_name',
-			'PluginVersion'		=> 'plugin_version',
-		];
-
-	}
+        /**
+         * @ignore
+         * @internal The methods these fields expose are configured in the class phpdoc.
+         */
+        static $_aFields = [
+            'PlatformName'        => 'platform_name',
+            'PlatformVersion'    => 'platform_version',
+            'PluginName'        => 'plugin_name',
+            'PluginVersion'        => 'plugin_version',
+        ];
+    }
 
 }

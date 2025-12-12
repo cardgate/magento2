@@ -175,7 +175,7 @@ class Callback implements ActionInterface
             $aData = empty($post) ? $get : $post;
             $sSiteKey = $this->_cardgateClient->getSiteKey();
 
-            if (false == $this->_cardgateClient->transactions()->verifyCallback( $aData, $sSiteKey)) {
+            if (false == $this->_cardgateClient->transactions()->verifyCallback($aData, $sSiteKey)) {
                 throw new CallbackException('hash verification failure');
             }
 
@@ -237,7 +237,7 @@ class Callback implements ActionInterface
                             }
                             $sItemProductId = $item->getProductId();
                             $sWebsiteId = $order->getStore()->getWebsiteId();
-                            $stockItem = $this->_stockRegistry->getStockItem( $sItemProductId, $sWebsiteId);
+                            $stockItem = $this->_stockRegistry->getStockItem($sItemProductId, $sWebsiteId);
                             $stockItem->setQty($stockItem->getQty() - $item->getQtyCanceled());
                             $stockItem->save();
                             $item->setQtyCanceled(0);
@@ -308,16 +308,20 @@ class Callback implements ActionInterface
                         $order->setStatus("cardgate_payment_failure");
                         $order->addCommentToStatusHistory(__("Transaction failure."));
                     } catch (CallbackException $e) {
-                        $order->addCommentToStatusHistory(__("Failed to cancel order. Order state was : %1.",
-                            $order->getState() . '/' . $order->getStatus()));
+                        $order->addCommentToStatusHistory(__(
+                            "Failed to cancel order. Order state was : %1.",
+                            $order->getState() . '/' . $order->getStatus()
+                        ));
                         throw new CallbackException('failed to cancel order.');
                     }
                 }
             } elseif ($code < 500) {
                 // 4xx refund
                 if (!$manualProcessing) {
-                    $order->registerCancellation(__("Transaction refund received. Amount %1.",
-                        $currency . ' ' . round($amount / 100, 2)));
+                    $order->registerCancellation(__(
+                        "Transaction refund received. Amount %1.",
+                        $currency . ' ' . round($amount / 100, 2)
+                    ));
                 }
             } elseif ($code >= 600
                       && $code < 700

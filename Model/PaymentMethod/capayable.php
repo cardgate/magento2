@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Capayable class.
- * @author DBS B.V.
  * Creates and manages CardGate Capayable
  */
 class Capayable extends \Cardgate\Payment\Model\PaymentMethods

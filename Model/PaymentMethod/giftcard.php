@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Gift Card class.
- * @author DBS B.V.
  * Creates and manages CardGate Giftcard
  */
 class Giftcard extends \Cardgate\Payment\Model\PaymentMethods

@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * Belfius class.
- * @author DBS B.V.
  * Creates and manages CardGate Belfius
  */
 class Belfius extends \Cardgate\Payment\Model\PaymentMethods

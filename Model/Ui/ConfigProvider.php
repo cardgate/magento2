@@ -17,7 +17,6 @@ use Magento\Framework\App\ObjectManager;
 /**
  * UI Config provider
  *
- * @author DBS B.V.
  *
  */
 class ConfigProvider implements Model\ConfigProviderInterface

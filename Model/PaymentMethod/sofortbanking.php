@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * SofortBanking class.
- * @author DBS B.V.
  * Creates and manages CardGate Sofortbanking
  */
 class Sofortbanking extends \Cardgate\Payment\Model\PaymentMethods

@@ -11,7 +11,6 @@ use Cardgate\Payment\Model\Config as CardgateConfig;
 /**
  * Render for mandatory field elements
  *
- * @author DBS B.V.
  *
  */
 class MandatoryField extends \Magento\Config\Block\System\Config\Form\Field

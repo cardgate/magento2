@@ -26,7 +26,6 @@ use Magento\Tax\Model\Calculation;
  *
  * Magento\Payment\Model\Method\Adapter
  *
- * @author DBS B.V.
  */
 class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
 {
@@ -115,8 +114,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
      *
      * @return bool
      */
-    public function checkPaymentCurrency($currency,$payment_method):bool {
-        $strictly_euro = in_array($payment_method,['cardgateideal',
+    public function checkPaymentCurrency($currency, $payment_method):bool
+    {
+        $strictly_euro = in_array($payment_method, ['cardgateideal',
             'cardgateidealqr',
             'cardgatemistercash',
             'cardgatebancontact',
@@ -126,10 +126,14 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             'cardgatedirectdebit',
             'cardgateonlineueberweisen',
             'cardgatespraypay']);
-        if ($strictly_euro && $currency != 'EUR') return false;
+        if ($strictly_euro && $currency != 'EUR') {
+            return false;
+        }
 
-        $strictly_pln = in_array($payment_method,['cardgateprzelewy24']);
-        if ($strictly_pln && $currency != 'PLN') return false;
+        $strictly_pln = in_array($payment_method, ['cardgateprzelewy24']);
+        if ($strictly_pln && $currency != 'PLN') {
+            return false;
+        }
 
         return true;
     }
@@ -146,10 +150,10 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             return false;
         };
 
-        if (!is_null($quote) && $quote->getData("quote_currency_code")){
+        if (!is_null($quote) && $quote->getData("quote_currency_code")) {
             $sCurrencyCode = $quote->getData("quote_currency_code");
-            $paymentMethod = 'cardgate'.substr($this->code,9 );
-            if (!$this->checkPaymentCurrency($sCurrencyCode,$paymentMethod)) {
+            $paymentMethod = 'cardgate'.substr($this->code, 9);
+            if (!$this->checkPaymentCurrency($sCurrencyCode, $paymentMethod)) {
                 return false;
             }
         }
@@ -159,12 +163,12 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
         $loggedInIsGroup = $this->config->loggedInIsGroup($quote->getStoreId());
         $isLoggedIn      = ($quote->getCustomer()->getId() < 1 ? false : true);
         if ($isLoggedIn) {
-            if ($groupId > 0 && count($aCustomerGroups) > 0 && ! in_array($groupId, $aCustomerGroups)){
+            if ($groupId > 0 && count($aCustomerGroups) > 0 && ! in_array($groupId, $aCustomerGroups)) {
                 return false;
             }
         } else {
             if ($loggedInIsGroup) {
-                if (in_array('-1', $aCustomerGroups)){
+                if (in_array('-1', $aCustomerGroups)) {
                     return true;
                 } else {
                     return false;

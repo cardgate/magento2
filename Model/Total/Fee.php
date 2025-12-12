@@ -13,7 +13,6 @@ use \Magento\Tax\Model\Sales\Total\Quote\CommonTaxCollector;
 /**
  * Inject CardGate fee into totals for quote
  *
- * @author DBS B.V.
  *
  */
 class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal

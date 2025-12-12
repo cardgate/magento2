@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * DirectDebit class.
- * @author DBS B.V.
  * Creates and manages CardGate DirectDebit
  */
 class Directdebit extends \Cardgate\Payment\Model\PaymentMethods

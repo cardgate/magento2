@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * MisterCash/Bancontact class.
- * @author DBS B.V.
  * Creates and manages CardGate MisterCash
  */
 class Mistercash extends \Cardgate\Payment\Model\PaymentMethods

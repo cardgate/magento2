@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * ClickAndBuy class.
- * @author DBS B.V.
  * Creates and manages Clickandbuy
  */
 class Clickandbuy extends \Cardgate\Payment\Model\PaymentMethods

@@ -8,7 +8,6 @@ namespace Cardgate\Payment\Model\PaymentMethod;
 
 /**
  * PayPal class.
- * @author DBS B.V.
  * Creates and manages CardGate PayPal
  */
 class Paypal extends \Cardgate\Payment\Model\PaymentMethods

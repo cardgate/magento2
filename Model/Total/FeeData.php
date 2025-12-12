@@ -9,7 +9,6 @@ namespace Cardgate\Payment\Model\Total;
 /**
  * FeeData structure object.
  *
- * @author DBS B.V.
  *
  */
 class FeeData

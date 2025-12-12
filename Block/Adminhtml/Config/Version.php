@@ -13,7 +13,6 @@ use Magento\Framework\App\ObjectManager;
 /**
  * Render for "show version" element
  *
- * @author DBS B.V.
  *
  */
 class Version extends \Magento\Config\Block\System\Config\Form\Field

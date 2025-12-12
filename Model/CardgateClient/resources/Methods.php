@@ -27,60 +27,63 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient\resources {
 
-	/**
-	 * CardGate resource object.
-	 */
-	class Methods extends Base {
+    /**
+     * CardGate resource object.
+     */
+    class Methods extends Base
+    {
 
-		/**
-		 * This method can be used to receive a {@link \Cardgate\Payment\Model\CardgateClient\Method} instance.
-		 * @param string $sId_ Method id to receive method instance for.
-		 * @return \Cardgate\Payment\Model\CardgateClient\Method
-		 * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
-		 * @access public
-		 * @api
-		 */
-		public function get( $sId_ ) {
-			return new \Cardgate\Payment\Model\CardgateClient\Method( $this->_oClient, $sId_, $sId_ );
-		}
+        /**
+         * This method can be used to receive a {@link \Cardgate\Payment\Model\CardgateClient\Method} instance.
+         * @param string $sId_ Method id to receive method instance for.
+         * @return \Cardgate\Payment\Model\CardgateClient\Method
+         * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
+         * @access public
+         * @api
+         */
+        public function get($sId_)
+        {
+            return new \Cardgate\Payment\Model\CardgateClient\Method($this->_oClient, $sId_, $sId_);
+        }
 
-		/**
-		 * This method can be used to retrieve a list of all available payment methods for a site.
-		 * @param int $iSiteId_ The site to retrieve payment methods for.
-		 * @return array
-		 * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
-		 * @access public
-		 * @api
-		 */
-		public function all( $iSiteId_ ) {
-			if ( ! is_integer( $iSiteId_ ) ) {
-				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_ );
-			}
+        /**
+         * This method can be used to retrieve a list of all available payment methods for a site.
+         * @param int $iSiteId_ The site to retrieve payment methods for.
+         * @return array
+         * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
+         * @access public
+         * @api
+         */
+        public function all($iSiteId_)
+        {
+            if (! is_integer($iSiteId_)) {
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_);
+            }
 
-			$sResource = "options/{$iSiteId_}/";
+            $sResource = "options/{$iSiteId_}/";
 
-			$aResult = $this->_oClient->doRequest( $sResource, NULL, 'GET' );
+            $aResult = $this->_oClient->doRequest($sResource, null, 'GET');
 
-			if ( empty( $aResult['options'] ) ) {
-				throw new \Cardgate\Payment\Model\CardgateClient\Exception( 'Method.Options.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo( TRUE, FALSE )	);
-			}
+            if (empty($aResult['options'])) {
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Method.Options.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+            }
 
-            $aValidMethods  = ( new \ReflectionClass( '\Cardgate\Payment\Model\CardgateClient\Method' ) )->getConstants();
-			$aMethods = [];
-			foreach( $aResult['options'] as $aOption ) {
+            $aValidMethods  = ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Method') )->getConstants();
+            $aMethods = [];
+            foreach ($aResult['options'] as $aOption) {
 
-                if (!in_array($aOption['id'],$aValidMethods)) {
+                if (!in_array($aOption['id'], $aValidMethods)) {
                     continue;
                 }
 
-				try {
-					$aMethods[] = new \Cardgate\Payment\Model\CardgateClient\Method( $this->_oClient, $aOption['id'], $aOption['name'] );
-				} catch ( \Cardgate\Payment\Model\CardgateClient\Exception $oException_ ) {
-					trigger_error( $oException_->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING );
-				}
-			}
-			return $aMethods;
-		}
-	}
+                try {
+                    $aMethods[] = new \Cardgate\Payment\Model\CardgateClient\Method($this->_oClient, $aOption['id'], $aOption['name']);
+                } catch (\Cardgate\Payment\Model\CardgateClient\Exception $oException_) {
+                    trigger_error($oException_->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING);
+                }
+            }
+            return $aMethods;
+        }
+    }
 
 }

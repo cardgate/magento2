@@ -8,11 +8,6 @@ namespace Cardgate\Payment\Model\Config;
 
 use Magento\Framework\App\ObjectManager;
 
-/**
- *
- * @author DBS B.V.
- *
- */
 class Master
 {
 

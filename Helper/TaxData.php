@@ -13,7 +13,6 @@ use Magento\Tax\Api\Data\OrderTaxDetailsItemInterface;
 /**
  * Taxdata-helper plugin to add CardGate Fee tax to invoices
  *
- * @author DBS B.V.
  *
  */
 class TaxData extends \Magento\Tax\Helper\Data
