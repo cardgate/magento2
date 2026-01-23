@@ -70,7 +70,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @ignore
          * @internal The __call method translates get-, set-, unset- and has-methods to their configured fields.
          * @return $this|mixed|bool Return $this on set and unset, mixed on get and bool on has
-         * @throws \Exception|\ReflectionException
+         * @throws Exception|\ReflectionException
          */
         public function __call($sMethod_, $aArgs_)
         {
@@ -96,10 +96,10 @@ namespace Cardgate\Payment\Model\CardgateClient {
                                 $this->_aData[static::$_aFields[$sKey]] = $aArgs_[0];
                                 return $this; // makes the call chainable
                             } else {
-                                throw new \Exception("{$sClassName}.Invalid.Method", "invalid value for {$sMethod_}");
+                                throw new Exception("{$sClassName}.Invalid.Method", "invalid value for {$sMethod_}");
                             }
                         } else {
-                            throw new \Exception("{$sClassName}.Invalid.Method", "missing parameter 1 for {$sMethod_}");
+                            throw new Exception("{$sClassName}.Invalid.Method", "missing parameter 1 for {$sMethod_}");
                         }
                     }
                     break;
@@ -117,7 +117,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
                     }
                     break;
             }
-            throw new \Exception("{$sClassName}.Invalid.Method", "call to undefined method {$sMethod_}");
+            throw new Exception("{$sClassName}.Invalid.Method", "call to undefined method {$sMethod_}");
         }
     }
 

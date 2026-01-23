@@ -47,7 +47,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $iPrice_ The price of the cart item.
          * @param string $sLink_ An optional link to the product.
          * @return Item Returns the item that was added.
-         * @throws \Exception|\ReflectionException
+         * @throws Exception|\ReflectionException
          */
         public function addItem($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
         {
