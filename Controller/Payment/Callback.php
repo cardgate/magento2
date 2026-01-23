@@ -8,6 +8,7 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Payment\Exception\CallbackException;
 use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;

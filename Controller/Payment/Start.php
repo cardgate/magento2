@@ -12,6 +12,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Payment\Exception\StartException;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;

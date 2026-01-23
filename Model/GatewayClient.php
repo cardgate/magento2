@@ -7,6 +7,7 @@
 namespace Cardgate\Payment\Model;
 
 use Cardgate\Payment\Model\CardgateClient\Exception;
+use Cardgate\Payment\Exception\GatewayClientException;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\App\ProductMetadata;
@@ -50,7 +51,7 @@ class GatewayClient
      * @param ModuleListInterface $oModuleList_
      * @param RemoteAddress $remoteAddress
      *
-     * @throws \Exception
+     * @throws GatewayClientException
      */
     public function __construct(
         Config $oConfig_,
@@ -68,7 +69,7 @@ class GatewayClient
         $sApiKey = $oEncryptor_->decrypt($oConfig_->getGlobal('api_password'));
         $bTestMode = !!$oConfig_->getGlobal('testmode');
         if (! class_exists(\Cardgate\Payment\Model\CardgateClient\Client::class)) {
-            throw new \Exception("cardgate client library not installed");
+            throw new GatewayClientException("cardgate client library not installed");
         }
         $this->_oClient = new \Cardgate\Payment\Model\CardgateClient\Client($sMerchantId, $sApiKey, $bTestMode);
 

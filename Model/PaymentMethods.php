@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Model;
 
-use Cardgate\Exception\RefundException;
+use Cardgate\Payment\Exception\RefundException;
 use Cardgate\Payment\Model;
 use Cardgate\Payment\Model\Config\ValueHandlerPool;
 use Cardgate\Payment\Block\Info\DefaultInfo;
