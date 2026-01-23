@@ -246,13 +246,16 @@ class Callback implements ActionInterface
                     }
 
                     // Test if transaction has been processed already.
-                    $paymentRepository = $this->_objectManager->get(\Magento\Sales\Model\Order\Payment\Transaction\Repository::class);
+                    $paymentRepository = $this->_objectManager
+                        ->get(\Magento\Sales\Model\Order\Payment\Transaction\Repository::class);
                     $currentTransaction = $paymentRepository->getByTransactionId(
                         $transactionId,
                         $payment->getId(),
                         $order->getId()
                     );
-                    if (! empty($currentTransaction) && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE) {
+                    if (! empty($currentTransaction)
+                        && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE
+                    ) {
                         $order->addCommentToStatusHistory(__('Transaction already processed.'));
                         $updateCardgateData = false;
                         throw new CallbackException('transaction already processed.');

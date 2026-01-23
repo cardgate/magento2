@@ -157,7 +157,10 @@ namespace Cardgate\Payment\Model\CardgateClient {
         public function setType($iType_)
         {
             if (! is_integer($iType_)
-                || ! in_array($iType_, ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Item') )->getConstants())
+                || ! in_array(
+                    $iType_,
+                    ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Item') )->getConstants()
+                )
             ) {
                 throw new \Exception('Item.Type.Invalid', 'invalid cart item type: ' . $iType_);
             }

@@ -113,8 +113,14 @@ class Subscription extends Transaction
      *
      * @throws SubscriptionException
      */
-    public function __construct(Client $oClient_, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR')
-    {
+    public function __construct(
+        Client $oClient_,
+        $iSiteId_,
+        $iPeriod_,
+        $sPeriodType_,
+        $iPeriodAmount_,
+        $sCurrency_ = 'EUR'
+    ) {
         $this->_oClient = $oClient_;
         $this->setSiteId($iSiteId_)
              ->setPeriod($iPeriod_)
@@ -197,7 +203,10 @@ class Subscription extends Transaction
         if (! is_string($sPeriodType_)
             || ! in_array($sPeriodType_, [ 'day', 'week', 'month', 'year' ])
         ) {
-            throw new SubscriptionException('Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_);
+            throw new SubscriptionException(
+                'Subscription.Period.Type.Invalid',
+                'invalid period type: ' . $sPeriodType_
+            );
         }
         $this->_sPeriodType = $sPeriodType_;
 
@@ -224,7 +233,10 @@ class Subscription extends Transaction
     public function setPeriodPrice($iPeriodPrice_)
     {
         if (! is_integer($iPeriodPrice_)) {
-            throw new SubscriptionException('Subscription.Period.Price.Invalid', 'invalid period price: ' . $iPeriodPrice_);
+            throw new SubscriptionException(
+                'Subscription.Period.Price.Invalid',
+                'invalid period price: ' . $iPeriodPrice_
+            );
         }
         $this->_iPeriodPrice = $iPeriodPrice_;
 
@@ -251,7 +263,10 @@ class Subscription extends Transaction
     public function setInitialPayment($iAmount_)
     {
         if (! is_integer($iAmount_)) {
-            throw new SubscriptionException('Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $iAmount_);
+            throw new SubscriptionException(
+                'Subscription.Initial.Payment.Invalid',
+                'invalid initial payment amount: ' . $iAmount_
+            );
         }
         $this->_iInitialPayment = $iAmount_;
 
@@ -299,7 +314,10 @@ class Subscription extends Transaction
         if (! is_string($sTrialPeriodType_)
             || ! in_array($sTrialPeriodType_, [ 'day', 'week', 'month', 'year' ])
         ) {
-            throw new SubscriptionException('Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $sTrialPeriodType_);
+            throw new SubscriptionException(
+                'Subscription.Period.Type.Invalid',
+                'invalid trial period type: ' . $sTrialPeriodType_
+            );
         }
         $this->_sTrialPeriodType = $sTrialPeriodType_;
 
@@ -326,7 +344,10 @@ class Subscription extends Transaction
     public function setTrialPeriodPrice($iTrialPeriodPrice_)
     {
         if (! is_integer($iTrialPeriodPrice_)) {
-            throw new SubscriptionException('Subscription.Period.Price.Invalid', 'invalid trial period price: ' . $iTrialPeriodPrice_);
+            throw new SubscriptionException(
+                'Subscription.Period.Price.Invalid',
+                'invalid trial period price: ' . $iTrialPeriodPrice_
+            );
         }
         $this->_iTrialPeriodPrice = $iTrialPeriodPrice_;
 
@@ -458,7 +479,11 @@ class Subscription extends Transaction
         if (empty($aResult)
             || empty($aResult['subscription'])
         ) {
-            throw new SubscriptionException('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+            throw new SubscriptionException(
+                'Subscription.Request.Invalid',
+                'unexpected result: ' . $this->_oClient->getLastResult()
+                . $this->_oClient->getDebugInfo(true, false)
+            );
         }
         $this->_sId = $aResult['subscription'];
         if (isset($aResult['subscription']['action'])
@@ -498,7 +523,11 @@ class Subscription extends Transaction
 
         if (false == $aResult['success']) {
             // oClient will have thrown an error if there was a proper error from the API, so this is weird!
-            throw new SubscriptionException('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+            throw new SubscriptionException(
+                'Subscription.Request.Invalid',
+                'unexpected result: ' . $this->_oClient->getLastResult()
+                . $this->_oClient->getDebugInfo(true, false)
+            );
         }
 
         return true;

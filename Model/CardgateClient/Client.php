@@ -495,10 +495,16 @@ namespace Cardgate\Payment\Model\CardgateClient {
                 curl_close($rCh);
             }
             if (null === ( $aResults = json_decode($this->_sLastResult, true) )) {
-                throw new ClientException('Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $this->_sLastResult);
+                throw new ClientException(
+                    'Client.Request.JSON.Invalid',
+                    'remote gave invalid JSON: ' . $this->_sLastResult
+                );
             }
             if (isset($aResults['error'])) {
-                throw new ClientException('Client.Request.Remote.' . $aResults['error']['code'], $aResults['error']['message']    . $this->getDebugInfo());
+                throw new ClientException(
+                    'Client.Request.Remote.' . $aResults['error']['code'],
+                    $aResults['error']['message'] . $this->getDebugInfo()
+                );
             }
 
             return $aResults;

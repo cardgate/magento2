@@ -343,7 +343,10 @@ namespace Cardgate\Payment\Model\CardgateClient {
             } elseif (is_string($mPaymentMethod_)) {
                 $this->_oPaymentMethod = new Method($this->_oClient, $mPaymentMethod_, $mPaymentMethod_);
             } else {
-                throw new \Exception('Transaction.PaymentMethod.Invalid', 'invalid payment method: ' . $mPaymentMethod_);
+                throw new \Exception(
+                    'Transaction.PaymentMethod.Invalid',
+                    'invalid payment method: ' . $mPaymentMethod_
+                );
             }
             return $this;
         }
@@ -620,7 +623,11 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (empty($aResult['payment'])
                 || empty($aResult['payment']['transaction'])
             ) {
-                throw new \Exception('Transaction.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+                throw new \Exception(
+                    'Transaction.Request.Invalid',
+                    'unexpected result: ' . $this->_oClient->getLastResult()
+                    . $this->_oClient->getDebugInfo(true, false)
+                );
             }
             $this->_sId = $aResult['payment']['transaction'];
             if (isset($aResult['payment']['action'])
@@ -646,7 +653,11 @@ namespace Cardgate\Payment\Model\CardgateClient {
             $aResult = $this->_oClient->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['transaction'])) {
-                throw new \Exception('Transaction.CanRefund.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+                throw new \Exception(
+                    'Transaction.CanRefund.Invalid',
+                    'unexpected result: ' . $this->_oClient->getLastResult()
+                    . $this->_oClient->getDebugInfo(true, false)
+                );
             }
 
             $iRemainder_ = (int) ($aResult['transaction']['refund_remainder'] ?? 0);
@@ -682,7 +693,11 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (empty($aResult['refund'])
                 || empty($aResult['refund']['transaction'])
             ) {
-                throw new \Exception('Transaction.Refund.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+                throw new \Exception(
+                    'Transaction.Refund.Invalid',
+                    'unexpected result: ' . $this->_oClient->getLastResult()
+                    . $this->_oClient->getDebugInfo(true, false)
+                );
             }
 
             // This is a bit unlogical! Why not leave this to the callee?
@@ -718,7 +733,11 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (empty($aResult['recurring'])
                 || empty($aResult['recurring']['transaction_id'])
             ) {
-                throw new \Exception('Transaction.Recur.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+                throw new \Exception(
+                    'Transaction.Recur.Invalid',
+                    'unexpected result: ' . $this->_oClient->getLastResult()
+                    . $this->_oClient->getDebugInfo(true, false)
+                );
             }
 
             // Same unlogical stuff as method above! Why not leave this to the callee?

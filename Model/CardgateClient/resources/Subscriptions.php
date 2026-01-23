@@ -43,7 +43,10 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
         public function get($sSubscriptionId_, &$aDetails_ = [])
         {
             if (! is_string($sSubscriptionId_)) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Subscription.Id.Invalid', 'invalid subscription id: ' . $sSubscriptionId_);
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Subscription.Id.Invalid',
+                    'invalid subscription id: ' . $sSubscriptionId_
+                );
             }
 
             $sResource = "subscription/{$sSubscriptionId_}/";
@@ -51,7 +54,10 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
             $aResult = $this->_oClient->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['subscription'])) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Subscription.Details.Invalid', 'invalid subscription data returned');
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Subscription.Details.Invalid',
+                    'invalid subscription data returned'
+                );
             }
 
             if (count($aDetails_) > 0) {
@@ -106,7 +112,14 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          */
         public function create($iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR')
         {
-            return new \Cardgate\Payment\Model\CardgateClient\Subscription($this->_oClient, $iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_);
+            return new \Cardgate\Payment\Model\CardgateClient\Subscription(
+                $this->_oClient,
+                $iSiteId_,
+                $iPeriod_,
+                $sPeriodType_,
+                $iPeriodAmount_,
+                $sCurrency_
+            );
         }
     }
 

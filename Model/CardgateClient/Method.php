@@ -178,7 +178,9 @@ namespace Cardgate\Payment\Model\CardgateClient {
             static $aValidMethods; // use static cache for this
 
             if (! isset($aValidMethods)) {
-                $aValidMethods  = ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Method') )->getConstants();
+                $aValidMethods  = ( new \ReflectionClass(
+                    '\Cardgate\Payment\Model\CardgateClient\Method'
+                ) )->getConstants();
             }
             $this->_oClient = $oClient_;
             $this->setId($sId_);

@@ -53,7 +53,10 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
         public function all($iSiteId_)
         {
             if (! is_integer($iSiteId_)) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Methods.SiteId.Invalid', 'invalid site id: ' . $iSiteId_);
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Methods.SiteId.Invalid',
+                    'invalid site id: ' . $iSiteId_
+                );
             }
 
             $sResource = "options/{$iSiteId_}/";
@@ -61,7 +64,11 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
             $aResult = $this->_oClient->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['options'])) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Method.Options.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Method.Options.Invalid',
+                    'unexpected result: ' . $this->_oClient->getLastResult()
+                    . $this->_oClient->getDebugInfo(true, false)
+                );
             }
 
             $aValidMethods  = ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Method') )->getConstants();
@@ -73,9 +80,16 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
                 }
 
                 try {
-                    $aMethods[] = new \Cardgate\Payment\Model\CardgateClient\Method($this->_oClient, $aOption['id'], $aOption['name']);
+                    $aMethods[] = new \Cardgate\Payment\Model\CardgateClient\Method(
+                        $this->_oClient,
+                        $aOption['id'],
+                        $aOption['name']
+                    );
                 } catch (\Cardgate\Payment\Model\CardgateClient\Exception $oException_) {
-                    trigger_error($oException_->getMessage() . '. Please update this SDK to the latest version.', E_USER_WARNING);
+                    trigger_error(
+                        $oException_->getMessage() . '. Please update this SDK to the latest version.',
+                        E_USER_WARNING
+                    );
                 }
             }
             return $aMethods;

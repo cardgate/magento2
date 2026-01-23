@@ -361,8 +361,11 @@ class Start implements ActionInterface
      *
      * @return void
      */
-    private function _convertAddress(Address &$oAddress_, \Cardgate\Payment\Model\CardgateClient\Consumer &$oConsumer_, $sMethod_)
-    {
+    private function _convertAddress(
+        Address &$oAddress_,
+        \Cardgate\Payment\Model\CardgateClient\Consumer &$oConsumer_,
+        $sMethod_
+    ) {
         $oConsumer_->$sMethod_()->setFirstName($oAddress_->getFirstname());
         $oConsumer_->$sMethod_()->setLastName($oAddress_->getLastname());
         if (!!( $sCompany = $oAddress_->getCompany() )) {
