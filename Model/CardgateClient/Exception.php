@@ -36,7 +36,6 @@ class Exception extends \Exception
     /**
      * The unified string variable of the exception.
      * @var string
-     * @access private
      * @phpcsSuppress Magento2.NamingConvention.ReservedWords.ForbiddenAsNameSpace
      */
         private $_sError;
@@ -47,10 +46,8 @@ class Exception extends \Exception
      * @param string $sMessage_ The exception message to throw.
      * @param int $iCode_ The numeric exception code.
      * @param \Throwable $oPrevious_ The previous exception used for the exception chaining.
-     * @access public
-     * @api
      */
-    function __construct($sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = null)
+    public function __construct($sError_, $sMessage_, $iCode_ = 0, ?\Throwable $oPrevious_ = null)
     {
         $this->_sError = $sError_;
         parent::__construct($sMessage_, $iCode_, $oPrevious_);
@@ -59,8 +56,6 @@ class Exception extends \Exception
     /**
      * Get the unified string code associated with this exception.
      * @return string The unified string code of the exception.
-     * @access public
-     * @api
      */
     public function getError()
     {

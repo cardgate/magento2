@@ -19,14 +19,11 @@ use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 class Callback implements ActionInterface
 {
     /**
-     *
-     *
      * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
      */
     protected $orderSender;
 
     /**
-     *
      * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
      */
     protected $invoiceSender;
@@ -60,14 +57,12 @@ class Callback implements ActionInterface
     private $_encryptor;
 
     /**
-     *
-     * @var \Magento\Framework\Encryption\Encryptor
+     * @var \Magento\Framework\App\Cache\TypeListInterface
      */
     private $_listInterface;
 
     /**
-     *
-     * @var ObjectManager
+     * @var \Magento\Framework\ObjectManagerInterface
      */
     private $_objectManager;
 

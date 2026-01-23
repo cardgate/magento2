@@ -38,8 +38,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param string $sId_ Method id to receive method instance for.
          * @return \Cardgate\Payment\Model\CardgateClient\Method
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
-         * @access public
-         * @api
          */
         public function get($sId_)
         {
@@ -51,8 +49,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param int $iSiteId_ The site to retrieve payment methods for.
          * @return array
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
-         * @access public
-         * @api
          */
         public function all($iSiteId_)
         {

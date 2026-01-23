@@ -50,7 +50,7 @@ class GatewayClient
      * @param ProductMetadata $oMetaData_
      * @param ModuleListInterface $oModuleList_
      * @param RemoteAddress $remoteAddress
-     *
+     * @return void
      * @throws GatewayClientException
      */
     public function __construct(

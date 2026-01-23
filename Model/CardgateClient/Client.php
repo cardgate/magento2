@@ -51,77 +51,66 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Toggle testmode variable.
          * @var bool
-         * @access private
          */
         private $_bTestmode;
 
         /**
          * The merchant id to use for authentication.
          * @var int
-         * @access private
          */
         private $_iMerchantId;
 
         /**
          * The secret key to use for authentication.
          * @var string
-         * @access private
          */
         private $_sKey;
 
         /**
          * The consumer IP address associated with the client.
          * @var string
-         * @access private
          */
         private $_sIp = null;
 
         /**
          * The language to use when communicating with the API.
          * @var string
-         * @access private
          */
         private $_sLanguage = null;
 
         /**
          * The version resource.
          * @var resources\Version
-         * @access private
          */
         private $_oVersion = null;
 
         /**
          * The transactions resource.
          * @var resources\Transactions
-         * @access private
          */
         private $_oTransactions = null;
 
         /**
          * The subscriptions resource.
          * @var resources\Subscriptions
-         * @access private
          */
         private $_oSubscriptions = null;
 
         /**
          * The consumers resource.
          * @var resources\Consumers
-         * @access private
          */
         private $_oConsumers = null;
 
         /**
          * The methods resource.
          * @var resources\Methods
-         * @access private
          */
         private $_oMethods = null;
 
         /**
          * Debug level. 0 = None, 1 = Include result in errors, 2 = Verbose CURL calls.
          * @var int
-         * @access private
          */
         const DEBUG_NONE    = 0;
         const DEBUG_RESULTS = 1;
@@ -132,7 +121,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Last request and result for debugging.
          * @var string
-         * @access private
          */
         private $_sLastRequest = null;
         private $_sLastResult = null;
@@ -143,10 +131,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $sKey_ The merchant API key for the client.
          * @param bool $bTestmode_ Toggle testmode for the client.
          * @throws ClientException
-         * @access public
-         * @api
          */
-        function __construct($iMerchantId_, $sKey_, $bTestmode_ = false)
+        public function __construct($iMerchantId_, $sKey_, $bTestmode_ = false)
         {
             $this->setMerchantId($iMerchantId_)->setKey($sKey_)->setTestmode($bTestmode_);
         }
@@ -173,8 +159,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param bool $bTestmode_ Enable or disable testmode for this client.
          * @return $this
          * @throws ClientException
-         * @access public
-         * @api
          */
         public function setTestmode($bTestmode_)
         {
@@ -188,8 +172,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get currenct testmode setting.
          * @return bool The current testmode setting
-         * @access public
-         * @api
          */
         public function getTestmode()
         {
@@ -200,8 +182,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set debug level.
          * @param int $iDebugLevel_ Level: 0 = None, 1 = Include request/resule in errors, 2 = Verbose cURL calls.
          * @return $this
-         * @access public
-         * @api
          */
         public function setDebugLevel($iLevel_)
         {
@@ -212,8 +192,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get current debug level setting.
          * @return int The current debug level.
-         * @access public
-         * @api
          */
         public function getDebugLevel()
         {
@@ -225,8 +203,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param bool $bStartWithNewLine_ Optional flag to indicate the info should start with a new-line.
          * @param bool $bAddResult_ Optional flag to indicate the result should be included too.
          * @return string Debug info or empty if level = 0.
-         * @access public
-         * @api
          */
         public function getDebugInfo($bStartWithNewLine_ = true, $bAddResult_ = true)
         {
@@ -247,8 +223,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param int $iMerchantId_ Merchant id to set.
          * @return $this
          * @throws ClientException
-         * @access public
-         * @api
          */
         public function setMerchantId($iMerchantId_)
         {
@@ -262,8 +236,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the merchant id associated with this client.
          * @return int The merchant id associated with this client
-         * @access public
-         * @api
          */
         public function getMerchantId()
         {
@@ -275,8 +247,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $sKey_ The merchant API key to set.
          * @return $this
          * @throws ClientException
-         * @access public
-         * @api
          */
         public function setKey($sKey_)
         {
@@ -290,8 +260,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the Merchant API key to authenticate the transaction request with.
          * @return string The merchant API key.
-         * @access public
-         * @api
          */
         public function getKey()
         {
@@ -303,8 +271,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string The IP address of the consumer.
          * @return $this
          * @throws ClientException
-         * @access public
-         * @api
          */
         public function setIp($sIp_)
         {
@@ -320,8 +286,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the IP address.
          * @return string The consumer IP address.
-         * @access public
-         * @api
          */
         public function getIp()
         {
@@ -333,8 +297,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $sLanguage_ The language to set.
          * @return $this
          * @throws ClientException
-         * @access public
-         * @api
          */
         public function setLanguage($sLanguage_)
         {
@@ -348,8 +310,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the language the client is configured with.
          * @return string The language the client is configured with.
-         * @access public
-         * @api
          */
         public function getLanguage()
         {
@@ -359,8 +319,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the URL to use with this connection, depending on testmode settings.
          * @return string The URL to use
-         * @access public
-         * @api
          */
         public function getUrl()
         {
@@ -374,8 +332,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the last request sent to the API.
          * @return string The request string.
-         * @access public
-         * @api
          */
         public function getLastRequest()
         {
@@ -385,8 +341,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the last result from an API call.
          * @return string The result string.
-         * @access public
-         * @api
          */
         public function getLastResult()
         {
@@ -397,8 +351,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Pull the config from the API using a token provided by the site setup button in the backoffice.
          * @return array Returns an array with settings.
          * @throws ClientException
-         * @access public
-         * @api
          */
         public function pullConfig($sToken_)
         {
@@ -412,8 +364,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the versioning resource.
          * @return resources\Version
-         * @access public
-         * @api
          */
         public function version()
         {
@@ -426,8 +376,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the transactions resource.
          * @return resources\Transactions
-         * @access public
-         * @api
          */
         public function transactions()
         {
@@ -440,8 +388,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the subscriptions resource.
          * @return resources\Subscriptions
-         * @access public
-         * @api
          */
         public function subscriptions()
         {
@@ -454,8 +400,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the consumers resource.
          * @return resources\Consumers
-         * @access public
-         * @api
          */
         public function consumers()
         {
@@ -468,8 +412,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the payment methods resource.
          * @return resources\Methods
-         * @access public
-         * @api
          */
         public function methods()
         {

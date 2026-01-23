@@ -31,7 +31,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
 {
 
     /**
-     *
      * @var ObjectManagerInterface
      */
     private $objectManager = null;
@@ -61,13 +60,11 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     protected $_canRefundInvoicePartial = true;
 
     /**
-     *
      * @var Calculation
      */
     protected $taxCalculation;
 
     /**
-     *
      * @var \Cardgate\Payment\Model\Config
      */
     protected $config;

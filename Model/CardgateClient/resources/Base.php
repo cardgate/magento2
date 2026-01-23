@@ -36,17 +36,14 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
         /**
          * The client associated with this resource.
          * @var \Cardgate\Payment\Model\CardgateClient\Client
-         * @access private
          */
         protected $_oClient;
 
         /**
          * The constructor.
          * @param \Cardgate\Payment\Model\CardgateClient\Client $oClient_ The client to associate the resource with.
-         * @access public
-         * @api
          */
-        function __construct(\Cardgate\Payment\Model\CardgateClient\Client $oClient_)
+        public function __construct(\Cardgate\Payment\Model\CardgateClient\Client $oClient_)
         {
             $this->_oClient = $oClient_;
         }

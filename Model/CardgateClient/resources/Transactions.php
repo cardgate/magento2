@@ -39,8 +39,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param array $aDetails_ array that gets filled with additional transaction details.
          * @return \Cardgate\Payment\Model\CardgateClient\Transaction
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function get($sTransactionId_, &$aDetails_ = [])
         {
@@ -85,8 +83,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param string $sTransactionId_ The transaction identifier.
          * @return string
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function status($sTransactionId_)
         {
@@ -114,8 +110,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param string $sCurrency_ Currency (ISO 4217)
          * @return \Cardgate\Payment\Model\CardgateClient\Transaction
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function create($iSiteId_, $iAmount_, $sCurrency_ = 'EUR')
         {
@@ -129,8 +123,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * use of the merchant key only (otherwise both are checked).
          * @return bool Returns TRUE if the callback is valid or FALSE if not.
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function verifyCallback($aData_, $sSiteKey_ = null)
         {

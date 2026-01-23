@@ -39,8 +39,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param array $aDetails_ Array that gets filled with additional subscription details.
          * @return \Cardgate\Payment\Model\CardgateClient\Subscription
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function get($sSubscriptionId_, &$aDetails_ = [])
         {
@@ -105,8 +103,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param string $sCurrency_ Currency (ISO 4217)
          * @return \Cardgate\Payment\Model\CardgateClient\Subscription
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function create($iSiteId_, $iPeriod_, $sPeriodType_, $iPeriodAmount_, $sCurrency_ = 'EUR')
         {

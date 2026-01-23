@@ -88,8 +88,7 @@ class Start implements ActionInterface
     private $stockRegistryInterface;
 
     /**
-     *
-     * @var  Magento\Framework\Controller\Result\Redirect
+     * @var \Magento\Framework\Controller\Result\Redirect
      */
     private $redirect;
 

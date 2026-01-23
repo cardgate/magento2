@@ -36,8 +36,6 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
         /**
          * This method can be used to create a new consumer.
          * @return \Cardgate\Payment\Model\CardgateClient\Consumer
-         * @access public
-         * @api
          */
         public function create()
         {

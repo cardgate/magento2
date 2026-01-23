@@ -55,22 +55,18 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * The bill-to address.
          * @var Address
-         * @access private
          */
         private $_oAddress = null;
 
         /**
          * The ship-to address.
          * @var Address
-         * @access private
          */
         private $_oShippingAddress = null;
 
         /**
          * Accessor for the bill-to address.
          * @return Address
-         * @access public
-         * @api
          */
         public function address()
         {
@@ -83,8 +79,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the ship-to address.
          * @return Address
-         * @access public
-         * @api
          */
         public function shippingAddress()
         {

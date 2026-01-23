@@ -139,10 +139,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param int $iPrice_ The price of the cart item.
          * @param string $sLink_ An optional link to the product.
          * @throws \Exception|\ReflectionException
-         * @access public
-         * @api
          */
-        function __construct($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
+        public function __construct($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
         {
             $this->setType($iType_)->setSKU($sSKU_)->setName($sName_)->setQuantity($iQuantity_)->setPrice($iPrice_);
             if (! ($sLink_ === null)) {
@@ -155,10 +153,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param int $iType_ The cart item type to set.
          * @return Item Returns this, makes the call chainable.
          * @throws \Exception|\ReflectionException
-         * @access public
-         * @api
          */
-        function setType($iType_)
+        public function setType($iType_)
         {
             if (! is_integer($iType_)
                 || ! in_array($iType_, ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Item') )->getConstants())
@@ -173,10 +169,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param float $fVat_ The vat to set.
          * @return Item Returns this, makes the call chainable.
          * @throws \Exception
-         * @access public
-         * @api
          */
-        function setVat($fVat_)
+        public function setVat($fVat_)
         {
             if (! is_numeric($fVat_)) {
                 throw new \Exception('Item.Vat.Invalid', 'invalid vat: ' . $fVat_);
@@ -188,10 +182,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the vat included flag.
          * @param bool $bVatIncluded_ The vat included flag to set.
          * @return Item Returns this, makes the call chainable.
-         * @access public
-         * @api
          */
-        function setVatIncluded($bVatIncluded_)
+        public function setVatIncluded($bVatIncluded_)
         {
             return parent::setVatIncluded(!!$bVatIncluded_);
         }
@@ -201,10 +193,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param float $fVatAmount_ The vat amount to set.
          * @return Item Returns this, makes the call chainable.
          * @throws \Exception
-         * @access public
-         * @api
          */
-        function setVatAmount($fVatAmount_)
+        public function setVatAmount($fVatAmount_)
         {
             if (! is_numeric($fVatAmount_)) {
                 throw new \Exception('Item.Vat.Amount.Invalid', 'invalid vat amount: ' . $fVatAmount_);
@@ -217,10 +207,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param float $fStock_ The stock to set.
          * @return Item Returns this, makes the call chainable.
          * @throws \Exception
-         * @access public
-         * @api
          */
-        function setStock($fStock_)
+        public function setStock($fStock_)
         {
             if (! is_numeric($fStock_)) {
                 throw new \Exception('Item.Stock.Invalid', 'invalid stock: ' . $fStock_);
