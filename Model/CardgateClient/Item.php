@@ -138,14 +138,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param $iQuantity_
          * @param int $iPrice_ The price of the cart item.
          * @param string $sLink_ An optional link to the product.
-         * @throws Exception|\ReflectionException
+         * @throws \Exception|\ReflectionException
          * @access public
          * @api
          */
         function __construct($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
         {
             $this->setType($iType_)->setSKU($sSKU_)->setName($sName_)->setQuantity($iQuantity_)->setPrice($iPrice_);
-            if (! is_null($sLink_)) {
+            if (! ($sLink_ === null)) {
                 $this->setLink($sLink_);
             }
         }
@@ -154,7 +154,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the type (must be one of the {@link \Cardgate\Payment\Model\CardgateClient\Item::TYPE_*}} constants.
          * @param int $iType_ The cart item type to set.
          * @return Item Returns this, makes the call chainable.
-         * @throws Exception|\ReflectionException
+         * @throws \Exception|\ReflectionException
          * @access public
          * @api
          */
@@ -163,7 +163,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (! is_integer($iType_)
                 || ! in_array($iType_, ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Item') )->getConstants())
             ) {
-                throw new Exception('Item.Type.Invalid', 'invalid cart item type: ' . $iType_);
+                throw new \Exception('Item.Type.Invalid', 'invalid cart item type: ' . $iType_);
             }
             return parent::setType($iType_);
         }
@@ -172,14 +172,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the vat.
          * @param float $fVat_ The vat to set.
          * @return Item Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
         function setVat($fVat_)
         {
             if (! is_numeric($fVat_)) {
-                throw new Exception('Item.Vat.Invalid', 'invalid vat: ' . $fVat_);
+                throw new \Exception('Item.Vat.Invalid', 'invalid vat: ' . $fVat_);
             }
             return parent::setVat($fVat_);
         }
@@ -200,14 +200,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the vat amount.
          * @param float $fVatAmount_ The vat amount to set.
          * @return Item Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
         function setVatAmount($fVatAmount_)
         {
             if (! is_numeric($fVatAmount_)) {
-                throw new Exception('Item.Vat.Amount.Invalid', 'invalid vat amount: ' . $fVatAmount_);
+                throw new \Exception('Item.Vat.Amount.Invalid', 'invalid vat amount: ' . $fVatAmount_);
             }
             return parent::setVatAmount($fVatAmount_);
         }
@@ -216,14 +216,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the stock.
          * @param float $fStock_ The stock to set.
          * @return Item Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
         function setStock($fStock_)
         {
             if (! is_numeric($fStock_)) {
-                throw new Exception('Item.Stock.Invalid', 'invalid stock: ' . $fStock_);
+                throw new \Exception('Item.Stock.Invalid', 'invalid stock: ' . $fStock_);
             }
             return parent::setStock($fStock_);
         }

@@ -150,7 +150,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             return false;
         };
 
-        if (!is_null($quote) && $quote->getData("quote_currency_code")) {
+        if (!($quote === null) && $quote->getData("quote_currency_code")) {
             $sCurrencyCode = $quote->getData("quote_currency_code");
             $paymentMethod = 'cardgate'.substr($this->code, 9);
             if (!$this->checkPaymentCurrency($sCurrencyCode, $paymentMethod)) {

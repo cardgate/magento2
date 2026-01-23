@@ -107,7 +107,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the gender.
          * @param string $sGender_ The gender to set.
          * @return Address Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
@@ -116,7 +116,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (! is_string($sGender_)
                 || strlen($sGender_) != 1
             ) {
-                throw new Exception('Address.Gender.Invalid', 'invalid gender: ' . $sGender_);
+                throw new \Exception('Address.Gender.Invalid', 'invalid gender: ' . $sGender_);
             }
             return parent::setGender($sGender_);
         }
@@ -125,7 +125,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the day of birth.
          * @param string $sDayOfBirth_ The day of birth to set.
          * @return Address Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
@@ -134,7 +134,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (! is_string($sDayOfBirth_)
                 || false == ( $iDayOfBirthUnix = strtotime($sDayOfBirth_) )
             ) {
-                throw new Exception('Address.DayOfBirth.Invalid', 'invalid day of birth: ' . $sDayOfBirth_);
+                throw new \Exception('Address.DayOfBirth.Invalid', 'invalid day of birth: ' . $sDayOfBirth_);
             }
             return parent::setDayOfBirth(date('%m/%d/%Y', $iDayOfBirthUnix));
         }
@@ -143,7 +143,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Sets the country.
          * @param string $sCountry_ The country to set (ISO 3166-1 alpha-2).
          * @return Address Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
@@ -152,7 +152,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (! is_string($sCountry_)
                 || strlen($sCountry_) != 2
             ) {
-                throw new Exception('Address.Country.Invalid', 'invalid country: ' . $sCountry_);
+                throw new \Exception('Address.Country.Invalid', 'invalid country: ' . $sCountry_);
             }
             return parent::setCountry($sCountry_);
         }

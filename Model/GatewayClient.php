@@ -12,6 +12,7 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Framework\App\ProductMetadata;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 
 /**
  * Cardgate client wrapper, proxies all calls to a fully configured CardGate client instance.
@@ -37,34 +38,42 @@ class GatewayClient
     private $_sSiteKey;
 
     /**
+     * @var RemoteAddress
+     */
+    private $_remoteAddress;
+
+    /**
      * @param Config $oConfig_
      * @param EncryptorInterface $oEncryptor_
      * @param Resolver $oLocaleResolver_
      * @param ProductMetadata $oMetaData_
      * @param ModuleListInterface $oModuleList_
+     * @param RemoteAddress $remoteAddress
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(
         Config $oConfig_,
         EncryptorInterface $oEncryptor_,
         Resolver $oLocaleResolver_,
         ProductMetadata $oMetaData_,
-        ModuleListInterface $oModuleList_
+        ModuleListInterface $oModuleList_,
+        RemoteAddress $remoteAddress
     ) {
         $this->_iSiteId = (int)$oConfig_->getGlobal('site_id');
         $this->_sSiteKey = $oConfig_->getGlobal('site_key');
+        $this->_remoteAddress = $remoteAddress;
 
         $sMerchantId = (int)$oConfig_->getGlobal('api_username');
         $sApiKey = $oEncryptor_->decrypt($oConfig_->getGlobal('api_password'));
         $bTestMode = !!$oConfig_->getGlobal('testmode');
-        if (! class_exists('\Cardgate\Payment\Model\CardgateClient\Client')) {
-            throw new Exception("cardgate client library not installed");
+        if (! class_exists(\Cardgate\Payment\Model\CardgateClient\Client::class)) {
+            throw new \Exception("cardgate client library not installed");
         }
         $this->_oClient = new \Cardgate\Payment\Model\CardgateClient\Client($sMerchantId, $sApiKey, $bTestMode);
 
         try {
-            $this->_oClient->setIp(self::_determineIp());
+            $this->_oClient->setIp($this->_determineIp());
             $aLangCountry = [];
             $aLangCountry = explode('_', $oLocaleResolver_->getLocale());
             $sLanguage = $aLangCountry[0];
@@ -82,7 +91,8 @@ class GatewayClient
                 \Cardgate\Payment\Model\CardgateClient\Client::CLIENT_VERSION
             );
         } catch (\Exception $e) {
-            /* ignore */
+            /** @noinspection PhpEmptyCatchBlockInspection */
+            // ignore
         }
     }
 
@@ -131,20 +141,6 @@ class GatewayClient
      */
     private function _determineIp()
     {
-        $sIp = '0.0.0.0';
-        if (! empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $sIp = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (! empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $sIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } elseif (! empty($_SERVER['REMOTE_ADDR'])) {
-            $sIp = $_SERVER['REMOTE_ADDR'];
-        }
-
-        foreach (preg_split("/\s?[,;\|]\s?/i", $sIp) as $sIp) {
-            if (filter_var($sIp, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-                return $sIp;
-            }
-        }
-        return $sIp;
+        return $this->_remoteAddress->getRemoteAddress();
     }
 }

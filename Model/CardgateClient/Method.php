@@ -112,7 +112,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Billink
          */
         const BILLINK = 'billink';
-        
+
         /**
          * IDEALQR
          */
@@ -122,12 +122,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Paysafecash
          */
         const PAYSAFECASH = 'paysafecash';
-        
+
         /**
          * OnlineUberweisen
          */
         const ONLINEUEBERWEISEN = 'onlineueberweisen';
-        
+
         /**
          * Gift Card
          */
@@ -173,7 +173,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * The constructor.
          * @param Client $oClient_ The client associated with this transaction.
          * @param string $sId_ The payment method identifier to create a method instance for.
-         * @throws Exception|\ReflectionException
+         * @throws \Exception|\ReflectionException
          * @access public
          * @api
          * @throws
@@ -186,11 +186,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
                 $aValidMethods  = ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Method') )->getConstants();
             }
             $this->_oClient = $oClient_;
-            /*
-            if ( ! in_array( $sId_, $aValidMethods ) ) {
-                throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
-            }
-            */
             $this->setId($sId_);
             $this->setName($sName_);
         }
@@ -199,7 +194,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set the method id.
          * @param string $sId_ Method id to set.
          * @return $this
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
@@ -208,7 +203,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (! is_string($sId_)
                 || empty($sId_)
             ) {
-                throw new Exception('Method.Id.Invalid', 'invalid id: ' . $sId_);
+                throw new \Exception('Method.Id.Invalid', 'invalid id: ' . $sId_);
             }
             $this->_sId = $sId_;
             return $this;
@@ -229,7 +224,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set the method name.
          * @param string $sName_ Method name to set.
          * @return $this
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */
@@ -238,7 +233,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (! is_string($sName_)
                 || empty($sName_)
             ) {
-                throw new Exception('Method.Name.Invalid', 'invalid name: ' . $sName_);
+                throw new \Exception('Method.Name.Invalid', 'invalid name: ' . $sName_);
             }
             $this->_sName = $sName_;
             return $this;
@@ -258,7 +253,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * This method returns all the issuers available for the current payment method.
          * @return array An array with issuers
-         * @throws Exception
+         * @throws \Exception
          * @access public
          * @api
          */

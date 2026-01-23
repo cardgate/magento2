@@ -122,7 +122,7 @@ class Subscription extends Transaction
      * @param int $iPeriodAmount_ The period amount of the subscription in cents.
      * @param string $sCurrency_ Currency (ISO 4217)
      *
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
@@ -142,7 +142,7 @@ class Subscription extends Transaction
      * @param string $sId_ Subscription id to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
@@ -151,7 +151,7 @@ class Subscription extends Transaction
         if (! is_string($sId_)
             || empty($sId_)
         ) {
-            throw new Exception('Subscription.Id.Invalid', 'invalid id: ' . $sId_);
+            throw new \Exception('Subscription.Id.Invalid', 'invalid id: ' . $sId_);
         }
         $this->_sId = $sId_;
 
@@ -161,14 +161,14 @@ class Subscription extends Transaction
     /**
      * Get the subscription id associated with this subscription.
      * @return string The subscription id associated with this subscription.
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function getId()
     {
         if (empty($this->_sId)) {
-            throw new Exception('Subscription.Not.Initialized', 'invalid subscription state');
+            throw new \Exception('Subscription.Not.Initialized', 'invalid subscription state');
         }
 
         return $this->_sId;
@@ -180,14 +180,14 @@ class Subscription extends Transaction
      * @param int $iPeriod_ Period length to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function setPeriod($iPeriod_)
     {
         if (! is_integer($iPeriod_)) {
-            throw new Exception('Subscription.Period.Invalid', 'invalid period: ' . $iPeriod_);
+            throw new \Exception('Subscription.Period.Invalid', 'invalid period: ' . $iPeriod_);
         }
         $this->_iPeriod = $iPeriod_;
 
@@ -211,7 +211,7 @@ class Subscription extends Transaction
      * @param string $sPeriodType_ Period type to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
@@ -220,7 +220,7 @@ class Subscription extends Transaction
         if (! is_string($sPeriodType_)
             || ! in_array($sPeriodType_, [ 'day', 'week', 'month', 'year' ])
         ) {
-            throw new Exception('Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_);
+            throw new \Exception('Subscription.Period.Type.Invalid', 'invalid period type: ' . $sPeriodType_);
         }
         $this->_sPeriodType = $sPeriodType_;
 
@@ -244,14 +244,14 @@ class Subscription extends Transaction
      * @param int $iPeriod_ Period price to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function setPeriodPrice($iPeriodPrice_)
     {
         if (! is_integer($iPeriodPrice_)) {
-            throw new Exception('Subscription.Period.Price.Invalid', 'invalid period price: ' . $iPeriodPrice_);
+            throw new \Exception('Subscription.Period.Price.Invalid', 'invalid period price: ' . $iPeriodPrice_);
         }
         $this->_iPeriodPrice = $iPeriodPrice_;
 
@@ -275,14 +275,14 @@ class Subscription extends Transaction
      * @param int $iInitialPayment_ The initial payment amount to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function setInitialPayment($iAmount_)
     {
         if (! is_integer($iAmount_)) {
-            throw new Exception('Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $iAmount_);
+            throw new \Exception('Subscription.Initial.Payment.Invalid', 'invalid initial payment amount: ' . $iAmount_);
         }
         $this->_iInitialPayment = $iAmount_;
 
@@ -296,14 +296,14 @@ class Subscription extends Transaction
      * @param int $iPeriod_ Trial period length to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function setTrialPeriod($iTrialPeriod_)
     {
         if (! is_integer($iTrialPeriod_)) {
-            throw new Exception('Subscription.Period.Invalid', 'invalid trial period: ' . $iTrialPeriod_);
+            throw new \Exception('Subscription.Period.Invalid', 'invalid trial period: ' . $iTrialPeriod_);
         }
         $this->_iTrialPeriod = $iTrialPeriod_;
 
@@ -327,7 +327,7 @@ class Subscription extends Transaction
      * @param string $sTrialPeriodType_ Trial Period type to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
@@ -336,7 +336,7 @@ class Subscription extends Transaction
         if (! is_string($sTrialPeriodType_)
             || ! in_array($sTrialPeriodType_, [ 'day', 'week', 'month', 'year' ])
         ) {
-            throw new Exception('Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $sTrialPeriodType_);
+            throw new \Exception('Subscription.Period.Type.Invalid', 'invalid trial period type: ' . $sTrialPeriodType_);
         }
         $this->_sTrialPeriodType = $sTrialPeriodType_;
 
@@ -360,14 +360,14 @@ class Subscription extends Transaction
      * @param int $iPeriod_ Trial period price to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function setTrialPeriodPrice($iTrialPeriodPrice_)
     {
         if (! is_integer($iTrialPeriodPrice_)) {
-            throw new Exception('Subscription.Period.Price.Invalid', 'invalid trial period price: ' . $iTrialPeriodPrice_);
+            throw new \Exception('Subscription.Period.Price.Invalid', 'invalid trial period price: ' . $iTrialPeriodPrice_);
         }
         $this->_iTrialPeriodPrice = $iTrialPeriodPrice_;
 
@@ -391,14 +391,14 @@ class Subscription extends Transaction
      * @param string $sStartDate_ The start date to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function setStartDate($sStartDate_)
     {
         if (! is_string($sStartDate_)) {
-            throw new Exception('Subscription.Date.Start.Invalid', 'invalid start date: ' . $sStartDate_);
+            throw new \Exception('Subscription.Date.Start.Invalid', 'invalid start date: ' . $sStartDate_);
         }
         $this->_sStartDate = $sStartDate_;
 
@@ -422,14 +422,14 @@ class Subscription extends Transaction
      * @param string $sEndDate_ The end date to set.
      *
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
     public function setEndDate($sEndDate_)
     {
         if (! is_string($sEndDate_)) {
-            throw new Exception('Subscription.Date.End.Invalid', 'invalid end date: ' . $sEndDate_);
+            throw new \Exception('Subscription.Date.End.Invalid', 'invalid end date: ' . $sEndDate_);
         }
         $this->_sEndDate = $sEndDate_;
 
@@ -461,7 +461,7 @@ class Subscription extends Transaction
     /**
      * Registers the subscription with the CardGate payment gateway.
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
@@ -487,7 +487,7 @@ class Subscription extends Transaction
             'start_date'         => $this->_sStartDate,
             'end_date'           => $this->_sEndDate,
         ];
-        if (! is_null($this->_oConsumer)) {
+        if (! ($this->_oConsumer === null)) {
             $aData['email']      = $this->_oConsumer->getEmail();
             $aData['phone']      = $this->_oConsumer->getPhone();
             $aData['consumer']   = array_merge(
@@ -496,7 +496,7 @@ class Subscription extends Transaction
             );
             $aData['country_id'] = $this->_oConsumer->address()->getCountry();
         }
-        if (! is_null($this->_oCart)) {
+        if (! ($this->_oCart === null)) {
             $aData['cartitems'] = $this->_oCart->getData();
         }
 
@@ -513,7 +513,7 @@ class Subscription extends Transaction
         if (empty($aResult)
             || empty($aResult['subscription'])
         ) {
-            throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+            throw new \Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
         }
         $this->_sId = $aResult['subscription'];
         if (isset($aResult['subscription']['action'])
@@ -528,7 +528,7 @@ class Subscription extends Transaction
     /**
      * Change the subscription status.
      * @return bool Whether the status change succeeded.
-     * @throws Exception
+     * @throws \Exception
      * @access public
      * @api
      */
@@ -536,11 +536,11 @@ class Subscription extends Transaction
     {
 
         if (empty($this->_sId)) {
-            throw new Exception('Subscription.Request.Invalid', 'invalid subscription id');
+            throw new \Exception('Subscription.Request.Invalid', 'invalid subscription id');
         }
 
         if (! in_array($sStatus_, [ 'reactivate', 'suspend', 'cancel', 'deactivate' ])) {
-            throw new Exception('Subscription.Status.Invalid', 'invalid subscription status provided');
+            throw new \Exception('Subscription.Status.Invalid', 'invalid subscription status provided');
         }
 
         $aData = [
@@ -555,7 +555,7 @@ class Subscription extends Transaction
 
         if (false == $aResult['success']) {
             // oClient will have thrown an error if there was a proper error from the API, so this is weird!
-            throw new Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
+            throw new \Exception('Subscription.Request.Invalid', 'unexpected result: ' . $this->_oClient->getLastResult() . $this->_oClient->getDebugInfo(true, false));
         }
 
         return true;

@@ -194,7 +194,7 @@ class Callback implements ActionInterface
                 // match the one from the gateway.
                 if ($payment->getCardgatePaymentmethod() != $pmId) {
                     $payment->setCardgatePaymentmethod($pmId);
-                    $sText = "Callback received for transaction %1 with payment method '%2' but 
+                    $sText = "Callback received for transaction %1 with payment method '%2' but
                     payment method should be '%3'. Processing anyway.";
                     $sOldPaymentMethod = $order->getPayment()->getCardgatePaymentmethod();
                     $order->addCommentToStatusHistory(__($sText, $transactionId, $pmId, $sOldPaymentMethod));
@@ -323,12 +323,6 @@ class Callback implements ActionInterface
                         $currency . ' ' . round($amount / 100, 2)
                     ));
                 }
-            } elseif ($code >= 600
-                      && $code < 700
-            ) {
-                // 6xx notification from bank
-            } elseif ($code < 800) {
-                // 7xx waiting for confirmation
             }
 
             // Set the output to a string that the gateway expects.
