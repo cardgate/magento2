@@ -86,10 +86,11 @@ namespace Cardgate\Payment\Model\CardgateClient {
     {
 
         /**
+         * @var array
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
-        static $_aFields = [
+        public static $_aFields = [
             'FirstName'  => 'firstname',
             'Initials'   => 'initials',
             'LastName'   => 'lastname',
@@ -108,10 +109,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $sGender_ The gender to set.
          * @return Address Returns this, makes the call chainable.
          * @throws Exception
-         * @access public
-         * @api
          */
-        function setGender($sGender_)
+        public function setGender($sGender_)
         {
             if (! is_string($sGender_)
                 || strlen($sGender_) != 1
@@ -126,10 +125,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $sDayOfBirth_ The day of birth to set.
          * @return Address Returns this, makes the call chainable.
          * @throws Exception
-         * @access public
-         * @api
          */
-        function setDayOfBirth($sDayOfBirth_)
+        public function setDayOfBirth($sDayOfBirth_)
         {
             if (! is_string($sDayOfBirth_)
                 || false == ( $iDayOfBirthUnix = strtotime($sDayOfBirth_) )
@@ -144,10 +141,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $sCountry_ The country to set (ISO 3166-1 alpha-2).
          * @return Address Returns this, makes the call chainable.
          * @throws Exception
-         * @access public
-         * @api
          */
-        function setCountry($sCountry_)
+        public function setCountry($sCountry_)
         {
             if (! is_string($sCountry_)
                 || strlen($sCountry_) != 2

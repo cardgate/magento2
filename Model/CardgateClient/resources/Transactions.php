@@ -39,13 +39,14 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param array $aDetails_ array that gets filled with additional transaction details.
          * @return \Cardgate\Payment\Model\CardgateClient\Transaction
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function get($sTransactionId_, &$aDetails_ = [])
         {
             if (! is_string($sTransactionId_)) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_);
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Transaction.Id.Invalid',
+                    'invalid transaction id: ' . $sTransactionId_
+                );
             }
 
             $sResource = "transaction/{$sTransactionId_}/";
@@ -53,7 +54,10 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
             $aResult = $this->_oClient->doRequest($sResource, null, 'GET');
 
             if (empty($aResult['transaction'])) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Transaction.Details.Invalid', 'invalid transaction data returned' . $this->_oClient->getDebugInfo());
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Transaction.Details.Invalid',
+                    'invalid transaction data returned' . $this->_oClient->getDebugInfo()
+                );
             }
 
             if (count($aDetails_) > 0) {
@@ -85,13 +89,14 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param string $sTransactionId_ The transaction identifier.
          * @return string
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function status($sTransactionId_)
         {
             if (! is_string($sTransactionId_)) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Transaction.Id.Invalid', 'invalid transaction id: ' . $sTransactionId_);
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Transaction.Id.Invalid',
+                    'invalid transaction id: ' . $sTransactionId_
+                );
             }
 
             $sResource = "status/{$sTransactionId_}/";
@@ -101,7 +106,10 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
             if (empty($aResult['status'])
                 || ! is_string($aResult['status'])
             ) {
-                throw new \Cardgate\Payment\Model\CardgateClient\Exception('Transaction.Status.Invalid', 'invalid transaction status returned' . $this->_oClient->getDebugInfo());
+                throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                    'Transaction.Status.Invalid',
+                    'invalid transaction status returned' . $this->_oClient->getDebugInfo()
+                );
             }
 
             return $aResult['status'];
@@ -114,12 +122,15 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @param string $sCurrency_ Currency (ISO 4217)
          * @return \Cardgate\Payment\Model\CardgateClient\Transaction
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function create($iSiteId_, $iAmount_, $sCurrency_ = 'EUR')
         {
-            return new \Cardgate\Payment\Model\CardgateClient\Transaction($this->_oClient, $iSiteId_, $iAmount_, $sCurrency_);
+            return new \Cardgate\Payment\Model\CardgateClient\Transaction(
+                $this->_oClient,
+                $iSiteId_,
+                $iAmount_,
+                $sCurrency_
+            );
         }
 
         /**
@@ -129,14 +140,15 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * use of the merchant key only (otherwise both are checked).
          * @return bool Returns TRUE if the callback is valid or FALSE if not.
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
-         * @access public
-         * @api
          */
         public function verifyCallback($aData_, $sSiteKey_ = null)
         {
             foreach ([ 'transaction', 'currency', 'amount', 'reference', 'code', 'hash', 'status' ] as $sRequiredKey) {
                 if (! isset($aData_[$sRequiredKey])) {
-                    throw new \Cardgate\Payment\Model\CardgateClient\Exception('Transaction.Callback.Missing', 'missing callback data: ' . $sRequiredKey);
+                    throw new \Cardgate\Payment\Model\CardgateClient\Exception(
+                        'Transaction.Callback.Missing',
+                        'missing callback data: ' . $sRequiredKey
+                    );
                 }
             }
             $sPrefix = '';

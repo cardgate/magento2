@@ -36,7 +36,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * The items in this cart.
          * @var Client
-         * @access private
          */
         private $_aItems = [];
 
@@ -49,21 +48,19 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param string $sLink_ An optional link to the product.
          * @return Item Returns the item that was added.
          * @throws Exception|\ReflectionException
-         * @access public
-         * @api
          */
-        function addItem($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
+        public function addItem($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_ = null)
         {
             $oItem = new Item($iType_, $sSKU_, $sName_, $iQuantity_, $iPrice_, $sLink_);
             $this->_aItems[] = $oItem;
             return $oItem;
         }
 
-        function getAll()
+        public function getAll()
         {
         }
 
-        function getData()
+        public function getData()
         {
             $aData = [];
             foreach ($this->_aItems as $oItem) {

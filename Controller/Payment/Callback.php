@@ -8,6 +8,7 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Payment\Exception\CallbackException;
 use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
@@ -18,14 +19,11 @@ use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 class Callback implements ActionInterface
 {
     /**
-     *
-     *
      * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
      */
     protected $orderSender;
 
     /**
-     *
      * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
      */
     protected $invoiceSender;
@@ -59,14 +57,12 @@ class Callback implements ActionInterface
     private $_encryptor;
 
     /**
-     *
-     * @var \Magento\Framework\Encryption\Encryptor
+     * @var \Magento\Framework\App\Cache\TypeListInterface
      */
     private $_listInterface;
 
     /**
-     *
-     * @var ObjectManager
+     * @var \Magento\Framework\ObjectManagerInterface
      */
     private $_objectManager;
 
@@ -116,48 +112,19 @@ class Callback implements ActionInterface
     public function execute()
     {
         $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_RAW);
-        $order = $payment = null;
-        $post = $this->_request->getPostValue();
-        if (! is_array($post)) {
-            $post = [];
-        }
         $get = $this->_request->getParams();
         if (! is_array($get)) {
             $get = [];
         }
 
         if (!empty($get['cgp_sitesetup']) && !empty($get['token'])) {
+            return $this->processSiteSetup($get, $result);
+        }
 
-            try {
-                $bIsTest = ($get['testmode'] == 1 ? true : false);
-                $sMerchantId = (int)$this->_cardgateConfig->getGlobal('api_username');
-                if ($sMerchantId == 0) {
-                    $this->_cardgateConfig->setGlobal('api_username', 0);
-                    $this->_cardgateConfig->setGlobal('api_password', $this->_encryptor->encrypt('initconfig'));
-                    $this->_cardgateConfig->setGlobal('testmode', $bIsTest);
-                    $this->_listInterface->cleanType('config');
-                }
-                $this->_cardgateClient = $this->_objectManager->get(\Cardgate\Payment\Model\GatewayClient::class);
-                $aResult = $this->_cardgateClient->pullConfig($get['token']);
-                if (isset($aResult['success']) && $aResult['success']==1) {
-                    $aConfigData = $aResult['pullconfig']['content'];
-                    $sEncryptedApiKey = $this->_encryptor->encrypt($aConfigData['api_key']);
-                    $this->_cardgateConfig->setGlobal('testmode', $aConfigData['testmode']);
-                    $this->_cardgateConfig->setGlobal('site_id', $aConfigData['site_id']);
-                    $this->_cardgateConfig->setGlobal('site_key', $aConfigData['site_key']);
-                    $this->_cardgateConfig->setGlobal('api_username', $aConfigData['merchant_id']);
-                    $this->_cardgateConfig->setGlobal('api_password', $sEncryptedApiKey);
-                    $this->_listInterface->cleanType('config');
-                    $sApiUserName = $this->_cardgateConfig->getGlobal('api_username');
-                    $sSiteId = $this->_cardgateConfig->getGlobal('site_id');
-                    $sResponse = $sApiUserName . '.' . $sSiteId . '.200';
-                } else {
-                    $sResponse = 'Data retrieval failed.';
-                }
-                return $result->setContents($sResponse);
-            } catch (CallbackException $e) {
-                return $result->setContents($e->getMessage());
-            }
+        $order = $payment = null;
+        $post = $this->_request->getPostValue();
+        if (! is_array($post)) {
+            $post = [];
         }
 
         $transactionId = empty($post['transaction']) ? $get['transaction'] : $post['transaction'];
@@ -170,7 +137,6 @@ class Callback implements ActionInterface
 
         $manualProcessing = !!$this->_cardgateConfig->getGlobal('manually_process_order');
         $updateCardgateData = false;
-        $payment = null;
         try {
             $aData = empty($post) ? $get : $post;
             $sSiteKey = $this->_cardgateClient->getSiteKey();
@@ -194,7 +160,7 @@ class Callback implements ActionInterface
                 // match the one from the gateway.
                 if ($payment->getCardgatePaymentmethod() != $pmId) {
                     $payment->setCardgatePaymentmethod($pmId);
-                    $sText = "Callback received for transaction %1 with payment method '%2' but 
+                    $sText = "Callback received for transaction %1 with payment method '%2' but
                     payment method should be '%3'. Processing anyway.";
                     $sOldPaymentMethod = $order->getPayment()->getCardgatePaymentmethod();
                     $order->addCommentToStatusHistory(__($sText, $transactionId, $pmId, $sOldPaymentMethod));
@@ -221,42 +187,19 @@ class Callback implements ActionInterface
                 $order->addCommentToStatusHistory(__("Transaction success."));
 
                 if (!$manualProcessing) {
-                    // Uncancel if needed.
-                    if ($order->isCanceled()) {
-                        if (($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED)) {
-                            $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
-                        }
-
-                        foreach ($order->getItems() as $item) {
-                            foreach ($item->getChildrenItems() as $child) {
-                                $sProductId = $child->getProductId();
-                                $sWebsiteId = $order->getStore()->getWebsiteId();
-                                $stockItem = $this->_stockRegistry->getStockItem($sProductId, $sWebsiteId);
-                                $stockItem->setQty($stockItem->getQty() - $item->getQtyCanceled());
-                                $stockItem->save();
-                            }
-                            $sItemProductId = $item->getProductId();
-                            $sWebsiteId = $order->getStore()->getWebsiteId();
-                            $stockItem = $this->_stockRegistry->getStockItem($sItemProductId, $sWebsiteId);
-                            $stockItem->setQty($stockItem->getQty() - $item->getQtyCanceled());
-                            $stockItem->save();
-                            $item->setQtyCanceled(0);
-                            $item->setTaxCanceled(0);
-                            $item->setDiscountTaxCompensationCanceled(0);
-                            $item->save();
-                        }
-                        $sRebookedText = 'Transaction rebooked. Product stock reclaimed from inventory.';
-                        $order->addCommentToStatusHistory(__($sRebookedText));
-                    }
+                    $this->rebookOrder($order);
 
                     // Test if transaction has been processed already.
-                    $paymentRepository = $this->_objectManager->get(\Magento\Sales\Model\Order\Payment\Transaction\Repository::class);
+                    $paymentRepository = $this->_objectManager
+                        ->get(\Magento\Sales\Model\Order\Payment\Transaction\Repository::class);
                     $currentTransaction = $paymentRepository->getByTransactionId(
                         $transactionId,
                         $payment->getId(),
                         $order->getId()
                     );
-                    if (! empty($currentTransaction) && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE) {
+                    if (! empty($currentTransaction)
+                        && $currentTransaction->getTxnType() == TransactionInterface::TYPE_CAPTURE
+                    ) {
                         $order->addCommentToStatusHistory(__('Transaction already processed.'));
                         $updateCardgateData = false;
                         throw new CallbackException('transaction already processed.');
@@ -323,12 +266,6 @@ class Callback implements ActionInterface
                         $currency . ' ' . round($amount / 100, 2)
                     ));
                 }
-            } elseif ($code >= 600
-                      && $code < 700
-            ) {
-                // 6xx notification from bank
-            } elseif ($code < 800) {
-                // 7xx waiting for confirmation
             }
 
             // Set the output to a string that the gateway expects.
@@ -353,5 +290,83 @@ class Callback implements ActionInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Process site setup.
+     *
+     * @param array $get
+     * @param \Magento\Framework\Controller\Result\Raw $result
+     * @return \Magento\Framework\Controller\Result\Raw
+     */
+    private function processSiteSetup(array $get, $result)
+    {
+        try {
+            $bIsTest = ($get['testmode'] == 1 ? true : false);
+            $sMerchantId = (int)$this->_cardgateConfig->getGlobal('api_username');
+            if ($sMerchantId == 0) {
+                $this->_cardgateConfig->setGlobal('api_username', 0);
+                $this->_cardgateConfig->setGlobal('api_password', $this->_encryptor->encrypt('initconfig'));
+                $this->_cardgateConfig->setGlobal('testmode', $bIsTest);
+                $this->_listInterface->cleanType('config');
+            }
+            $this->_cardgateClient = $this->_objectManager->get(\Cardgate\Payment\Model\GatewayClient::class);
+            $aResult = $this->_cardgateClient->pullConfig($get['token']);
+            if (isset($aResult['success']) && $aResult['success'] == 1) {
+                $aConfigData = $aResult['pullconfig']['content'];
+                $sEncryptedApiKey = $this->_encryptor->encrypt($aConfigData['api_key']);
+                $this->_cardgateConfig->setGlobal('testmode', $aConfigData['testmode']);
+                $this->_cardgateConfig->setGlobal('site_id', $aConfigData['site_id']);
+                $this->_cardgateConfig->setGlobal('site_key', $aConfigData['site_key']);
+                $this->_cardgateConfig->setGlobal('api_username', $aConfigData['merchant_id']);
+                $this->_cardgateConfig->setGlobal('api_password', $sEncryptedApiKey);
+                $this->_listInterface->cleanType('config');
+                $sApiUserName = $this->_cardgateConfig->getGlobal('api_username');
+                $sSiteId = $this->_cardgateConfig->getGlobal('site_id');
+                $sResponse = $sApiUserName . '.' . $sSiteId . '.200';
+            } else {
+                $sResponse = 'Data retrieval failed.';
+            }
+            return $result->setContents($sResponse);
+        } catch (CallbackException $e) {
+            return $result->setContents($e->getMessage());
+        }
+    }
+
+    /**
+     * Rebook order and reclaim product stock from inventory.
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @return void
+     */
+    private function rebookOrder($order)
+    {
+        // Uncancel if needed.
+        if ($order->isCanceled()) {
+            if (($order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED)) {
+                $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+            }
+
+            foreach ($order->getItems() as $item) {
+                foreach ($item->getChildrenItems() as $child) {
+                    $sProductId = $child->getProductId();
+                    $sWebsiteId = $order->getStore()->getWebsiteId();
+                    $stockItem = $this->_stockRegistry->getStockItem($sProductId, $sWebsiteId);
+                    $stockItem->setQty($stockItem->getQty() - $item->getQtyCanceled());
+                    $stockItem->save();
+                }
+                $sItemProductId = $item->getProductId();
+                $sWebsiteId = $order->getStore()->getWebsiteId();
+                $stockItem = $this->_stockRegistry->getStockItem($sItemProductId, $sWebsiteId);
+                $stockItem->setQty($stockItem->getQty() - $item->getQtyCanceled());
+                $stockItem->save();
+                $item->setQtyCanceled(0);
+                $item->setTaxCanceled(0);
+                $item->setDiscountTaxCompensationCanceled(0);
+                $item->save();
+            }
+            $sRebookedText = 'Transaction rebooked. Product stock reclaimed from inventory.';
+            $order->addCommentToStatusHistory(__($sRebookedText));
+        }
     }
 }
