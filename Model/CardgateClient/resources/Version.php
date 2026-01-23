@@ -57,7 +57,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
-        static $_aFields = [
+        public static $_aFields = [
             'PlatformName'        => 'platform_name',
             'PlatformVersion'    => 'platform_version',
             'PluginName'        => 'plugin_name',

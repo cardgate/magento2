@@ -81,43 +81,43 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Product.
          */
-        const TYPE_PRODUCT = 1;
+        public const TYPE_PRODUCT = 1;
 
         /**
          * Shipping Costs
          */
-        const TYPE_SHIPPING = 2;
+        public const TYPE_SHIPPING = 2;
 
         /**
          * Payment Costs
          */
-        const TYPE_PAYMENT = 3;
+        public const TYPE_PAYMENT = 3;
 
         /**
          * Discount
          */
-        const TYPE_DISCOUNT = 4;
+        public const TYPE_DISCOUNT = 4;
 
         /**
          * Handling fees
          */
-        const TYPE_HANDLING = 5;
+        public const TYPE_HANDLING = 5;
 
         /**
          * Correction
          */
-        const TYPE_CORRECTION = 6;
+        public const TYPE_CORRECTION = 6;
 
         /**
          * VAT Correction
          */
-        const TYPE_VAT_CORRECTION = 7;
+        public const TYPE_VAT_CORRECTION = 7;
 
         /**
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
-        static $_aFields = [
+        public static $_aFields = [
             'SKU'            => 'sku',
             'Name'            => 'name',
             'Link'            => 'link',

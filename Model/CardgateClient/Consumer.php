@@ -47,7 +47,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
-        static $_aFields = [
+        public static $_aFields = [
             'Email'            => 'email',
             'Phone'            => 'phone'
         ];

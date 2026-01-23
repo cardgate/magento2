@@ -36,17 +36,17 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Client version.
          */
-        const CLIENT_VERSION = "0";
+        public const CLIENT_VERSION = "0";
 
         /**
          * Url to use for production.
          */
-        const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
+        public const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
 
         /**
          * Url to use for testing.
          */
-        const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
+        public const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
 
         /**
          * Toggle testmode variable.
@@ -112,9 +112,9 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Debug level. 0 = None, 1 = Include result in errors, 2 = Verbose CURL calls.
          * @var int
          */
-        const DEBUG_NONE    = 0;
-        const DEBUG_RESULTS = 1;
-        const DEBUG_VERBOSE = 2;
+        public const DEBUG_NONE    = 0;
+        public const DEBUG_RESULTS = 1;
+        public const DEBUG_VERBOSE = 2;
 
         private $_iDebugLevel = 0;
 

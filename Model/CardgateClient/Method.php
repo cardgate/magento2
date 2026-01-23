@@ -36,117 +36,117 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * iDeal.
          */
-        const IDEAL = 'ideal';
+        public const IDEAL = 'ideal';
 
         /**
          * iDeal (legacy).
          */
-        const IDEALPRO = 'idealpro';
+        public const IDEALPRO = 'idealpro';
 
         /**
          * BanContact.
          */
-        const BANCONTACT = 'bancontact';
+        public const BANCONTACT = 'bancontact';
 
         /**
          * MisterCash (legacy)
          */
-        const MISTERCASH = 'mistercash';
+        public const MISTERCASH = 'mistercash';
 
         /**
          * CreditCard.
          */
-        const CREDITCARD = 'creditcard';
+        public const CREDITCARD = 'creditcard';
 
         /**
          * Afterpay.
          */
-        const AFTERPAY = 'afterpay';
+        public const AFTERPAY = 'afterpay';
 
         /**
          * Giropay.
          */
-        const GIROPAY = 'giropay';
+        public const GIROPAY = 'giropay';
 
         /**
          * Giropay.
          */
-        const BANKTRANSFER = 'banktransfer';
+        public const BANKTRANSFER = 'banktransfer';
 
         /**
          * Bitcoins.
          */
-        const BITCOIN = 'bitcoin';
+        public const BITCOIN = 'bitcoin';
 
         /**
          * DirectDebit.
          */
-        const DIRECTDEBIT = 'directdebit';
+        public const DIRECTDEBIT = 'directdebit';
 
         /**
          * Klarna.
          */
-        const KLARNA = 'klarna';
+        public const KLARNA = 'klarna';
 
         /**
          * PayPal.
          */
-        const PAYPAL = 'paypal';
+        public const PAYPAL = 'paypal';
 
         /**
          * Przelewy24.
          */
-        const PRZELEWY24 = 'przelewy24';
+        public const PRZELEWY24 = 'przelewy24';
 
         /**
          * SofortBanking.
          */
-        const SOFORTBANKING = 'sofortbanking';
+        public const SOFORTBANKING = 'sofortbanking';
 
         /**
          * Paysafecard
          */
-        const PAYSAFECARD = 'paysafecard';
+        public const PAYSAFECARD = 'paysafecard';
 
         /**
          * Billink
          */
-        const BILLINK = 'billink';
+        public const BILLINK = 'billink';
 
         /**
          * IDEALQR
          */
-        const IDEALQR = 'idealqr';
+        public const IDEALQR = 'idealqr';
 
         /**
          * Paysafecash
          */
-        const PAYSAFECASH = 'paysafecash';
+        public const PAYSAFECASH = 'paysafecash';
 
         /**
          * OnlineUberweisen
          */
-        const ONLINEUEBERWEISEN = 'onlineueberweisen';
+        public const ONLINEUEBERWEISEN = 'onlineueberweisen';
 
         /**
          * Gift Card
          */
-        const GIFTCARD = 'giftcard';
+        public const GIFTCARD = 'giftcard';
 
         /**
          * EPS
          */
-        const EPS = 'eps';
+        public const EPS = 'eps';
 
         /**
          * SprayPay
          */
-        const SPRAYPAY = 'spraypay';
+        public const SPRAYPAY = 'spraypay';
 
         /**
          * Crypto
          */
-        const CRYPTO = 'crypto';
+        public const CRYPTO = 'crypto';
 
         /**
          * The client associated with this payment method.
