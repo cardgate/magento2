@@ -6,7 +6,7 @@
  */
 namespace Cardgate\Payment\Model;
 
-use Cardgate\Exception\RefundException;
+use Cardgate\Payment\Exception\RefundException;
 use Cardgate\Payment\Model;
 use Cardgate\Payment\Model\Config\ValueHandlerPool;
 use Cardgate\Payment\Block\Info\DefaultInfo;
@@ -31,7 +31,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
 {
 
     /**
-     *
      * @var ObjectManagerInterface
      */
     private $objectManager = null;
@@ -61,13 +60,11 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     protected $_canRefundInvoicePartial = true;
 
     /**
-     *
      * @var Calculation
      */
     protected $taxCalculation;
 
     /**
-     *
      * @var \Cardgate\Payment\Model\Config
      */
     protected $config;
@@ -150,7 +147,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             return false;
         };
 
-        if (!is_null($quote) && $quote->getData("quote_currency_code")) {
+        if (!($quote === null) && $quote->getData("quote_currency_code")) {
             $sCurrencyCode = $quote->getData("quote_currency_code");
             $paymentMethod = 'cardgate'.substr($this->code, 9);
             if (!$this->checkPaymentCurrency($sCurrencyCode, $paymentMethod)) {

@@ -79,7 +79,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
                 case 'get':
                     $sKey = substr($sMethod_, 3);
                     if (isset(static::$_aFields[$sKey])) {
-                        return isset($this->_aData[static::$_aFields[$sKey]]) ? $this->_aData[static::$_aFields[$sKey]]  : null;
+                        return isset($this->_aData[static::$_aFields[$sKey]])
+                            ? $this->_aData[static::$_aFields[$sKey]] : null;
                     }
                     break;
                 case 'set':

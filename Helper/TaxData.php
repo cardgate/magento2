@@ -23,7 +23,8 @@ class TaxData extends \Magento\Tax\Helper\Data
      *
      * @param \Magento\Tax\Helper\Data $taxData
      * @param \Closure $proceed
-     * @param \Magento\Sales\Model\Order|\Magento\Sales\Model\Order\Invoice|\Magento\Sales\Model\Order\Creditmemo $source
+     * @param \Magento\Sales\Model\Order|\Magento\Sales\Model\Order\Invoice|
+     * @param \Magento\Sales\Model\Order\Creditmemo $source
      * @return array
      */
     public function aroundGetCalculatedTaxes(\Magento\Tax\Helper\Data $taxData, \Closure $proceed, $source)

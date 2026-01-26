@@ -24,24 +24,21 @@ class Config implements ConfigInterface
     public const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
 
     /**
-     * @var ScopeConfigInterface
+     * @var MutableScopeConfigInterface
      */
     private $scopeConfig;
 
     /**
-     *
      * @var ConfigResource
      */
     private $_configResource;
 
     /**
-     *
      * @var Master
      */
     private $_masterConfig;
 
     /**
-     *
      * @var SerializerInterface
      */
     public $_serializer;

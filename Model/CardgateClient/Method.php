@@ -36,136 +36,133 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * iDeal.
          */
-        const IDEAL = 'ideal';
+        public const IDEAL = 'ideal';
 
         /**
          * iDeal (legacy).
          */
-        const IDEALPRO = 'idealpro';
+        public const IDEALPRO = 'idealpro';
 
         /**
          * BanContact.
          */
-        const BANCONTACT = 'bancontact';
+        public const BANCONTACT = 'bancontact';
 
         /**
          * MisterCash (legacy)
          */
-        const MISTERCASH = 'mistercash';
+        public const MISTERCASH = 'mistercash';
 
         /**
          * CreditCard.
          */
-        const CREDITCARD = 'creditcard';
+        public const CREDITCARD = 'creditcard';
 
         /**
          * Afterpay.
          */
-        const AFTERPAY = 'afterpay';
+        public const AFTERPAY = 'afterpay';
 
         /**
          * Giropay.
          */
-        const GIROPAY = 'giropay';
+        public const GIROPAY = 'giropay';
 
         /**
          * Giropay.
          */
-        const BANKTRANSFER = 'banktransfer';
+        public const BANKTRANSFER = 'banktransfer';
 
         /**
          * Bitcoins.
          */
-        const BITCOIN = 'bitcoin';
+        public const BITCOIN = 'bitcoin';
 
         /**
          * DirectDebit.
          */
-        const DIRECTDEBIT = 'directdebit';
+        public const DIRECTDEBIT = 'directdebit';
 
         /**
          * Klarna.
          */
-        const KLARNA = 'klarna';
+        public const KLARNA = 'klarna';
 
         /**
          * PayPal.
          */
-        const PAYPAL = 'paypal';
+        public const PAYPAL = 'paypal';
 
         /**
          * Przelewy24.
          */
-        const PRZELEWY24 = 'przelewy24';
+        public const PRZELEWY24 = 'przelewy24';
 
         /**
          * SofortBanking.
          */
-        const SOFORTBANKING = 'sofortbanking';
+        public const SOFORTBANKING = 'sofortbanking';
 
         /**
          * Paysafecard
          */
-        const PAYSAFECARD = 'paysafecard';
+        public const PAYSAFECARD = 'paysafecard';
 
         /**
          * Billink
          */
-        const BILLINK = 'billink';
-        
+        public const BILLINK = 'billink';
+
         /**
          * IDEALQR
          */
-        const IDEALQR = 'idealqr';
+        public const IDEALQR = 'idealqr';
 
         /**
          * Paysafecash
          */
-        const PAYSAFECASH = 'paysafecash';
-        
+        public const PAYSAFECASH = 'paysafecash';
+
         /**
          * OnlineUberweisen
          */
-        const ONLINEUEBERWEISEN = 'onlineueberweisen';
-        
+        public const ONLINEUEBERWEISEN = 'onlineueberweisen';
+
         /**
          * Gift Card
          */
-        const GIFTCARD = 'giftcard';
+        public const GIFTCARD = 'giftcard';
 
         /**
          * EPS
          */
-        const EPS = 'eps';
+        public const EPS = 'eps';
 
         /**
          * SprayPay
          */
-        const SPRAYPAY = 'spraypay';
+        public const SPRAYPAY = 'spraypay';
 
         /**
          * Crypto
          */
-        const CRYPTO = 'crypto';
+        public const CRYPTO = 'crypto';
 
         /**
          * The client associated with this payment method.
          * @var Client
-         * @access private
          */
         private $_oClient;
 
         /**
          * The payment method.
          * @var string
-         * @access private
          */
         private $_sId;
 
         /**
          * The payment method name.
          * @var string
-         * @access private
          */
         private $_sName;
 
@@ -173,24 +170,19 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * The constructor.
          * @param Client $oClient_ The client associated with this transaction.
          * @param string $sId_ The payment method identifier to create a method instance for.
-         * @throws Exception|\ReflectionException
-         * @access public
-         * @api
+         * @throws MethodException|\ReflectionException
          * @throws
          */
-        function __construct(Client $oClient_, $sId_, $sName_)
+        public function __construct(Client $oClient_, $sId_, $sName_)
         {
             static $aValidMethods; // use static cache for this
 
             if (! isset($aValidMethods)) {
-                $aValidMethods  = ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Method') )->getConstants();
+                $aValidMethods  = ( new \ReflectionClass(
+                    '\Cardgate\Payment\Model\CardgateClient\Method'
+                ) )->getConstants();
             }
             $this->_oClient = $oClient_;
-            /*
-            if ( ! in_array( $sId_, $aValidMethods ) ) {
-                throw new Exception('Method.PaymentMethod.Invalid', 'invalid payment method: ' . $sId_);
-            }
-            */
             $this->setId($sId_);
             $this->setName($sName_);
         }
@@ -199,16 +191,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set the method id.
          * @param string $sId_ Method id to set.
          * @return $this
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws MethodException
          */
         public function setId($sId_)
         {
             if (! is_string($sId_)
                 || empty($sId_)
             ) {
-                throw new Exception('Method.Id.Invalid', 'invalid id: ' . $sId_);
+                throw new MethodException('Method.Id.Invalid', 'invalid id: ' . $sId_);
             }
             $this->_sId = $sId_;
             return $this;
@@ -217,8 +207,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the payment method id.
          * @return string The payment method id for this instance.
-         * @access public
-         * @api
          */
         public function getId()
         {
@@ -229,16 +217,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set the method name.
          * @param string $sName_ Method name to set.
          * @return $this
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws MethodException
          */
         public function setName($sName_)
         {
             if (! is_string($sName_)
                 || empty($sName_)
             ) {
-                throw new Exception('Method.Name.Invalid', 'invalid name: ' . $sName_);
+                throw new MethodException('Method.Name.Invalid', 'invalid name: ' . $sName_);
             }
             $this->_sName = $sName_;
             return $this;
@@ -247,8 +233,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the payment method name.
          * @return string The payment method name for this instance.
-         * @access public
-         * @api
          */
         public function getName()
         {
@@ -258,9 +242,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * This method returns all the issuers available for the current payment method.
          * @return array An array with issuers
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws MethodException
          */
         public function getIssuers()
         {

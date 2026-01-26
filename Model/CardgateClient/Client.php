@@ -36,103 +36,91 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Client version.
          */
-        const CLIENT_VERSION = "0";
+        public const CLIENT_VERSION = "0";
 
         /**
          * Url to use for production.
          */
-        const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
+        public const URL_PRODUCTION = 'https://secure.curopayments.net/rest/v1/curo/';
 
         /**
          * Url to use for testing.
          */
-        const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
+        public const URL_STAGING = 'https://secure-staging.curopayments.net/rest/v1/curo/';
 
         /**
          * Toggle testmode variable.
          * @var bool
-         * @access private
          */
         private $_bTestmode;
 
         /**
          * The merchant id to use for authentication.
          * @var int
-         * @access private
          */
         private $_iMerchantId;
 
         /**
          * The secret key to use for authentication.
          * @var string
-         * @access private
          */
         private $_sKey;
 
         /**
          * The consumer IP address associated with the client.
          * @var string
-         * @access private
          */
         private $_sIp = null;
 
         /**
          * The language to use when communicating with the API.
          * @var string
-         * @access private
          */
         private $_sLanguage = null;
 
         /**
          * The version resource.
          * @var resources\Version
-         * @access private
          */
         private $_oVersion = null;
 
         /**
          * The transactions resource.
          * @var resources\Transactions
-         * @access private
          */
         private $_oTransactions = null;
 
         /**
          * The subscriptions resource.
          * @var resources\Subscriptions
-         * @access private
          */
         private $_oSubscriptions = null;
 
         /**
          * The consumers resource.
          * @var resources\Consumers
-         * @access private
          */
         private $_oConsumers = null;
 
         /**
          * The methods resource.
          * @var resources\Methods
-         * @access private
          */
         private $_oMethods = null;
 
         /**
          * Debug level. 0 = None, 1 = Include result in errors, 2 = Verbose CURL calls.
          * @var int
-         * @access private
          */
-        const DEBUG_NONE    = 0;
-        const DEBUG_RESULTS = 1;
-        const DEBUG_VERBOSE = 2;
+        public const DEBUG_NONE    = 0;
+        public const DEBUG_RESULTS = 1;
+        public const DEBUG_VERBOSE = 2;
 
         private $_iDebugLevel = 0;
 
         /**
          * Last request and result for debugging.
          * @var string
-         * @access private
          */
         private $_sLastRequest = null;
         private $_sLastResult = null;
@@ -142,11 +130,9 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param int $iMerchantId_ The merchant id for the client.
          * @param string $sKey_ The merchant API key for the client.
          * @param bool $bTestmode_ Toggle testmode for the client.
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws ClientException
          */
-        function __construct($iMerchantId_, $sKey_, $bTestmode_ = false)
+        public function __construct($iMerchantId_, $sKey_, $bTestmode_ = false)
         {
             $this->setMerchantId($iMerchantId_)->setKey($sKey_)->setTestmode($bTestmode_);
         }
@@ -172,14 +158,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Toggle testmode.
          * @param bool $bTestmode_ Enable or disable testmode for this client.
          * @return $this
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws ClientException
          */
         public function setTestmode($bTestmode_)
         {
             if (! is_bool($bTestmode_)) {
-                throw new Exception('Client.Testmode.Invalid', 'invalid testmode: ' . $bTestmode_);
+                throw new ClientException('Client.Testmode.Invalid', 'invalid testmode: ' . $bTestmode_);
             }
             $this->_bTestmode = $bTestmode_;
             return $this;
@@ -188,8 +172,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get currenct testmode setting.
          * @return bool The current testmode setting
-         * @access public
-         * @api
          */
         public function getTestmode()
         {
@@ -200,8 +182,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set debug level.
          * @param int $iDebugLevel_ Level: 0 = None, 1 = Include request/resule in errors, 2 = Verbose cURL calls.
          * @return $this
-         * @access public
-         * @api
          */
         public function setDebugLevel($iLevel_)
         {
@@ -212,8 +192,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get current debug level setting.
          * @return int The current debug level.
-         * @access public
-         * @api
          */
         public function getDebugLevel()
         {
@@ -225,8 +203,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param bool $bStartWithNewLine_ Optional flag to indicate the info should start with a new-line.
          * @param bool $bAddResult_ Optional flag to indicate the result should be included too.
          * @return string Debug info or empty if level = 0.
-         * @access public
-         * @api
          */
         public function getDebugInfo($bStartWithNewLine_ = true, $bAddResult_ = true)
         {
@@ -246,14 +222,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Configure the client object with a merchant id.
          * @param int $iMerchantId_ Merchant id to set.
          * @return $this
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws ClientException
          */
         public function setMerchantId($iMerchantId_)
         {
             if (! is_integer($iMerchantId_)) {
-                throw new Exception('Client.MerchantId.Invalid', 'invalid merchant: ' . $iMerchantId_);
+                throw new ClientException('Client.MerchantId.Invalid', 'invalid merchant: ' . $iMerchantId_);
             }
             $this->_iMerchantId = $iMerchantId_;
             return $this;
@@ -262,8 +236,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the merchant id associated with this client.
          * @return int The merchant id associated with this client
-         * @access public
-         * @api
          */
         public function getMerchantId()
         {
@@ -274,14 +246,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set the Merchant API key to authenticate the transaction request with.
          * @param string $sKey_ The merchant API key to set.
          * @return $this
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws ClientException
          */
         public function setKey($sKey_)
         {
             if (! is_string($sKey_)) {
-                throw new Exception('Client.Key.Invalid', 'invalid merchant key: ' . $sKey_);
+                throw new ClientException('Client.Key.Invalid', 'invalid merchant key: ' . $sKey_);
             }
             $this->_sKey = $sKey_;
             return $this;
@@ -290,8 +260,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the Merchant API key to authenticate the transaction request with.
          * @return string The merchant API key.
-         * @access public
-         * @api
          */
         public function getKey()
         {
@@ -302,16 +270,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Set the IP address.
          * @param string The IP address of the consumer.
          * @return $this
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws ClientException
          */
         public function setIp($sIp_)
         {
             if (! is_string($sIp_)
                 || false === filter_var($sIp_, FILTER_VALIDATE_IP) // NOTE ipv6
             ) {
-                throw new Exception('Client.Ip.Invalid', 'invalid IP address: ' . $sIp_);
+                throw new ClientException('Client.Ip.Invalid', 'invalid IP address: ' . $sIp_);
             }
             $this->_sIp = $sIp_;
             return $this;
@@ -320,8 +286,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the IP address.
          * @return string The consumer IP address.
-         * @access public
-         * @api
          */
         public function getIp()
         {
@@ -332,14 +296,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * Configure the language to use.
          * @param string $sLanguage_ The language to set.
          * @return $this
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws ClientException
          */
         public function setLanguage($sLanguage_)
         {
             if (! is_string($sLanguage_)) {
-                throw new Exception('Client.Language.Invalid', 'invalid language: ' . $sLanguage_);
+                throw new ClientException('Client.Language.Invalid', 'invalid language: ' . $sLanguage_);
             }
             $this->_sLanguage = $sLanguage_;
             return $this;
@@ -348,8 +310,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the language the client is configured with.
          * @return string The language the client is configured with.
-         * @access public
-         * @api
          */
         public function getLanguage()
         {
@@ -359,13 +319,11 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the URL to use with this connection, depending on testmode settings.
          * @return string The URL to use
-         * @access public
-         * @api
          */
         public function getUrl()
         {
-            if (! empty($_SERVER['CG_API_URL'])) {
-                return $_SERVER['CG_API_URL'];
+            if (! empty(getenv('CG_API_URL'))) {
+                return getenv('CG_API_URL');
             } else {
                 return ( $this->getTestmode() ? self::URL_STAGING : self::URL_PRODUCTION );
             }
@@ -374,8 +332,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the last request sent to the API.
          * @return string The request string.
-         * @access public
-         * @api
          */
         public function getLastRequest()
         {
@@ -385,8 +341,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Get the last result from an API call.
          * @return string The result string.
-         * @access public
-         * @api
          */
         public function getLastResult()
         {
@@ -396,14 +350,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Pull the config from the API using a token provided by the site setup button in the backoffice.
          * @return array Returns an array with settings.
-         * @throws Exception
-         * @access public
-         * @api
+         * @throws ClientException
          */
         public function pullConfig($sToken_)
         {
             if (! is_string($sToken_)) {
-                throw new Exception('Client.Token.Invalid', 'invalid token for settings pull: ' . $sToken_);
+                throw new ClientException('Client.Token.Invalid', 'invalid token for settings pull: ' . $sToken_);
             }
             $sResource = "pullconfig/{$sToken_}/";
             return $this->doRequest($sResource);
@@ -412,8 +364,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the versioning resource.
          * @return resources\Version
-         * @access public
-         * @api
          */
         public function version()
         {
@@ -426,8 +376,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the transactions resource.
          * @return resources\Transactions
-         * @access public
-         * @api
          */
         public function transactions()
         {
@@ -440,8 +388,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the subscriptions resource.
          * @return resources\Subscriptions
-         * @access public
-         * @api
          */
         public function subscriptions()
         {
@@ -454,8 +400,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the consumers resource.
          * @return resources\Consumers
-         * @access public
-         * @api
          */
         public function consumers()
         {
@@ -468,8 +412,6 @@ namespace Cardgate\Payment\Model\CardgateClient {
         /**
          * Accessor for the payment methods resource.
          * @return resources\Methods
-         * @access public
-         * @api
          */
         public function methods()
         {
@@ -485,23 +427,23 @@ namespace Cardgate\Payment\Model\CardgateClient {
          * @param array $aData_ Optional data to use for the call.
          * @param string $sHttpMethod_ The http method to use (GET or POST, which is the default).
          * @return array An array with request results.
-         * @throws Exception
+         * @throws ClientException
          */
         public function doRequest($sResource_, $aData_ = null, $sHttpMethod_ = 'POST')
         {
 
             if (! in_array($sHttpMethod_, [ 'GET', 'POST' ])) {
-                throw new Exception('Client.HttpMethod.Invalid', 'invalid http method: ' . $sHttpMethod_);
+                throw new ClientException('Client.HttpMethod.Invalid', 'invalid http method: ' . $sHttpMethod_);
             }
 
             $sUrl = $this->getUrl() . $sResource_;
             if (is_array($aData_)) {
                 $aData_['ip'] = $this->getIp();
                 $aData_['language_id'] = $this->getLanguage();
-            } elseif (is_null($aData_)) {
+            } elseif (($aData_ === null)) {
                 $aData_ = [ 'ip' => $this->getIp(), 'language_id' => $this->getLanguage() ];
             } else {
-                throw new Exception('Client.Data.Invalid', 'invalid data: ' . $aData_);
+                throw new ClientException('Client.Data.Invalid', 'invalid data: ' . $aData_);
             }
 
             if (null !== $this->_oVersion) {
@@ -548,15 +490,21 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (false == $this->_sLastResult) {
                 $sError = curl_error($rCh);
                 curl_close($rCh);
-                throw new Exception('Client.Request.Curl.Error', $sError);
+                throw new ClientException('Client.Request.Curl.Error', $sError);
             } else {
                 curl_close($rCh);
             }
             if (null === ( $aResults = json_decode($this->_sLastResult, true) )) {
-                throw new Exception('Client.Request.JSON.Invalid', 'remote gave invalid JSON: ' . $this->_sLastResult);
+                throw new ClientException(
+                    'Client.Request.JSON.Invalid',
+                    'remote gave invalid JSON: ' . $this->_sLastResult
+                );
             }
             if (isset($aResults['error'])) {
-                throw new Exception('Client.Request.Remote.' . $aResults['error']['code'], $aResults['error']['message']    . $this->getDebugInfo());
+                throw new ClientException(
+                    'Client.Request.Remote.' . $aResults['error']['code'],
+                    $aResults['error']['message'] . $this->getDebugInfo()
+                );
             }
 
             return $aResults;

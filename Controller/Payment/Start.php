@@ -12,6 +12,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Payment\Exception\StartException;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Address;
@@ -87,8 +88,7 @@ class Start implements ActionInterface
     private $stockRegistryInterface;
 
     /**
-     *
-     * @var  Magento\Framework\Controller\Result\Redirect
+     * @var \Magento\Framework\Controller\Result\Redirect
      */
     private $redirect;
 
@@ -361,8 +361,11 @@ class Start implements ActionInterface
      *
      * @return void
      */
-    private function _convertAddress(Address &$oAddress_, \Cardgate\Payment\Model\CardgateClient\Consumer &$oConsumer_, $sMethod_)
-    {
+    private function _convertAddress(
+        Address &$oAddress_,
+        \Cardgate\Payment\Model\CardgateClient\Consumer &$oConsumer_,
+        $sMethod_
+    ) {
         $oConsumer_->$sMethod_()->setFirstName($oAddress_->getFirstname());
         $oConsumer_->$sMethod_()->setLastName($oAddress_->getLastname());
         if (!!( $sCompany = $oAddress_->getCompany() )) {

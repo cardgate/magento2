@@ -13,6 +13,7 @@ use Magento\Framework\Message\Manager;
 use Magento\Framework\App\RequestInterface as Request;
 use \Magento\Framework\Controller\Result\Redirect as ResultRedirect;
 use Cardgate\Payment\Model\Config as CardgateConfig;
+use Cardgate\Payment\Exception\RedirectException;
 
 /**
  * Client redirect after payment action
@@ -91,12 +92,14 @@ class Redirect implements ActionInterface
                 || empty($code)
                 || empty($transactionId)
             ) {
-                throw new \Exception(__('Wrong parameters supplied.'));
+                throw new RedirectException(__('Wrong parameters supplied.'));
             }
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
             // of relying on the provided status in the url.
-            $order = ObjectManager::getInstance()->create(\Magento\Sales\Model\Order::class)->loadByIncrementId($orderId);
+            $order = ObjectManager::getInstance()
+                ->create(\Magento\Sales\Model\Order::class)
+                ->loadByIncrementId($orderId);
             if (\Magento\Sales\Model\Order::STATE_NEW == $order->getState()) {
                 $gatewayClient = ObjectManager::getInstance()->get(\Cardgate\Payment\Model\GatewayClient::class);
                 $status = $gatewayClient->transactions()->status($transactionId);
@@ -111,12 +114,12 @@ class Redirect implements ActionInterface
                     $this->_checkoutSession->restoreQuote();
                     $this->resultRedirect->setPath('checkout');
                 } else {
-                    throw new \Exception(__('Transaction canceled.'));
+                    throw new RedirectException(__('Transaction canceled.'));
                 }
             } else {
-                throw new \Exception(__('Payment not completed.'));
+                throw new RedirectException(__('Payment not completed.'));
             }
-        } catch (\Exception $e) {
+        } catch (RedirectException $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
             if (!!$this->_cardgateConfig->getGlobal('always_show_success_page')) {
                 $this->_checkoutSession->start();
