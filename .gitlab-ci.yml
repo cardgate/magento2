@@ -1,0 +1,56 @@
+include:
+ - template: Jobs/SAST.gitlab-ci.yml
+## Disable for now! Is really slow (most of the time)!? - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+stages:
+  - linting
+  - build
+  - test
+  - analysis
+  - deploy
+  - cleanup
+
+php linter:
+  stage: linting
+  image: registry.gitlab.com/pipeline-components/php-linter:latest
+  script:
+    - parallel-lint --colors  --exclude ./core_lib/v1/composer2/vendor --exclude ./curopayments_lib_internal/v1/3rdparty/vendor --exclude ./curopayments_bin_dev/composer/vendor --exclude ./curopayments_lib/v1/3rdparty/phpexcel .
+  allow_failure: true
+  tags:
+    - docker
+
+semgrep-sast:
+  tags:
+    - docker
+#secret_detection:
+#  variables:
+#    GIT_DEPTH: 500
+
+
+
+qodana:
+  stage: analysis
+#  dependencies:
+#    - phpunit_job
+  image:
+    name: jetbrains/qodana-php:latest
+    entrypoint: [""]
+  cache:
+    - key: qodana-latest-$CI_DEFAULT_BRANCH-$CI_COMMIT_REF_SLUG
+      fallback_keys:
+        - qodana-latest-$CI_DEFAULT_BRANCH-
+        - qodana-latest-
+      paths:
+        - .qodana/cache
+  variables:
+    QODANA_TOKEN: $QODANA_TOKEN
+    QODANA_ENDPOINT: "https://qodana.cloud"
+  script:
+    - qodana --cache-dir=$CI_PROJECT_DIR/.qodana/cache --baseline qodana.sarif.json --baseline-include-absent
+  tags:
+    - docker
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      when: always
+    - when: never
+  allow_failure: true
