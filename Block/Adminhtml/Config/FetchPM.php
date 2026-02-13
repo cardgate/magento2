@@ -43,7 +43,7 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field
      * @see \Magento\Config\Block\System\Config\Form\Field::_getElementHtml()
      */
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
-    { // git test2
+    {
         if (!empty($this->cardgateConfig->getGlobal('api_username'))
              && ! empty($this->cardgateConfig->getGlobal('api_password'))
              && ! empty($this->cardgateConfig->getGlobal('site_id'))
