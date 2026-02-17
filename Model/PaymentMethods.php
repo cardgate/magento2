@@ -112,7 +112,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
      * @return bool
      */
     public function checkPaymentCurrency($currency, $payment_method):bool
-    { // this is a test
+    { // test 3
         $strictly_euro = in_array($payment_method, ['cardgateideal',
             'cardgateidealqr',
             'cardgatemistercash',
