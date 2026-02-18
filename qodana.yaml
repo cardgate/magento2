@@ -11,3 +11,21 @@ include:
   - name: PhpRedundantClosingTagInspection
   - name: PhpUnhandledExceptionInspection
   - name: PhpUnnecessaryStopStatementInspection
+  - name: PhpDeprecationInspection
+  - name: PhpDisabledMethodInspection
+  - name: PhpIncludeInspection
+  - name: PhpReservedWordUsageInspection
+  - name: PhpUnusedAliasInspection
+  - name: PhpUnusedLocalVariableInspection
+  - name: PhpUnusedParameterInspection
+  - name: PhpUnusedPrivateFieldInspection
+  - name: PhpUnusedPrivateMethodInspection
+  - name: PhpVariableVariableInspection
+  - name: PhpAssignmentInConditionInspection
+  - name: PhpDivisionByZeroInspection
+  - name: PhpIllegalArrayKeyTypeInspection
+  - name: PhpMethodParametersCountMismatchInspection
+  - name: PhpNonStrictObjectEqualityInspection
+  - name: PhpStrictTypeDeclarationInspection
+  - name: PhpUsageOfSilenceOperatorInspection
+  - name: PhpWrongStringConcatenationInspection
