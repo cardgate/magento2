@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+	Copyright (c) 2024 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Cron/etc/crontab.xsd">
+	<!--
+		Own group (see etc/cron_groups.xml): the "default" group can be throttled by the
+		merchant, which would silently stop subscription billing.
+	-->
+	<group id="cardgate">
+		<job name="cardgate_process_subscriptions" instance="Cardgate\Payment\Model\Cron\ProcessSubscriptions" method="execute">
+			<schedule>*/5 * * * *</schedule>
+		</job>
+	</group>
+</config>

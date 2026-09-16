@@ -8,6 +8,7 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Payment\Model\Subscription\SubscriptionManager;
 use Cardgate\Payment\Exception\CallbackException;
 use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
@@ -50,6 +51,7 @@ class Callback implements ActionInterface
      */
     private $_cardgateConfig;
 
+    private $_subscriptionManager;
     /**
      *
      * @var \Magento\Framework\Encryption\Encryptor
@@ -81,6 +83,7 @@ class Callback implements ActionInterface
      * @param \Cardgate\Payment\Model\Config $config
      * @param \Magento\Framework\Encryption\Encryptor $encryptor
      * @param StockRegistryProviderInterface $stockRegistry
+     * @param SubscriptionManager $subscriptionManager
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -90,7 +93,8 @@ class Callback implements ActionInterface
         GatewayClient $client,
         \Cardgate\Payment\Model\Config $config,
         \Magento\Framework\Encryption\Encryptor $encryptor,
-        StockRegistryProviderInterface $stockRegistry
+        StockRegistryProviderInterface $stockRegistry,
+        SubscriptionManager $subscriptionManager
     ) {
         $this->resultFactory = $context->getResultFactory();
         $this->_request = $context->getRequest();
@@ -102,6 +106,7 @@ class Callback implements ActionInterface
         $this->_encryptor = $encryptor;
         $this->_objectManager = $context->getObjectManager();
         $this->_stockRegistry = $stockRegistry;
+        $this->_subscriptionManager = $subscriptionManager;
     }
 
     /**
@@ -229,6 +234,23 @@ class Callback implements ActionInterface
                     $payment->setCurrencyCode($currency);
                     $payment->registerCaptureNotification($amount);
                     $payment->setMethod('cardgate_' . $pt);
+
+                    // If it is a mandate transaction, create the subscription(s). This has to
+                    // happen after the capture so the transaction id is known on the payment
+                    // and can be stored as the mandate of the subscription.
+                    $parentTransactionId = empty($post['parent_transaction_id'])
+                        ? ( empty($get['parent_transaction_id']) ? '' : $get['parent_transaction_id'] )
+                        : $post['parent_transaction_id'];
+                    if ($parentTransactionId == 'master') {
+                        $payment->setCardgateTransaction($transactionId);
+                        $created = $this->_subscriptionManager->createFromOrder($order);
+                        if (! empty($created)) {
+                            $order->addCommentToStatusHistory(__(
+                                '%1 subscription(s) created.',
+                                count($created)
+                            ));
+                        }
+                    }
 
                     if (! $order->getEmailSent()) {
                         $this->orderSender->send($order);
