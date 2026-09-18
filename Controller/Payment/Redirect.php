@@ -92,7 +92,7 @@ class Redirect implements ActionInterface
                 || empty($code)
                 || empty($transactionId)
             ) {
-                throw new RedirectException(__('Wrong parameters supplied.'));
+                throw new RedirectException(new \Magento\Framework\Phrase( __('Wrong parameters supplied.')));
             }
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
@@ -114,10 +114,10 @@ class Redirect implements ActionInterface
                     $this->_checkoutSession->restoreQuote();
                     $this->resultRedirect->setPath('checkout');
                 } else {
-                    throw new RedirectException(__('Transaction canceled.'));
+                    throw new RedirectException(new \Magento\Framework\Phrase( __('Transaction canceled.')));
                 }
             } else {
-                throw new RedirectException(__('Payment not completed.'));
+                throw new RedirectException( new \Magento\Framework\Phrase( __('Payment not completed.')));
             }
         } catch (RedirectException $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));

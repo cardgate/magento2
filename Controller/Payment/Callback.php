@@ -147,7 +147,7 @@ class Callback implements ActionInterface
             $sSiteKey = $this->_cardgateClient->getSiteKey();
 
             if (false == $this->_cardgateClient->transactions()->verifyCallback($aData, $sSiteKey)) {
-                throw new CallbackException('hash verification failure');
+                throw new CallbackException(new \Magento\Framework\Phrase( 'hash verification failure'));
             }
 
             $sHistoryComment = __("Update for transaction %1. Received status code %2.", $transactionId, $code);
@@ -207,7 +207,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Transaction already processed.'));
                         $updateCardgateData = false;
-                        throw new CallbackException('transaction already processed.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('transaction already processed.'));
                     }
 
                     // Test if payment has been processed already.
@@ -216,7 +216,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Payment already processed in another transaction.'));
                         $updateCardgateData = false;
-                        throw new CallbackException('payment already processed in another transaction.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('payment already processed in another transaction.'));
                     }
 
                     if ($order->isCurrencyDifferent()) {
@@ -262,7 +262,7 @@ class Callback implements ActionInterface
                         $this->invoiceSender->send($invoice);
                     } else {
                         $order->addCommentToStatusHistory(__('Failed to create invoice.'));
-                        throw new CallbackException('failed to create invoice.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('failed to create invoice.'));
                     }
                 }
             } elseif ($code < 400) {
@@ -277,7 +277,7 @@ class Callback implements ActionInterface
                             "Failed to cancel order. Order state was : %1.",
                             $order->getState() . '/' . $order->getStatus()
                         ));
-                        throw new CallbackException('failed to cancel order.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('failed to cancel order.'));
                     }
                 }
             } elseif ($code < 500) {
