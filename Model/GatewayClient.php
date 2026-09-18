@@ -69,7 +69,7 @@ class GatewayClient
         $sApiKey = $oEncryptor_->decrypt($oConfig_->getGlobal('api_password'));
         $bTestMode = !!$oConfig_->getGlobal('testmode');
         if (! class_exists(\Cardgate\Payment\Model\CardgateClient\Client::class)) {
-            throw new GatewayClientException("cardgate client library not installed");
+            throw new GatewayClientException(new \Magento\Framework\Phrase("cardgate client library not installed"));
         }
         $this->_oClient = new \Cardgate\Payment\Model\CardgateClient\Client($sMerchantId, $sApiKey, $bTestMode);
 
@@ -111,7 +111,7 @@ class GatewayClient
         if (is_callable([ $this->_oClient, $sMethod_ ])) {
             return call_user_func_array([ $this->_oClient, $sMethod_ ], $aArgs_);
         } else {
-            throw new GatewayClientException("invalid call to {$sMethod_}");
+            throw new GatewayClientException(new \Magento\Framework\Phrase("invalid call to {$sMethod_}"));
         }
     }
 

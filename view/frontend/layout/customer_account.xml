@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+	Copyright (c) 2024 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceBlock name="customer_account_navigation">
+			<block class="Magento\Customer\Block\Account\SortLink" name="cardgate-subscriptions-link">
+				<arguments>
+					<argument name="path" xsi:type="string">cardgate/subscription/index</argument>
+					<argument name="label" xsi:type="string" translate="true">My Subscriptions</argument>
+					<argument name="sortOrder" xsi:type="number">250</argument>
+				</arguments>
+			</block>
+		</referenceBlock>
+	</body>
+</page>

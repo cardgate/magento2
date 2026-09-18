@@ -15,4 +15,11 @@
 	<event name="sales_order_invoice_pay">
 		<observer name="cardgate_order_invoice_pay" instance="Cardgate\Payment\Observer\SalesOrderInvoicePay" />
 	</event>
+	<event name="sales_order_place_after">
+		<observer name="cardgate_subscription_order_place_after"
+			instance="Cardgate\Payment\Observer\SubscriptionOrderPlaceAfter" />
+	</event>
+	<event name="sales_quote_add_item">
+		<observer name="cardgate_cart_subscription_limit" instance="Cardgate\Payment\Observer\CartSubscriptionLimit" />
+	</event>
 </config>

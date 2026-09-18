@@ -57,12 +57,68 @@ The CardGate Module for Magento 2 is installed via [Composer](http://getcomposer
   - Check the output
 - After the payment methods are refreshed successfully, all active *Payment method sections* can be enabled and edited.
 
+## Subscriptions (CuroPayments recurring)
+
+This module can turn products into recurring subscriptions that are billed through the
+CuroPayments recurring entry point:
+
+- test: `https://secure-staging.curopayments.net/rest/v1/curo/recurring/`
+- live: `https://secure.curopayments.net/rest/v1/curo/recurring/`
+
+See [the CuroPayments documentation](https://curo.readme.io/reference/createrecurringtransaction)
+for the entry point details. The initial (authorizing) transaction of the order is used as
+the SEPA Direct Debit mandate for all following recurring charges.
+
+### Enabling a product as a subscription
+
+`setup:upgrade` adds three product attributes (group *CardGate Subscription*):
+
+- **Sell as Subscription** (`cardgate_is_subscription`)
+- **Subscription Interval Count** (`cardgate_subscription_interval`)
+- **Subscription Interval Unit** (`cardgate_subscription_interval_unit`) — day/week/month/year
+
+These attributes apply to every product type (simple, configurable, bundle, grouped and
+virtual).
+
+### Allowed payment methods
+
+Subscriptions are only created when the order is paid with one of:
+Bancontact, Creditcard, Direct Debit, iDEAL, Przelewy24 and onlineueberweisen.
+
+### Features
+
+- **Self-service** — customers can pause, resume, skip the next cycle, change the interval
+  or cancel from *My Account → My Subscriptions*.
+- **Mixed carts** — only the subscription line-items of an order spawn a subscription; one-off
+  items are billed normally by the initial order.
+- **Shipping recalculation** — shipping is recomputed per billing cycle, scaled to the cycle
+  length.
+- **Automated billing** — an hourly cron (`cardgate_process_subscriptions`) processes every due
+  subscription. Each billing cycle creates a *renewal order* (a copy of the subscribed
+  line-item of the originating order: same customer, addresses, shipping and payment method)
+  and charges that order through the recurring entry point, using the order increment id as
+  reference. The regular CardGate callback therefore captures and invoices the renewal order
+  just like a normal order.
+- **Robust scheduling** — `next_run_at` is normalised to the start of the day so a due cycle is
+  always picked up by the first cron run of that day.
+- **Back-off on failure** — a failed cycle cancels the renewal order, increments
+  `failure_count` and postpones `next_run_at` exponentially (max 7 days). After 5 consecutive
+  failures the subscription is paused for review and the reason is stored in `last_error`.
+
+## Testing
+
+The module ships with a PHPUnit test-suite that runs on PHP **7.4 up to 8.3**.
+
+```
+composer install
+vendor/bin/phpunit
+```
+
+`phpunit.xml` uses the PHPUnit 10/11 schema and `tests/bootstrap.php` registers a
+small PSR-4 autoloader so the standalone unit tests run without a full Magento
+installation. PHPUnit `^10.5 || ^11.0` is declared under `require-dev`, both of
+which support PHP 8.3.
+
 ## Requirements
 
-This extension requires the [CardGate API client library for PHP.](https://github.com/cardgate/cardgate-clientlib-php)
-
-When using composer this will be installed automatically. To install manually, enter the following command in your Magento 2 root folder:
-
-```
-composer require cardgate/cardgate-clientlib-php
-```
+No further requirements.

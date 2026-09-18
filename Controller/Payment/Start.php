@@ -9,6 +9,7 @@ namespace Cardgate\Payment\Controller\Payment;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Cardgate\Payment\Model\Subscription\SubscriptionManager;
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config;
 use Cardgate\Payment\Model\Config\Master;
@@ -172,7 +173,7 @@ class Start implements ActionInterface
             $consumer = $transaction->getConsumer();
             $billingAddress = $order->getBillingAddress();
             if (!$billingAddress) {
-                throw new StartException('missing or invalid billing address');
+                throw new StartException(new \Magento\Framework\Phrase( 'missing or invalid billing address'));
             }
             $consumer->setEmail($billingAddress->getEmail());
             $telephone =$billingAddress->getTelephone();
@@ -196,6 +197,13 @@ class Start implements ActionInterface
             foreach ($order->getAllVisibleItems() as $item) {
                 $itemQty = (int)( $item->getQtyOrdered() ? $item->getQtyOrdered() : $item->getQty() );
                 $product = $item->getProduct();
+                // if it is a subscription product, set recurring flag.
+                if ($product && $product->hasData(SubscriptionManager::ATTR_IS_SUBSCRIPTION)) {
+                    if((int) $product->getData(SubscriptionManager::ATTR_IS_SUBSCRIPTION) === 1){
+                        $transaction->setRecurring(true);
+                    };
+                }
+                $options = $product->getOptions();
                 $url = $product->getUrlModel()->getUrl($product);
                 $cartItem = $cart->addItem(
                     \Cardgate\Payment\Model\CardgateClient\Item::TYPE_PRODUCT,
@@ -336,7 +344,7 @@ class Start implements ActionInterface
                 return $this->redirect->setUrl($actionUrl);
             } else {
                 // Payment methods without user interaction are not yet supported.
-                throw new StartException('unsupported payment action');
+                throw new StartException( new \Magento\Framework\Phrase( 'unsupported payment action'));
             }
 
         } catch (StartException $e) {
