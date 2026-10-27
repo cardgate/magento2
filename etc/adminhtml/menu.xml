@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+	Copyright (c) 2024 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="Cardgate_Payment::subscriptions" title="CardGate Subscriptions" translate="title" module="Cardgate_Payment" sortOrder="100" parent="Magento_Sales::sales_operation" action="cardgate/subscription/index" resource="Cardgate_Payment::subscriptions" />
+	</menu>
+</config>
