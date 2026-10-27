@@ -1,0 +1,135 @@
+<?php
+/**
+ * Copyright (c) 2024 CardGate B.V.
+ * All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @var \Cardgate\Payment\Block\Adminhtml\Subscription\Edit $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$s = $block->getSubscription();
+if (!$s) {
+    return;
+}
+$readonly = $s->isCancelled();
+?>
+<form method="post" action="<?= $escaper->escapeUrl($block->getSaveUrl()) ?>" class="admin__fieldset-wrapper">
+    <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($block->getFormKey()) ?>"/>
+    <input type="hidden" name="id" value="<?= (int) $s->getId() ?>"/>
+
+    <div class="page-actions" style="margin-bottom:2rem;">
+        <a href="<?= $escaper->escapeUrl($block->getBackUrl()) ?>" class="action-default back"><?= $escaper->escapeHtml(__('Back')) ?></a>
+        <?php if (!$readonly): ?>
+            <button type="submit" name="back" value="1" class="action-secondary"><span><?= $escaper->escapeHtml(__('Save and Continue Edit')) ?></span></button>
+            <button type="submit" class="action-primary primary"><span><?= $escaper->escapeHtml(__('Save Subscription')) ?></span></button>
+        <?php endif; ?>
+    </div>
+
+    <fieldset class="admin__fieldset">
+        <legend class="admin__legend"><span><?= $escaper->escapeHtml(__('Subscription Information')) ?></span></legend>
+        <?php
+        $info = [
+            (string) __('Product') => $s->getName() . ' (' . $s->getSku() . ')',
+            (string) __('Customer ID') => $s->getCustomerId() ?: __('Guest'),
+            (string) __('Payment method') => $s->getPaymentMethod(),
+            (string) __('Mandate transaction') => $s->getMandateTransactionId(),
+            (string) __('Currency') => $s->getCurrency(),
+            (string) __('Cycles billed') => (int) $s->getCyclesBilled(),
+            (string) __('Failed attempts') => (int) $s->getFailureCount(),
+            (string) __('Last error') => $s->getLastError(),
+            (string) __('Last billing (UTC)') => $s->getLastRunAt(),
+            (string) __('Created at') => $s->getCreatedAt(),
+        ];
+        ?>
+        <div class="admin__field">
+            <label class="admin__field-label"><span><?= $escaper->escapeHtml(__('Original order')) ?></span></label>
+            <div class="admin__field-control">
+                <?php if ($url = $block->getOrderUrl($s->getOrderId())): ?>
+                    <a href="<?= $escaper->escapeUrl($url) ?>"><?= $escaper->escapeHtml($s->getIncrementId()) ?></a>
+                <?php else: ?>
+                    <?= $escaper->escapeHtml($s->getIncrementId()) ?>
+                <?php endif; ?>
+                <?php if ($url = $block->getOrderUrl($s->getLastOrderId())): ?>
+                    &nbsp;|&nbsp;<a href="<?= $escaper->escapeUrl($url) ?>"><?= $escaper->escapeHtml(__('Last renewal order')) ?></a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php foreach ($info as $label => $value): ?>
+            <div class="admin__field">
+                <label class="admin__field-label"><span><?= $escaper->escapeHtml($label) ?></span></label>
+                <div class="admin__field-control"><?= $escaper->escapeHtml((string) $value) ?></div>
+            </div>
+        <?php endforeach; ?>
+    </fieldset>
+
+    <fieldset class="admin__fieldset">
+        <legend class="admin__legend"><span><?= $escaper->escapeHtml(__('Settings')) ?></span></legend>
+
+        <div class="admin__field _required">
+            <label class="admin__field-label" for="cg-status"><span><?= $escaper->escapeHtml(__('Status')) ?></span></label>
+            <div class="admin__field-control">
+                <select id="cg-status" name="status" class="admin__control-select"<?= $readonly ? ' disabled' : '' ?>>
+                    <?php foreach ($block->getStatusOptions() as $code => $label): ?>
+                        <option value="<?= $escaper->escapeHtmlAttr($code) ?>"<?= $s->getStatus() === $code ? ' selected' : '' ?>><?= $escaper->escapeHtml($label) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="admin__field-note"><?= $escaper->escapeHtml(__('Cancelling is permanent and cannot be undone.')) ?></div>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <label class="admin__field-label" for="cg-qty"><span><?= $escaper->escapeHtml(__('Quantity')) ?></span></label>
+            <div class="admin__field-control">
+                <input id="cg-qty" type="number" min="0.0001" step="any" name="qty" class="admin__control-text"
+                       value="<?= $escaper->escapeHtmlAttr((float) $s->getQty()) ?>"<?= $readonly ? ' disabled' : '' ?>/>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <label class="admin__field-label" for="cg-amount"><span><?= $escaper->escapeHtml(__('Amount per cycle (%1)', $s->getCurrency())) ?></span></label>
+            <div class="admin__field-control">
+                <input id="cg-amount" type="number" min="0" step="0.01" name="amount" class="admin__control-text"
+                       value="<?= $escaper->escapeHtmlAttr($block->centsToDecimal($s->getAmount())) ?>"<?= $readonly ? ' disabled' : '' ?>/>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <label class="admin__field-label" for="cg-shipping"><span><?= $escaper->escapeHtml(__('Shipping per cycle (%1)', $s->getCurrency())) ?></span></label>
+            <div class="admin__field-control">
+                <input id="cg-shipping" type="number" min="0" step="0.01" name="shipping_amount" class="admin__control-text"
+                       value="<?= $escaper->escapeHtmlAttr($block->centsToDecimal($s->getShippingAmount())) ?>"<?= $readonly ? ' disabled' : '' ?>/>
+                <div class="admin__field-note"><?= $escaper->escapeHtml(__('Changing the interval recalculates shipping and reschedules the next billing date.')) ?></div>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <label class="admin__field-label" for="cg-interval"><span><?= $escaper->escapeHtml(__('Billing interval')) ?></span></label>
+            <div class="admin__field-control">
+                <input id="cg-interval" type="number" min="1" step="1" name="interval_count" class="admin__control-text" style="width:6rem;"
+                       value="<?= (int) $s->getIntervalCount() ?>"<?= $readonly ? ' disabled' : '' ?>/>
+                <select name="interval_unit" class="admin__control-select"<?= $readonly ? ' disabled' : '' ?>>
+                    <?php foreach ($block->getUnitOptions() as $code => $label): ?>
+                        <option value="<?= $escaper->escapeHtmlAttr($code) ?>"<?= $s->getIntervalUnit() === $code ? ' selected' : '' ?>><?= $escaper->escapeHtml($label) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <label class="admin__field-label" for="cg-next"><span><?= $escaper->escapeHtml(__('Next billing date (UTC)')) ?></span></label>
+            <div class="admin__field-control">
+                <input id="cg-next" type="datetime-local" name="next_run_at" class="admin__control-text"
+                       value="<?= $escaper->escapeHtmlAttr($block->getNextRunValue()) ?>"<?= $readonly ? ' disabled' : '' ?>/>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <label class="admin__field-label" for="cg-skip"><span><?= $escaper->escapeHtml(__('Skip next cycle')) ?></span></label>
+            <div class="admin__field-control">
+                <input id="cg-skip" type="checkbox" name="skip_next" value="1" class="admin__control-checkbox"
+                    <?= (int) $s->getSkipNext() ? ' checked' : '' ?><?= $readonly ? ' disabled' : '' ?>/>
+                <label for="cg-skip"></label>
+            </div>
+        </div>
+    </fieldset>
+</form>
