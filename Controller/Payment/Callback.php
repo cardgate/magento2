@@ -138,7 +138,7 @@ class Callback implements ActionInterface
         $currency = empty($post['currency']) ? $get['currency'] : $post['currency'];
         $amount = (int)( empty($post['amount']) ? $get['amount'] : $post['amount'] );
         $pt = empty($post['pt']) ? $get['pt'] : $post['pt'];
-        $pmId = ( ! empty($pt) ? $pt : 'unknown' );
+        $pmId = ( ! empty($pt) ? trim($pt) : 'unknown' );
 
         $manualProcessing = !!$this->_cardgateConfig->getGlobal('manually_process_order');
         $updateCardgateData = false;
@@ -163,7 +163,7 @@ class Callback implements ActionInterface
 
                 // If the gateway is using a different payment method than us, update the payment method of our order to
                 // match the one from the gateway.
-                if ($payment->getCardgatePaymentmethod() != $pmId) {
+                if (trim($payment->getCardgatePaymentmethod()) != $pmId) {
                     $payment->setCardgatePaymentmethod($pmId);
                     $sText = "Callback received for transaction %1 with payment method '%2' but
                     payment method should be '%3'. Processing anyway.";
