@@ -59,51 +59,132 @@ The CardGate Module for Magento 2 is installed via [Composer](http://getcomposer
 
 ## Subscriptions (CuroPayments recurring)
 
-This module can turn products into recurring subscriptions that are billed through the
-CuroPayments recurring entry point:
+This module can sell products as recurring subscriptions. The first order is paid normally
+by the customer; every following billing cycle is charged automatically through the
+CuroPayments recurring entry point, without customer interaction:
 
 - test: `https://secure-staging.curopayments.net/rest/v1/curo/recurring/`
 - live: `https://secure.curopayments.net/rest/v1/curo/recurring/`
 
 See [the CuroPayments documentation](https://curo.readme.io/reference/createrecurringtransaction)
-for the entry point details. The initial (authorizing) transaction of the order is used as
-the SEPA Direct Debit mandate for all following recurring charges.
+for the entry point details. The initial (authorizing) transaction of the order acts as the
+mandate for all following recurring charges.
 
-### Enabling a product as a subscription
+### 1. Setup
 
-`setup:upgrade` adds three product attributes (group *CardGate Subscription*):
+1. Install/upgrade the module and run `php bin/magento setup:upgrade` (creates the
+   `cardgate_subscription` table and the product attributes) followed by
+   `php bin/magento cache:flush`.
+2. Make sure the Magento cron is running (`bin/magento cron:run` from the system crontab).
+   Subscription billing uses its **own cron group `cardgate`** (see `etc/cron_groups.xml`),
+   so throttled settings of the `default` group do not delay billing.
+3. Enable at least one of the allowed payment methods (see below).
 
-- **Sell as Subscription** (`cardgate_is_subscription`)
-- **Subscription Interval Count** (`cardgate_subscription_interval`)
-- **Subscription Interval Unit** (`cardgate_subscription_interval_unit`) — day/week/month/year
+### 2. Making a product a subscription
 
-These attributes apply to every product type (simple, configurable, bundle, grouped and
-virtual).
+`setup:upgrade` adds three product attributes (group *CardGate Subscription*), available for
+every product type (simple, configurable, bundle, grouped and virtual):
 
-### Allowed payment methods
+| Attribute | Code | Meaning |
+|---|---|---|
+| Sell as Subscription | `cardgate_is_subscription` | Yes = buying this product starts a subscription |
+| Subscription Interval Count | `cardgate_subscription_interval` | Number of units between charges (minimum 1) |
+| Subscription Interval Unit | `cardgate_subscription_interval_unit` | `day`, `week`, `month` or `year` (default `month`) |
 
-Subscriptions are only created when the order is paid with one of:
-Bancontact, Creditcard, Direct Debit, iDEAL, Przelewy24 and onlineueberweisen.
+Example: count `3` + unit `month` = billed every three months.
 
-### Features
+### 3. Cart and checkout rules
 
-- **Self-service** — customers can pause, resume, skip the next cycle, change the interval
-  or cancel from *My Account → My Subscriptions*.
-- **Mixed carts** — only the subscription line-items of an order spawn a subscription; one-off
-  items are billed normally by the initial order.
-- **Shipping recalculation** — shipping is recomputed per billing cycle, scaled to the cycle
-  length.
-- **Automated billing** — an hourly cron (`cardgate_process_subscriptions`) processes every due
-  subscription. Each billing cycle creates a *renewal order* (a copy of the subscribed
-  line-item of the originating order: same customer, addresses, shipping and payment method)
-  and charges that order through the recurring entry point, using the order increment id as
-  reference. The regular CardGate callback therefore captures and invoices the renewal order
-  just like a normal order.
-- **Robust scheduling** — `next_run_at` is normalised to the start of the day so a due cycle is
-  always picked up by the first cron run of that day.
-- **Back-off on failure** — a failed cycle cancels the renewal order, increments
-  `failure_count` and postpones `next_run_at` exponentially (max 7 days). After 5 consecutive
-  failures the subscription is paused for review and the reason is stored in `last_error`.
+- **One subscription product per cart.** Adding a second subscription product is refused
+  with the message *"Only one subscription product is allowed per cart. You can add
+  non-subscription products."*
+- **Mixed carts are allowed.** One-off products are billed only once by the initial order;
+  only the subscription line-item is repeated.
+- **Allowed payment methods.** A subscription is only created when the order is paid with:
+  Bancontact (`cardgate_bancontact` / `cardgate_mistercash`), Creditcard, Direct Debit, iDEAL,
+  Przelewy24 or onlineueberweisen. Orders paid with any other method are processed as normal
+  orders without a subscription.
+
+### 4. How a subscription is created
+
+1. The customer places the order and pays the initial transaction at CardGate.
+2. When the CardGate callback confirms the payment, the CardGate transaction id of the order
+   is stored as the **mandate** and a subscription record is created for the subscription
+   line-item (the `sales_order_place_after` observer tries too, but at that moment there is
+   no mandate yet). Creation is idempotent: one subscription per order + product.
+3. The subscription stores:
+   - **amount**: row total incl. tax of the subscribed line-item;
+   - **shipping amount**: the order shipping (incl. tax), scaled to the cycle length
+     (cycle days / 30, limited between 0.25x and 2x);
+   - currency, quantity, interval, payment method and mandate;
+   - **next billing date** (`next_run_at`): order date + one interval, at 00:00 (UTC).
+
+Renewal orders (created by a subscription) never create a new subscription.
+
+### 5. Automated billing
+
+The cron job `cardgate_process_subscriptions` runs **every 5 minutes** and picks up all
+*active* subscriptions whose `next_run_at` has passed. For each of them:
+
+1. If *skip next* is set, the flag is cleared and the cycle is moved forward one interval
+   without charging.
+2. Otherwise a **renewal order** is created: a copy of the subscribed line-item of the
+   originating order, with the same customer, addresses, shipping and payment method.
+3. The renewal order is charged through the recurring entry point using the mandate, the
+   order grand total and the order increment id as reference.
+4. The regular CardGate callback then captures and invoices the renewal order just like a
+   normal order.
+5. On success `cycles_billed` is increased, `last_order_id` / `last_transaction_id` /
+   `last_run_at` are stored, failures are reset and `next_run_at` moves one interval forward.
+
+### 6. Failures and retries
+
+| Failure | What happens | Next attempt |
+|---|---|---|
+| Renewal order could not be created (gateway not contacted) | `failure_count` +1, `last_error` stored | 15, 30, 60, 120 ... minutes (max 240) |
+| Gateway charge failed | Renewal order is cancelled with a comment, `failure_count` +1, `last_error` stored | 1, 2, 4, 7, 7 days (start of day) |
+
+After **5 consecutive failures** the subscription is set to *paused* for review. Check
+`last_error` in the admin and `var/log/exception.log` / `var/log/debug.log`, fix the cause and
+resume the subscription.
+
+### 7. Statuses
+
+- **active** – billed automatically when due.
+- **paused** – not billed. *Resume* resets the failures and schedules the next charge one
+  interval from now.
+- **cancelled** – final; never billed again and cannot be resumed or paused.
+
+### 8. Customer self-service (*My Account → My Subscriptions*)
+
+Logged-in customers can, for their own subscriptions:
+
+- **Pause** / **Resume**;
+- **Skip** the next billing cycle (active subscriptions only);
+- **Change the interval** (shipping is rescaled and the next charge is scheduled one new
+  interval from now);
+- **Cancel**.
+
+### 9. Administration (*Sales → Operations → CardGate Subscriptions*)
+
+Requires the ACL resource *Sales → CardGate Subscriptions* (`Cardgate_Payment::subscriptions`);
+grant it under *System → Permissions → User Roles* for non-administrator roles.
+
+The grid lists all subscriptions. On the edit page an administrator can change:
+
+- shipping amount per cycle;
+- the *skip next* flag;
+- the next billing date;
+- the interval count/unit;
+- the status (active / paused / cancelled).
+
+### 10. Troubleshooting
+
+- *Menu not visible*: run `setup:upgrade`, `cache:flush` and log in again.
+- *Subscription not created*: check that the product has *Sell as Subscription* = Yes, the
+  payment method is allowed and the CardGate callback reached the shop.
+- *Nothing is billed*: check that the cron runs and the `cardgate` group has entries in
+  `cron_schedule`, and that the subscription is *active* with a past `next_run_at`.
 
 ## Testing
 
