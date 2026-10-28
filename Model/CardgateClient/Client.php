@@ -507,11 +507,10 @@ namespace Cardgate\Payment\Model\CardgateClient {
             $this->_sLastResult = curl_exec($rCh);
             if (false == $this->_sLastResult) {
                 $sError = curl_error($rCh);
-                curl_close($rCh);
+                unset($rCh);
                 throw new ClientException('Client.Request.Curl.Error', $sError);
-            } else {
-                curl_close($rCh);
             }
+            unset($rCh);
             if (null === ( $aResults = json_decode($this->_sLastResult, true) )) {
                 throw new ClientException(
                     'Client.Request.JSON.Invalid',
