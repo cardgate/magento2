@@ -8,6 +8,7 @@ namespace Cardgate\Payment\Controller\Payment;
 
 use Cardgate\Payment\Model\GatewayClient;
 use Cardgate\Payment\Model\Config\Master;
+use Cardgate\Payment\Model\Subscription\SubscriptionManager;
 use Cardgate\Payment\Exception\CallbackException;
 use Magento\Framework\App\ActionInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
@@ -50,6 +51,7 @@ class Callback implements ActionInterface
      */
     private $_cardgateConfig;
 
+    private $_subscriptionManager;
     /**
      *
      * @var \Magento\Framework\Encryption\Encryptor
@@ -81,6 +83,7 @@ class Callback implements ActionInterface
      * @param \Cardgate\Payment\Model\Config $config
      * @param \Magento\Framework\Encryption\Encryptor $encryptor
      * @param StockRegistryProviderInterface $stockRegistry
+     * @param SubscriptionManager $subscriptionManager
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -90,7 +93,8 @@ class Callback implements ActionInterface
         GatewayClient $client,
         \Cardgate\Payment\Model\Config $config,
         \Magento\Framework\Encryption\Encryptor $encryptor,
-        StockRegistryProviderInterface $stockRegistry
+        StockRegistryProviderInterface $stockRegistry,
+        SubscriptionManager $subscriptionManager
     ) {
         $this->resultFactory = $context->getResultFactory();
         $this->_request = $context->getRequest();
@@ -102,6 +106,7 @@ class Callback implements ActionInterface
         $this->_encryptor = $encryptor;
         $this->_objectManager = $context->getObjectManager();
         $this->_stockRegistry = $stockRegistry;
+        $this->_subscriptionManager = $subscriptionManager;
     }
 
     /**
@@ -133,7 +138,7 @@ class Callback implements ActionInterface
         $currency = empty($post['currency']) ? $get['currency'] : $post['currency'];
         $amount = (int)( empty($post['amount']) ? $get['amount'] : $post['amount'] );
         $pt = empty($post['pt']) ? $get['pt'] : $post['pt'];
-        $pmId = ( ! empty($pt) ? $pt : 'unknown' );
+        $pmId = ( ! empty($pt) ? trim($pt) : 'unknown' );
 
         $manualProcessing = !!$this->_cardgateConfig->getGlobal('manually_process_order');
         $updateCardgateData = false;
@@ -142,7 +147,7 @@ class Callback implements ActionInterface
             $sSiteKey = $this->_cardgateClient->getSiteKey();
 
             if (false == $this->_cardgateClient->transactions()->verifyCallback($aData, $sSiteKey)) {
-                throw new CallbackException('hash verification failure');
+                throw new CallbackException(new \Magento\Framework\Phrase( 'hash verification failure'));
             }
 
             $sHistoryComment = __("Update for transaction %1. Received status code %2.", $transactionId, $code);
@@ -158,7 +163,7 @@ class Callback implements ActionInterface
 
                 // If the gateway is using a different payment method than us, update the payment method of our order to
                 // match the one from the gateway.
-                if ($payment->getCardgatePaymentmethod() != $pmId) {
+                if (trim($payment->getCardgatePaymentmethod()) != $pmId) {
                     $payment->setCardgatePaymentmethod($pmId);
                     $sText = "Callback received for transaction %1 with payment method '%2' but
                     payment method should be '%3'. Processing anyway.";
@@ -202,7 +207,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Transaction already processed.'));
                         $updateCardgateData = false;
-                        throw new CallbackException('transaction already processed.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('transaction already processed.'));
                     }
 
                     // Test if payment has been processed already.
@@ -211,7 +216,7 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Payment already processed in another transaction.'));
                         $updateCardgateData = false;
-                        throw new CallbackException('payment already processed in another transaction.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('payment already processed in another transaction.'));
                     }
 
                     if ($order->isCurrencyDifferent()) {
@@ -230,6 +235,23 @@ class Callback implements ActionInterface
                     $payment->registerCaptureNotification($amount);
                     $payment->setMethod('cardgate_' . $pt);
 
+                    // If it is a mandate transaction, create the subscription(s). This has to
+                    // happen after the capture so the transaction id is known on the payment
+                    // and can be stored as the mandate of the subscription.
+                    $parentTransactionId = empty($post['parent_transaction_id'])
+                        ? ( empty($get['parent_transaction_id']) ? '' : $get['parent_transaction_id'] )
+                        : $post['parent_transaction_id'];
+                    if ($parentTransactionId == 'master') {
+                        $payment->setCardgateTransaction($transactionId);
+                        $created = $this->_subscriptionManager->createFromOrder($order);
+                        if (! empty($created)) {
+                            $order->addCommentToStatusHistory(__(
+                                '%1 subscription(s) created.',
+                                count($created)
+                            ));
+                        }
+                    }
+
                     if (! $order->getEmailSent()) {
                         $this->orderSender->send($order);
                     }
@@ -240,7 +262,7 @@ class Callback implements ActionInterface
                         $this->invoiceSender->send($invoice);
                     } else {
                         $order->addCommentToStatusHistory(__('Failed to create invoice.'));
-                        throw new CallbackException('failed to create invoice.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('failed to create invoice.'));
                     }
                 }
             } elseif ($code < 400) {
@@ -255,7 +277,7 @@ class Callback implements ActionInterface
                             "Failed to cancel order. Order state was : %1.",
                             $order->getState() . '/' . $order->getStatus()
                         ));
-                        throw new CallbackException('failed to cancel order.');
+                        throw new CallbackException(new \Magento\Framework\Phrase('failed to cancel order.'));
                     }
                 }
             } elseif ($code < 500) {

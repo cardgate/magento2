@@ -1,0 +1,31 @@
+####################################################################################################################
+# WARNING: Do not store sensitive information in this file, as its contents will be included in the Qodana report. #
+####################################################################################################################
+version: "1.0"
+profile:
+  name: qodana.recommended
+include:
+  - name: PhpDefineCanBeReplacedWithConstInspection
+  - name: PhpFullyQualifiedNameUsageInspection
+  - name: PhpPointlessBooleanExpressionInConditionInspection
+  - name: PhpRedundantClosingTagInspection
+  - name: PhpUnhandledExceptionInspection
+  - name: PhpUnnecessaryStopStatementInspection
+  - name: PhpDeprecationInspection
+  - name: PhpDisabledMethodInspection
+  - name: PhpIncludeInspection
+  - name: PhpReservedWordUsageInspection
+  - name: PhpUnusedAliasInspection
+  - name: PhpUnusedLocalVariableInspection
+  - name: PhpUnusedParameterInspection
+  - name: PhpUnusedPrivateFieldInspection
+  - name: PhpUnusedPrivateMethodInspection
+  - name: PhpVariableVariableInspection
+  - name: PhpAssignmentInConditionInspection
+  - name: PhpDivisionByZeroInspection
+  - name: PhpIllegalArrayKeyTypeInspection
+  - name: PhpMethodParametersCountMismatchInspection
+  - name: PhpNonStrictObjectEqualityInspection
+  - name: PhpStrictTypeDeclarationInspection
+  - name: PhpUsageOfSilenceOperatorInspection
+  - name: PhpWrongStringConcatenationInspection

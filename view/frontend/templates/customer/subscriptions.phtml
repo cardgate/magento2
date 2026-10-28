@@ -1,0 +1,103 @@
+<?php
+/**
+ * Copyright (c) 2024 CardGate B.V.
+ * All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @var \Cardgate\Payment\Block\Customer\Subscriptions $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$subscriptions = $block->getSubscriptions();
+$formKey = $block->getLayout()->createBlock(\Magento\Framework\View\Element\FormKey::class)->toHtml();
+?>
+<div class="block block-cardgate-subscriptions">
+    <div class="block-title">
+        <strong><?= $escaper->escapeHtml(__('My Subscriptions')) ?></strong>
+    </div>
+    <div class="block-content">
+        <?php if (!count($subscriptions)): ?>
+            <p class="empty"><?= $escaper->escapeHtml(__('You have no subscriptions yet.')) ?></p>
+        <?php else: ?>
+            <table class="data table table-cardgate-subscriptions">
+                <caption class="table-caption"><?= $escaper->escapeHtml(__('My Subscriptions')) ?></caption>
+                <thead>
+                    <tr>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Product')) ?></th>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Amount')) ?></th>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Interval')) ?></th>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Next Billing')) ?></th>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Status')) ?></th>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Actions')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($subscriptions as $subscription): ?>
+                    <?php $id = (int) $subscription->getId(); ?>
+                    <tr>
+                        <td data-th="<?= $escaper->escapeHtmlAttr(__('Product')) ?>">
+                            <?= $escaper->escapeHtml($subscription->getName()) ?>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtmlAttr(__('Amount')) ?>">
+                            <?= $escaper->escapeHtml(
+                                $block->formatAmount($subscription->getCycleAmount(), $subscription->getCurrency())
+                            ) ?>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtmlAttr(__('Interval')) ?>">
+                            <?= $escaper->escapeHtml(
+                                $subscription->getIntervalCount() . ' ' . $subscription->getIntervalUnit()
+                            ) ?>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtmlAttr(__('Next Billing')) ?>">
+                            <?= $escaper->escapeHtml($subscription->getNextRunAt()) ?>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtmlAttr(__('Status')) ?>">
+                            <?= $escaper->escapeHtml(__(ucfirst($subscription->getStatus()))) ?>
+                            <?php if ((int) $subscription->getSkipNext() === 1): ?>
+                                <small>(<?= $escaper->escapeHtml(__('next cycle skipped')) ?>)</small>
+                            <?php endif; ?>
+                        </td>
+                        <td data-th="<?= $escaper->escapeHtmlAttr(__('Actions')) ?>">
+                            <?php if (!$subscription->isCancelled()): ?>
+                                <?php if ($subscription->isActive()): ?>
+                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('pause', $id)) ?>" method="post">
+                                        <?= /* @noEscape */ $formKey ?>
+                                        <button type="submit" class="action"><?= $escaper->escapeHtml(__('Pause')) ?></button>
+                                    </form>
+                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('skip', $id)) ?>" method="post">
+                                        <?= /* @noEscape */ $formKey ?>
+                                        <button type="submit" class="action"><?= $escaper->escapeHtml(__('Skip next')) ?></button>
+                                    </form>
+                                <?php elseif ($subscription->isPaused()): ?>
+                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('resume', $id)) ?>" method="post">
+                                        <?= /* @noEscape */ $formKey ?>
+                                        <button type="submit" class="action"><?= $escaper->escapeHtml(__('Resume')) ?></button>
+                                    </form>
+                                <?php endif; ?>
+                                <form action="<?= $escaper->escapeUrl($block->getActionUrl('alter', $id)) ?>" method="post">
+                                    <?= /* @noEscape */ $formKey ?>
+                                    <input type="number" name="interval_count" min="1" value="<?= $escaper->escapeHtmlAttr($subscription->getIntervalCount()) ?>"/>
+                                    <select name="interval_unit">
+                                        <?php foreach ($block->getIntervalUnitOptions() as $option): ?>
+                                            <option value="<?= $escaper->escapeHtmlAttr($option['value']) ?>"
+                                                <?= $subscription->getIntervalUnit() === $option['value'] ? 'selected="selected"' : '' ?>>
+                                                <?= $escaper->escapeHtml($option['label']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="submit" class="action"><?= $escaper->escapeHtml(__('Update')) ?></button>
+                                </form>
+                                <form action="<?= $escaper->escapeUrl($block->getActionUrl('cancel', $id)) ?>" method="post">
+                                    <?= /* @noEscape */ $formKey ?>
+                                    <button type="submit" class="action"><?= $escaper->escapeHtml(__('Cancel')) ?></button>
+                                </form>
+                            <?php else: ?>
+                                <span><?= $escaper->escapeHtml(__('Cancelled')) ?></span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

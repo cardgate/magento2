@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+	Copyright (c) 2024 CardGate B.V.
+	All rights reserved.
+	See LICENSE for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="Magento_Sales::sales">
+					<resource id="Cardgate_Payment::subscriptions" title="CardGate Subscriptions" sortOrder="100" />
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>

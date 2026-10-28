@@ -97,6 +97,12 @@ namespace Cardgate\Payment\Model\CardgateClient {
         private $_oSubscriptions = null;
 
         /**
+         * The recurring resource.
+         * @var resources\Recurring
+         */
+        private $_oRecurring = null;
+
+        /**
          * The consumers resource.
          * @var resources\Consumers
          */
@@ -395,6 +401,18 @@ namespace Cardgate\Payment\Model\CardgateClient {
                 $this->_oSubscriptions = new resources\Subscriptions($this);
             }
             return $this->_oSubscriptions;
+        }
+
+        /**
+         * Accessor for the recurring resource.
+         * @return resources\Recurring
+         */
+        public function recurring()
+        {
+            if (null == $this->_oRecurring) {
+                $this->_oRecurring = new resources\Recurring($this);
+            }
+            return $this->_oRecurring;
         }
 
         /**

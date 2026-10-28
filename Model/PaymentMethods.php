@@ -112,7 +112,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
      * @return bool
      */
     public function checkPaymentCurrency($currency, $payment_method):bool
-    {
+    { // test 3
         $strictly_euro = in_array($payment_method, ['cardgateideal',
             'cardgateidealqr',
             'cardgatemistercash',
@@ -310,7 +310,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             if ($transaction->canRefund()) {
                 $transaction->refund((int)( $amount * 100 ));
             } else {
-                throw new RefundException('refund not allowed');
+                throw new RefundException(new \Magento\Framework\Phrase( 'refund not allowed'));
             }
         } catch (RefundException $e) {
             $order->addStatusHistoryComment(__('Error occurred while registering the refund (%1)', $e->getMessage()));

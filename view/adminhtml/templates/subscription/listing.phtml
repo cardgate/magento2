@@ -1,0 +1,109 @@
+<?php
+/**
+ * Copyright (c) 2024 CardGate B.V.
+ * All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @var \Cardgate\Payment\Block\Adminhtml\Subscription\Listing $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$collection = $block->getCollection();
+$statuses = $block->getStatusOptions();
+$page = $block->getCurrentPage();
+$lastPage = $block->getLastPage();
+?>
+<form method="get" action="<?= $escaper->escapeUrl($block->getUrl('*/*/index')) ?>" class="admin__data-grid-header">
+    <div class="admin__field" style="display:inline-block;margin-right:1rem;">
+        <label class="admin__field-label" for="cg-sub-q"><?= $escaper->escapeHtml(__('Search')) ?></label>
+        <input id="cg-sub-q" type="text" name="q" class="admin__control-text"
+               placeholder="<?= $escaper->escapeHtmlAttr(__('Order #, SKU, product, transaction')) ?>"
+               value="<?= $escaper->escapeHtmlAttr($block->getSearch()) ?>"/>
+    </div>
+    <div class="admin__field" style="display:inline-block;margin-right:1rem;">
+        <label class="admin__field-label" for="cg-sub-status"><?= $escaper->escapeHtml(__('Status')) ?></label>
+        <select id="cg-sub-status" name="status" class="admin__control-select">
+            <option value=""><?= $escaper->escapeHtml(__('All')) ?></option>
+            <?php foreach ($statuses as $code => $label): ?>
+                <option value="<?= $escaper->escapeHtmlAttr($code) ?>"<?= $block->getStatusFilter() === $code ? ' selected' : '' ?>>
+                    <?= $escaper->escapeHtml($label) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <button type="submit" class="action-secondary"><span><?= $escaper->escapeHtml(__('Filter')) ?></span></button>
+    <a href="<?= $escaper->escapeUrl($block->getUrl('*/*/index')) ?>" class="action-default" style="margin-left:.5rem;">
+        <?= $escaper->escapeHtml(__('Reset')) ?>
+    </a>
+</form>
+
+<p><?= $escaper->escapeHtml(__('%1 subscription(s) found', $collection->getSize())) ?></p>
+
+<div class="admin__data-grid-wrap">
+    <table class="data-grid">
+        <thead>
+        <tr>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('ID')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Order')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Customer ID')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Product')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Qty')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Amount / cycle')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Interval')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Status')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Cycles billed')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Next billing (UTC)')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Last error')) ?></th>
+            <th class="data-grid-th"><?= $escaper->escapeHtml(__('Action')) ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (!$collection->getSize()): ?>
+            <tr class="data-grid-tr-no-data">
+                <td colspan="12"><?= $escaper->escapeHtml(__('No subscriptions found.')) ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php foreach ($collection as $subscription): ?>
+            <?php $status = (string) $subscription->getStatus(); ?>
+            <tr class="data-row">
+                <td><?= (int) $subscription->getId() ?></td>
+                <td>
+                    <?php if ($orderUrl = $block->getOrderUrl($subscription)): ?>
+                        <a href="<?= $escaper->escapeUrl($orderUrl) ?>"><?= $escaper->escapeHtml($subscription->getIncrementId()) ?></a>
+                    <?php else: ?>
+                        <?= $escaper->escapeHtml($subscription->getIncrementId()) ?>
+                    <?php endif; ?>
+                </td>
+                <td><?= $escaper->escapeHtml($subscription->getCustomerId() ?: __('Guest')) ?></td>
+                <td><?= $escaper->escapeHtml($subscription->getName()) ?><br/><small><?= $escaper->escapeHtml($subscription->getSku()) ?></small></td>
+                <td><?= $escaper->escapeHtml((float) $subscription->getQty()) ?></td>
+                <td><?= $escaper->escapeHtml($block->formatCents($subscription->getCycleAmount(), $subscription->getCurrency())) ?></td>
+                <td><?= $escaper->escapeHtml(__('Every %1 %2', (int) $subscription->getIntervalCount(), $subscription->getIntervalUnit())) ?></td>
+                <td>
+                    <span class="grid-severity-<?= $status === 'active' ? 'notice' : ($status === 'paused' ? 'minor' : 'critical') ?>">
+                        <span><?= $escaper->escapeHtml($statuses[$status] ?? $status) ?></span>
+                    </span>
+                    <?php if ((int) $subscription->getSkipNext()): ?>
+                        <br/><small><?= $escaper->escapeHtml(__('Skips next cycle')) ?></small>
+                    <?php endif; ?>
+                </td>
+                <td><?= (int) $subscription->getCyclesBilled() ?></td>
+                <td><?= $escaper->escapeHtml($subscription->isCancelled() ? '-' : $subscription->getNextRunAt()) ?></td>
+                <td><?= $escaper->escapeHtml($subscription->getLastError()) ?></td>
+                <td><a href="<?= $escaper->escapeUrl($block->getEditUrl($subscription)) ?>"><?= $escaper->escapeHtml(__('Edit')) ?></a></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<?php if ($lastPage > 1): ?>
+    <div class="admin__data-grid-pager" style="margin-top:1rem;">
+        <?php if ($page > 1): ?>
+            <a class="action-previous" href="<?= $escaper->escapeUrl($block->getListUrl(['p' => $page - 1])) ?>">&laquo; <?= $escaper->escapeHtml(__('Previous')) ?></a>
+        <?php endif; ?>
+        <span style="margin:0 1rem;"><?= $escaper->escapeHtml(__('Page %1 of %2', $page, $lastPage)) ?></span>
+        <?php if ($page < $lastPage): ?>
+            <a class="action-next" href="<?= $escaper->escapeUrl($block->getListUrl(['p' => $page + 1])) ?>"><?= $escaper->escapeHtml(__('Next')) ?> &raquo;</a>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

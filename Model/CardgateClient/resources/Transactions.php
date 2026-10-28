@@ -168,7 +168,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
                         . $aData_['reference']
                         . $aData_['code']
                         . $sSiteKey_
-                    ) == $aData_['hash']
+                       ) == $aData_['hash']
                 )
                 || hash(
                     'md5',
