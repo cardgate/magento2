@@ -24,31 +24,43 @@ class Config implements ConfigInterface
     public const DEFAULT_PATH_PATTERN = 'payment/%s/%s';
 
     /**
+     * The scope config.
+     *
      * @var MutableScopeConfigInterface
      */
     private $scopeConfig;
 
     /**
+     * The config resource.
+     *
      * @var ConfigResource
      */
     private $_configResource;
 
     /**
+     * The master config.
+     *
      * @var Master
      */
     private $_masterConfig;
 
     /**
+     * The serializer.
+     *
      * @var SerializerInterface
      */
     public $_serializer;
 
     /**
+     * The path pattern.
+     *
      * @var string|null
      */
     private $pathPattern;
 
     /**
+     * The method code.
+     *
      * @var string
      */
     private $methodCode;
@@ -62,6 +74,8 @@ class Config implements ConfigInterface
     private static $activePMIDs = [];
 
     /**
+     * Constructor.
+     *
      * @param MutableScopeConfigInterface $scopeConfig
      * @param ConfigResource $configResource
      * @param Master $master
@@ -147,7 +161,7 @@ class Config implements ConfigInterface
     /**
      * Retrieve information from Cardgate Payment configuration
      *
-     * @param string $field
+     * @param string $method
      * @param int|null $storeId
      * @return mixed
      */

@@ -20,16 +20,22 @@ use Psr\Log\LoggerInterface;
 class SubscriptionOrderPlaceAfter implements ObserverInterface
 {
     /**
+     * The subscription manager.
+     *
      * @var SubscriptionManager
      */
     private $subscriptionManager;
 
     /**
+     * The logger.
+     *
      * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * Constructor.
+     *
      * @param SubscriptionManager $subscriptionManager
      * @param LoggerInterface $logger
      */
@@ -42,6 +48,8 @@ class SubscriptionOrderPlaceAfter implements ObserverInterface
     }
 
     /**
+     * Execute.
+     *
      * @param Observer $observer
      * @return void
      */

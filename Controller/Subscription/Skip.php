@@ -14,6 +14,8 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 class Skip extends AbstractSubscription implements HttpPostActionInterface
 {
     /**
+     * Execute.
+     *
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     public function execute()

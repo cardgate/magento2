@@ -20,61 +20,85 @@ use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 class Callback implements ActionInterface
 {
     /**
+     * The order sender.
+     *
      * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
      */
     protected $orderSender;
 
     /**
+     * The invoice sender.
+     *
      * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
      */
     protected $invoiceSender;
 
     /**
+     * The result factory.
+     *
      * @var \Magento\Framework\Controller\ResultFactory
      */
     protected $resultFactory;
 
     /**
+     * The request.
+     *
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_request;
 
     /**
+     * The cardgate client.
      *
      * @var GatewayClient
      */
     private $_cardgateClient;
 
     /**
+     * The cardgate config.
      *
      * @var Master
      */
     private $_cardgateConfig;
 
-    private $_subscriptionManager;
     /**
+     * The subscription manager.
+     *
+     * @var SubscriptionManager
+     */
+    private $_subscriptionManager;
+
+    /**
+     * The encryptor.
      *
      * @var \Magento\Framework\Encryption\Encryptor
      */
     private $_encryptor;
 
     /**
+     * The list interface.
+     *
      * @var \Magento\Framework\App\Cache\TypeListInterface
      */
     private $_listInterface;
 
     /**
+     * The object manager.
+     *
      * @var \Magento\Framework\ObjectManagerInterface
      */
     private $_objectManager;
 
     /**
+     * The stock registry.
      *
      * @var StockRegistryProviderInterface
      */
     private $_stockRegistry;
 
     /**
+     * Constructor.
+     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
@@ -147,7 +171,7 @@ class Callback implements ActionInterface
             $sSiteKey = $this->_cardgateClient->getSiteKey();
 
             if (false == $this->_cardgateClient->transactions()->verifyCallback($aData, $sSiteKey)) {
-                throw new CallbackException(new \Magento\Framework\Phrase( 'hash verification failure'));
+                throw new CallbackException(new \Magento\Framework\Phrase('hash verification failure'));
             }
 
             $sHistoryComment = __("Update for transaction %1. Received status code %2.", $transactionId, $code);
@@ -216,7 +240,9 @@ class Callback implements ActionInterface
                     ) {
                         $order->addCommentToStatusHistory(__('Payment already processed in another transaction.'));
                         $updateCardgateData = false;
-                        throw new CallbackException(new \Magento\Framework\Phrase('payment already processed in another transaction.'));
+                        throw new CallbackException(
+                            new \Magento\Framework\Phrase('payment already processed in another transaction.')
+                        );
                     }
 
                     if ($order->isCurrencyDifferent()) {

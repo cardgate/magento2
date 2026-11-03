@@ -22,30 +22,35 @@ use Magento\Framework\App\ObjectManager;
 class ConfigProvider implements Model\ConfigProviderInterface
 {
     /**
+     * The cache.
      *
      * @var \Magento\Framework\App\Cache\Type\Collection
      */
     private $cache;
 
     /**
+     * The config.
      *
      * @var Config
      */
     protected $config;
 
     /**
+     * The escaper.
      *
      * @var Escaper
      */
     protected $escaper;
 
     /**
+     * The master config.
      *
      * @var MasterConfig
      */
     private $masterConfig;
 
     /**
+     * Constructor.
      *
      * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
@@ -76,6 +81,7 @@ class ConfigProvider implements Model\ConfigProviderInterface
     public function getConfig()
     {
         /**
+         * The session.
          *
          * @var \Magento\Checkout\Model\Session $session
          */
@@ -91,6 +97,7 @@ class ConfigProvider implements Model\ConfigProviderInterface
         foreach ($this->masterConfig->getPaymentMethods() as $method) {
             $methodClass = $this->masterConfig->getPMClassByCode($method);
             /**
+             * The fee.
              *
              * @var \Cardgate\Payment\Model\Total\FeeData $fee
              */

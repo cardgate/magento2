@@ -19,26 +19,36 @@ use Magento\Framework\View\Element\Template\Context;
 class Subscriptions extends Template
 {
     /**
+     * The collection factory.
+     *
      * @var CollectionFactory
      */
     private $collectionFactory;
 
     /**
+     * The customer session.
+     *
      * @var CustomerSession
      */
     private $customerSession;
 
     /**
+     * The interval unit.
+     *
      * @var IntervalUnit
      */
     private $intervalUnit;
 
     /**
+     * The subscriptions.
+     *
      * @var Collection|null
      */
     private $subscriptions;
 
     /**
+     * Constructor.
+     *
      * @param Context $context
      * @param CollectionFactory $collectionFactory
      * @param CustomerSession $customerSession

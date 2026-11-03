@@ -18,12 +18,14 @@ class FetchPM extends \Magento\Config\Block\System\Config\Form\Field
 {
 
     /**
+     * The cardgate config.
      *
      * @var CardgateConfig
      */
     private $cardgateConfig;
 
     /**
+     * Constructor.
      *
      * @param Context $context
      * @param CardgateConfig $cardgateConfig

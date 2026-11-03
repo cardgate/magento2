@@ -35,48 +35,56 @@ class Subscription extends Transaction
 
     /**
      * The subscription id.
+     *
      * @var string
      */
     private $_sId;
 
     /**
      * The length of the subscription period.
+     *
      * @var int
      */
     private $_iPeriod;
 
     /**
      * The type of period (ie day, week, month, year)
+     *
      * @var string
      */
     private $_sPeriodType;
 
     /**
      * The price per period in cents
+     *
      * @var int
      */
     private $_iPeriodPrice;
 
     /**
      * The amount of the initial (first) payment, used only when the first payment is different from the monthly costs.
+     *
      * @var int
      */
     private $_iInitialPayment;
 
     /**
      * The length of the trial period.
+     *
      * @var int
      */
     private $_iTrialPeriod;
 
     /**
      * The type of trial period (ie day, week, month, year)
+     *
      * @var string
      */
     private $_sTrialPeriodType;
 
     /**
      * The price for the trial period in cents
+     *
      * @var int
      */
     private $_iTrialPeriodPrice;
@@ -84,6 +92,7 @@ class Subscription extends Transaction
     /**
      * The start date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
      * If none is given the current date will be used.
+     *
      * @var string
      */
     private $_sStartDate;
@@ -91,12 +100,14 @@ class Subscription extends Transaction
     /**
      * The end date (UTC) of the subscription in YYYY-MM-DD hh:mm:ss format.
      * If none is given the subscription will never end.
+     *
      * @var string
      */
     private $_sEndDate;
 
     /**
      * The status of the subscription.
+     *
      * @var string
      */
     private $_sStatus;
@@ -151,6 +162,7 @@ class Subscription extends Transaction
 
     /**
      * Get the subscription id associated with this subscription.
+     *
      * @return string The subscription id associated with this subscription.
      * @throws SubscriptionException
      */
@@ -183,6 +195,7 @@ class Subscription extends Transaction
 
     /**
      * Get the period of the subscription.
+     *
      * @return int The period of the subscription.
      */
     public function getPeriod()
@@ -215,6 +228,7 @@ class Subscription extends Transaction
 
     /**
      * Get the period type of the subscription.
+     *
      * @return string The period type of the subscription.
      */
     public function getPeriodType()
@@ -225,7 +239,7 @@ class Subscription extends Transaction
     /**
      * Configure the subscription object with a period price.
      *
-     * @param int $iPeriod_ Period price to set.
+     * @param int $iPeriodPrice_ Period price to set.
      *
      * @return $this
      * @throws SubscriptionException
@@ -245,6 +259,7 @@ class Subscription extends Transaction
 
     /**
      * Get the period price of the subscription.
+     *
      * @return int The period price of the subscription.
      */
     public function getPeriodPrice()
@@ -255,7 +270,7 @@ class Subscription extends Transaction
     /**
      * Configure the subscription initial payment amount.
      *
-     * @param int $iInitialPayment_ The initial payment amount to set.
+     * @param int $iAmount_ The initial payment amount to set.
      *
      * @return $this
      * @throws SubscriptionException
@@ -273,11 +288,10 @@ class Subscription extends Transaction
         return $this;
     }
 
-
     /**
      * Configure the subscription object with a trial period.
      *
-     * @param int $iPeriod_ Trial period length to set.
+     * @param int $iTrialPeriod_ Trial period length to set.
      *
      * @return $this
      * @throws SubscriptionException
@@ -294,6 +308,7 @@ class Subscription extends Transaction
 
     /**
      * Get the trial period of the subscription.
+     *
      * @return int The trial period of the subscription.
      */
     public function getTrialPeriod()
@@ -326,6 +341,7 @@ class Subscription extends Transaction
 
     /**
      * Get the trial period type of the subscription.
+     *
      * @return string The trial period type of the subscription.
      */
     public function getTrialPeriodType()
@@ -336,7 +352,7 @@ class Subscription extends Transaction
     /**
      * Configure the subscription object with a trial period price.
      *
-     * @param int $iPeriod_ Trial period price to set.
+     * @param int $iTrialPeriodPrice_ Trial period price to set.
      *
      * @return $this
      * @throws SubscriptionException
@@ -356,6 +372,7 @@ class Subscription extends Transaction
 
     /**
      * Get the period price of the subscription.
+     *
      * @return int The period price of the subscription.
      */
     public function getTrialPeriodPrice()
@@ -383,6 +400,7 @@ class Subscription extends Transaction
 
     /**
      * Get the start date of the subscription.
+     *
      * @return string The start date of the subscription.
      */
     public function getStartDate()
@@ -410,6 +428,7 @@ class Subscription extends Transaction
 
     /**
      * Get the end date of the subscription.
+     *
      * @return string The end date of the subscription.
      */
     public function getEndDate()
@@ -419,6 +438,7 @@ class Subscription extends Transaction
 
     /**
      * Get the status of the subscription.
+     *
      * @return string The end date of the subscription.
      */
     public function getStatus()
@@ -428,6 +448,7 @@ class Subscription extends Transaction
 
     /**
      * Registers the subscription with the CardGate payment gateway.
+     *
      * @return $this
      * @throws SubscriptionException
      */
@@ -497,6 +518,8 @@ class Subscription extends Transaction
 
     /**
      * Change the subscription status.
+     *
+     * @param string $sStatus_ The new status.
      * @return bool Whether the status change succeeded.
      * @throws SubscriptionException
      */

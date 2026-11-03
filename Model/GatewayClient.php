@@ -18,32 +18,43 @@ use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 /**
  * Cardgate client wrapper, proxies all calls to a fully configured CardGate client instance.
  * The CardGate client is installed as a dependency by Composer.
+ *
  * @see https://github.com/cardgate/cardgate-clientlib-php
  */
 class GatewayClient
 {
 
     /**
+     * The o client.
+     *
      * @var \Cardgate\Payment\Model\CardgateClient\Client
      */
     private $_oClient;
 
     /**
+     * The i site id.
+     *
      * @var int
      */
     private $_iSiteId;
 
     /**
+     * The s site key.
+     *
      * @var string
      */
     private $_sSiteKey;
 
     /**
+     * The remote address.
+     *
      * @var RemoteAddress
      */
     private $_remoteAddress;
 
     /**
+     * Constructor.
+     *
      * @param Config $oConfig_
      * @param EncryptorInterface $oEncryptor_
      * @param Resolver $oLocaleResolver_
@@ -92,8 +103,8 @@ class GatewayClient
                 \Cardgate\Payment\Model\CardgateClient\Client::CLIENT_VERSION
             );
         } catch (\Exception $e) {
-            /** @noinspection PhpEmptyCatchBlockInspection */
-            // ignore
+            // ignore, plugin version info is optional
+            unset($e);
         }
     }
 

@@ -44,6 +44,9 @@ namespace Cardgate\Payment\Model\CardgateClient {
     {
 
         /**
+         * Field name mapping.
+         *
+         * @var array
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
@@ -54,18 +57,21 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * The bill-to address.
+         *
          * @var Address
          */
         private $_oAddress = null;
 
         /**
          * The ship-to address.
+         *
          * @var Address
          */
         private $_oShippingAddress = null;
 
         /**
          * Accessor for the bill-to address.
+         *
          * @return Address
          */
         public function address()
@@ -78,6 +84,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Accessor for the ship-to address.
+         *
          * @return Address
          */
         public function shippingAddress()

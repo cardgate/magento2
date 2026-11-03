@@ -27,9 +27,6 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient;
 
-/**
- * Transaction exception.
- */
 class TransactionException extends Exception
 {
 }

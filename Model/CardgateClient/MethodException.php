@@ -27,9 +27,6 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient;
 
-/**
- * Method exception.
- */
 class MethodException extends Exception
 {
 }

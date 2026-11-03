@@ -35,6 +35,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to retrieve transaction details.
+         *
          * @param string $sTransactionId_ The transaction identifier.
          * @param array $aDetails_ array that gets filled with additional transaction details.
          * @return \Cardgate\Payment\Model\CardgateClient\Transaction
@@ -86,6 +87,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to retrieve a transaction status.
+         *
          * @param string $sTransactionId_ The transaction identifier.
          * @return string
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
@@ -117,6 +119,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to create a new transaction.
+         *
          * @param int $iSiteId_ Site id to create transaction for.
          * @param int $iAmount_ The amount of the transaction in cents.
          * @param string $sCurrency_ Currency (ISO 4217)
@@ -135,6 +138,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to verify a callback for a transaction.
+         *
          * @param array $aData_ The callback data (usually $_GET) to use for verification.
          * @param string $sSiteKey_ The site key used to verify hash. Leave empty to check hash with the
          * use of the merchant key only (otherwise both are checked).
@@ -168,7 +172,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
                         . $aData_['reference']
                         . $aData_['code']
                         . $sSiteKey_
-                       ) == $aData_['hash']
+                    ) == $aData_['hash']
                 )
                 || hash(
                     'md5',

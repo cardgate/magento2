@@ -26,6 +26,8 @@ class Version extends \Magento\Config\Block\System\Config\Form\Field
     private $cardgateConfig;
 
     /**
+     * Constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param CardgateConfig $cardgateConfig
      * @param array $data

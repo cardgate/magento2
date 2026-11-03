@@ -59,36 +59,49 @@ $formKey = $block->getLayout()->createBlock(\Magento\Framework\View\Element\Form
                         <td data-th="<?= $escaper->escapeHtmlAttr(__('Actions')) ?>">
                             <?php if (!$subscription->isCancelled()): ?>
                                 <?php if ($subscription->isActive()): ?>
-                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('pause', $id)) ?>" method="post">
+                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('pause', $id)) ?>"
+                                        method="post">
                                         <?= /* @noEscape */ $formKey ?>
-                                        <button type="submit" class="action"><?= $escaper->escapeHtml(__('Pause')) ?></button>
+                                        <button type="submit" class="action"><?=
+                                            $escaper->escapeHtml(__('Pause')) ?></button>
                                     </form>
-                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('skip', $id)) ?>" method="post">
+                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('skip', $id)) ?>"
+                                        method="post">
                                         <?= /* @noEscape */ $formKey ?>
-                                        <button type="submit" class="action"><?= $escaper->escapeHtml(__('Skip next')) ?></button>
+                                        <button type="submit" class="action"><?=
+                                            $escaper->escapeHtml(__('Skip next')) ?></button>
                                     </form>
                                 <?php elseif ($subscription->isPaused()): ?>
-                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('resume', $id)) ?>" method="post">
+                                    <form action="<?= $escaper->escapeUrl($block->getActionUrl('resume', $id)) ?>"
+                                        method="post">
                                         <?= /* @noEscape */ $formKey ?>
-                                        <button type="submit" class="action"><?= $escaper->escapeHtml(__('Resume')) ?></button>
+                                        <button type="submit" class="action"><?=
+                                            $escaper->escapeHtml(__('Resume')) ?></button>
                                     </form>
                                 <?php endif; ?>
-                                <form action="<?= $escaper->escapeUrl($block->getActionUrl('alter', $id)) ?>" method="post">
+                                <form action="<?= $escaper->escapeUrl($block->getActionUrl('alter', $id)) ?>"
+                                    method="post">
                                     <?= /* @noEscape */ $formKey ?>
-                                    <input type="number" name="interval_count" min="1" value="<?= $escaper->escapeHtmlAttr($subscription->getIntervalCount()) ?>"/>
+                                    <input type="number" name="interval_count" min="1" value="<?=
+                                        $escaper->escapeHtmlAttr($subscription->getIntervalCount()) ?>"/>
                                     <select name="interval_unit">
                                         <?php foreach ($block->getIntervalUnitOptions() as $option): ?>
                                             <option value="<?= $escaper->escapeHtmlAttr($option['value']) ?>"
-                                                <?= $subscription->getIntervalUnit() === $option['value'] ? 'selected="selected"' : '' ?>>
+                                                <?=
+                                                    $subscription->getIntervalUnit() === $option['value']
+                                                        ? 'selected="selected"' : '' ?>>
                                                 <?= $escaper->escapeHtml($option['label']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <button type="submit" class="action"><?= $escaper->escapeHtml(__('Update')) ?></button>
+                                    <button type="submit" class="action"><?=
+                                        $escaper->escapeHtml(__('Update')) ?></button>
                                 </form>
-                                <form action="<?= $escaper->escapeUrl($block->getActionUrl('cancel', $id)) ?>" method="post">
+                                <form action="<?= $escaper->escapeUrl($block->getActionUrl('cancel', $id)) ?>"
+                                    method="post">
                                     <?= /* @noEscape */ $formKey ?>
-                                    <button type="submit" class="action"><?= $escaper->escapeHtml(__('Cancel')) ?></button>
+                                    <button type="submit" class="action"><?=
+                                        $escaper->escapeHtml(__('Cancel')) ?></button>
                                 </form>
                             <?php else: ?>
                                 <span><?= $escaper->escapeHtml(__('Cancelled')) ?></span>

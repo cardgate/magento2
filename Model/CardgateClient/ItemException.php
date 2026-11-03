@@ -27,9 +27,6 @@
  */
 namespace Cardgate\Payment\Model\CardgateClient;
 
-/**
- * Item exception.
- */
 class ItemException extends Exception
 {
 }

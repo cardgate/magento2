@@ -31,6 +31,8 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
 {
 
     /**
+     * The object manager.
+     *
      * @var ObjectManagerInterface
      */
     private $objectManager = null;
@@ -50,26 +52,35 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     protected $code = 'cardgate_unknown';
 
     /**
+     * The can refund.
+     *
      * @var boolean
      */
     protected $_canRefund = true;
 
     /**
+     * The can refund invoice partial.
+     *
      * @var boolean
      */
     protected $_canRefundInvoicePartial = true;
 
     /**
+     * The tax calculation.
+     *
      * @var Calculation
      */
     protected $taxCalculation;
 
     /**
+     * The config.
+     *
      * @var \Cardgate\Payment\Model\Config
      */
     protected $config;
 
     /**
+     * Constructor.
      *
      * @param Calculation $taxCalculation
      * @param \Cardgate\Payment\Model\Config $config
@@ -106,13 +117,14 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     /**
      *  Check if the currency is allowed for this payment method.
      *
-     * @param $currency
-     * @param $payment_method
+     * @param string $currency
+     * @param string $payment_method
      *
      * @return bool
      */
     public function checkPaymentCurrency($currency, $payment_method):bool
-    { // test 3
+    {
+ // test 3
         $strictly_euro = in_array($payment_method, ['cardgateideal',
             'cardgateidealqr',
             'cardgatemistercash',
@@ -180,7 +192,10 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
     /**
      * Assign Data to Payment method
      *
-     * @inheritdoc
+     * Stores the additional payment data (e.g. the selected issuer) on the payment info instance.
+     *
+     * @param \Magento\Framework\DataObject $data
+     * @return $this
      *
      * @see \Magento\Payment\Model\Method\AbstractMethod::assignData()
      */
@@ -292,8 +307,9 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
 
     /**
      * Refund a transaction
+     *
      * @param InfoInterface $payment
-     * @param $amount
+     * @param float $amount
      *
      * @return $this|PaymentMethods|\Magento\Payment\Model\Method\Adapter
      */
@@ -310,7 +326,7 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             if ($transaction->canRefund()) {
                 $transaction->refund((int)( $amount * 100 ));
             } else {
-                throw new RefundException(new \Magento\Framework\Phrase( 'refund not allowed'));
+                throw new RefundException(new \Magento\Framework\Phrase('refund not allowed'));
             }
         } catch (RefundException $e) {
             $order->addStatusHistoryComment(__('Error occurred while registering the refund (%1)', $e->getMessage()));

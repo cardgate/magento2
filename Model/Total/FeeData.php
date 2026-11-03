@@ -15,30 +15,35 @@ class FeeData
 {
 
     /**
+     * The amount.
      *
      * @var float
      */
     protected $amount;
 
     /**
+     * The tax_amount.
      *
      * @var float
      */
     protected $tax_amount;
 
     /**
+     * The tax_class.
      *
      * @var int
      */
     protected $tax_class;
 
     /**
+     * The fee_includes_tax.
      *
      * @var boolean
      */
     protected $fee_includes_tax;
 
     /**
+     * The currency_converter.
      *
      * @var float
      */

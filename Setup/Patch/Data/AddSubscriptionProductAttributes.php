@@ -23,16 +23,22 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
 class AddSubscriptionProductAttributes implements DataPatchInterface
 {
     /**
+     * The module data setup.
+     *
      * @var ModuleDataSetupInterface
      */
     private $moduleDataSetup;
 
     /**
+     * The eav setup factory.
+     *
      * @var EavSetupFactory
      */
     private $eavSetupFactory;
 
     /**
+     * Constructor.
+     *
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param EavSetupFactory $eavSetupFactory
      */
@@ -45,6 +51,8 @@ class AddSubscriptionProductAttributes implements DataPatchInterface
     }
 
     /**
+     * Apply.
+     *
      * @return AddSubscriptionProductAttributes|void
      */
     public function apply()
@@ -121,6 +129,8 @@ class AddSubscriptionProductAttributes implements DataPatchInterface
     }
 
     /**
+     * Get dependencies.
+     *
      * @return array|string[]
      */
     public static function getDependencies()
@@ -129,6 +139,8 @@ class AddSubscriptionProductAttributes implements DataPatchInterface
     }
 
     /**
+     * Get aliases.
+     *
      * @return array|string[]
      */
     public function getAliases()

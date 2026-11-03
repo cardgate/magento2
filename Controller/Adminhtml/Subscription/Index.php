@@ -18,6 +18,8 @@ class Index extends Action implements HttpGetActionInterface
     public const ADMIN_RESOURCE = 'Cardgate_Payment::subscriptions';
 
     /**
+     * Execute.
+     *
      * @return \Magento\Backend\Model\View\Result\Page
      */
     public function execute()

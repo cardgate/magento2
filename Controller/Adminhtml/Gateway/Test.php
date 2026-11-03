@@ -15,6 +15,8 @@ class Test extends \Cardgate\Payment\Controller\Adminhtml\Gateway\FetchPM
 {
 
     /**
+     * Execute.
+     *
      * @return \Magento\Framework\Controller\Result\Raw\Interceptor
      */
     public function execute()

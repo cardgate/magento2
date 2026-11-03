@@ -35,114 +35,133 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * The client associated with this transaction.
+         *
          * @var Client
          */
         protected $_oClient;
 
         /**
          * The transaction id.
+         *
          * @var string
          */
         private $_sId;
 
         /**
          * The site id to use for payments.
+         *
          * @var int
          */
         protected $_iSiteId;
 
         /**
          * The site key to use for payments.
+         *
          * @var string
          */
         protected $_sSiteKey;
 
         /**
          * The transaction amount in cents.
+         *
          * @var int
          */
         protected $_iAmount;
 
         /**
          * The transaction currency (ISO 4217).
+         *
          * @var string
          */
         protected $_sCurrency;
 
         /**
          * The description for the transaction.
+         *
          * @var string
          */
         protected $_sDescription;
 
         /**
          * A reference for the transaction.
+         *
          * @var string
          */
         protected $_sReference;
 
         /**
          * The payment method for the transaction.
+         *
          * @var Method
          */
         protected $_oPaymentMethod = null;
 
         /**
          * The payment method issuer for the transaction.
+         *
          * @var string
          */
         protected $_sIssuer = null;
 
         /**
          * The recurring flag
+         *
          * @var bool
          */
         private $_bRecurring = false;
 
         /**
          * The consumer for the transaction.
+         *
          * @var Consumer
          */
         protected $_oConsumer = null;
 
         /**
          * The cart for the transaction.
+         *
          * @var Cart
          */
         protected $_oCart = null;
 
         /**
          * The URL to send payment callback updates to.
+         *
          * @var string
          */
         protected $_sCallbackUrl = null;
 
         /**
          * The URL to redirect to on success.
+         *
          * @var string
          */
         protected $_sSuccessUrl = null;
 
         /**
          * The URL to redirect to on failre.
+         *
          * @var string
          */
         protected $_sFailureUrl = null;
 
         /**
          * The URL to redirect to on pending.
+         *
          * @var string
          */
         protected $_sPendingUrl = null;
 
         /**
          * The URL to redirect to after initial transaction register.
+         *
          * @var string
          */
         protected $_sActionUrl = null;
 
         /**
          * The constructor.
+         *
          * @param Client $oClient_ The client associated with this transaction.
          * @param int $iSiteId_ Site id to create transaction for.
          * @param int $iAmount_ The amount of the transaction in cents.
@@ -157,6 +176,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the transaction id.
+         *
          * @param string $sId_ Transaction id to set.
          * @return $this
          * @throws TransactionException
@@ -174,6 +194,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the transaction id associated with this transaction.
+         *
          * @return string The transaction id associated with this transaction.
          * @throws TransactionException
          */
@@ -187,6 +208,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Configure the transaction object with a site id.
+         *
          * @param int $iSiteId_ Site id to set.
          * @return $this
          * @throws TransactionException
@@ -202,6 +224,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the site id associated with this transaction.
+         *
          * @return int The site id associated with this transaction.
          */
         public function getSiteId()
@@ -211,6 +234,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the site key used for hash verification.
+         *
          * @param string $sSiteKey_ The site key to set.
          * @return $this
          * @throws TransactionException
@@ -226,6 +250,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the Merchant API key to authenticate the transaction request with.
+         *
          * @return string The merchant API key.
          */
         public function getSiteKey()
@@ -235,6 +260,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Configure the transaction object with an amount.
+         *
          * @param int $iAmount_ Amount in cents to set.
          * @return $this
          * @throws TransactionException
@@ -250,6 +276,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the amount of the transaction.
+         *
          * @return int The amount of the transaction.
          */
         public function getAmount()
@@ -259,6 +286,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Configure the transaction currency.
+         *
          * @param string $sCurrency_ The currency to set.
          * @return $this
          * @throws TransactionException
@@ -274,6 +302,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the currency of the transaction.
+         *
          * @return string The currency of the transaction.
          */
         public function getCurrency()
@@ -283,6 +312,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Configure the description for the transaction.
+         *
          * @param string $sDescription_ The description to set.
          * @return $this
          * @throws TransactionException
@@ -290,7 +320,10 @@ namespace Cardgate\Payment\Model\CardgateClient {
         public function setDescription($sDescription_)
         {
             if (! is_string($sDescription_)) {
-                throw new TransactionException('Transaction.Description.Invalid', 'invalid description: ' . $sDescription_);
+                throw new TransactionException(
+                    'Transaction.Description.Invalid',
+                    'invalid description: ' . $sDescription_
+                );
             }
             $this->_sDescription = $sDescription_;
             return $this;
@@ -298,6 +331,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the description for the transaction.
+         *
          * @return string The description of the transaction.
          */
         public function getDescription()
@@ -307,6 +341,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Configure the reference for the transaction.
+         *
          * @param string $sReference_ The reference to set.
          * @return $this
          * @throws TransactionException
@@ -322,6 +357,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the reference for the transaction.
+         *
          * @return string The reference of the transaction.
          */
         public function getReference()
@@ -331,6 +367,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the payment method to use for the transaction.
+         *
          * @param Mixed $mPaymentMethod_ The payment method to use for the transaction. Can be one of the
          * consts defined in {@link Method} or a {@link Method} instance.
          * @return $this
@@ -353,6 +390,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the payment method that will be used for the transaction.
+         *
          * @return Method The payment method that will be used for the transaction.
          */
         public function getPaymentMethod()
@@ -362,6 +400,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the optional payment method issuer to use for the transaction.
+         *
          * @param string $sIssuer_ The payment method issuer to use for the transaction.
          * @return $this
          * @throws TransactionException
@@ -379,6 +418,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the optional payment method issuer that will be used for the transaction.
+         *
          * @return string The payment method issuer that will be used for the transaction.
          */
         public function getIssuer()
@@ -388,6 +428,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the recurring flag on the transaction.
+         *
          * @param bool $bRecurring_ Wether or not this transaction can be used for recurring.
          * @return $this
          */
@@ -399,6 +440,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the recurring flag of the transaction.
+         *
          * @return bool Returns wether or not this transaction can be used for recurring.
          */
         public function getRecurring()
@@ -408,6 +450,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the consumer for the transaction.
+         *
          * @param Consumer $oConsumer_ The consumer for the transaction.
          * @return $this
          */
@@ -419,6 +462,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the consumer for the transaction.
+         *
          * @return Consumer The consumer for the transaction.
          */
         public function getConsumer()
@@ -431,8 +475,10 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the consumer for the transaction.
+         *
          * @return Consumer The consumer for the transaction.
-         * @deprecated Will be removed in v2.0.0.
+         * @deprecated Will be removed in v2.0.0, the name "customer" was replaced by "consumer".
+         * @see getConsumer()
          */
         public function getCustomer()
         {
@@ -441,6 +487,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the cart for the transaction.
+         *
          * @param Cart $oCart_ The cart for the transaction.
          * @return $this
          */
@@ -452,6 +499,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the cart for the transaction.
+         *
          * @return Cart The cart for the transaction.
          */
         public function getCart()
@@ -464,6 +512,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the callback URL.
+         *
          * @param string $sUrl_ The URL to send callbacks to.
          * @return $this
          * @throws TransactionException
@@ -479,6 +528,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the callbacl URL.
+         *
          * @return string The URL callbacks are being sent to.
          */
         public function getCallbackUrl()
@@ -488,6 +538,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the success URL.
+         *
          * @param string $sUrl_ The URL to send successful transaction redirects.
          * @return $this
          * @throws TransactionException
@@ -503,6 +554,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the success URL.
+         *
          * @return string The URL successful transactions are being redirected to.
          */
         public function getSuccessUrl()
@@ -512,6 +564,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the failure URL.
+         *
          * @param string $sUrl_ The URL to send failed transaction redirects.
          * @return $this
          * @throws TransactionException
@@ -527,6 +580,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the failure URL.
+         *
          * @return string The URL failed transactions are being redirected to.
          */
         public function getFailureUrl()
@@ -536,6 +590,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the failure URL.
+         *
          * @param string $sUrl_ The URL to send failed transaction redirects.
          * @return $this
          * @throws TransactionException
@@ -551,6 +606,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Use this method to set the url for success, failure and pending all at once.
+         *
          * @param string $sUrl_ The URL to use for success, failure and pending.
          * @return $this
          * @throws TransactionException
@@ -563,6 +619,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the pending URL.
+         *
          * @return string The URL pending transactions are being redirected to.
          */
         public function getPendingUrl()
@@ -572,6 +629,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the redirect URL after transaction register.
+         *
          * @return string The URL to redirect to after register.
          */
         public function getActionUrl()
@@ -581,6 +639,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Registers the transaction with the cardgate payment gateway.
+         *
          * @return $this
          * @throws TransactionException
          */
@@ -641,6 +700,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * This method can be used to determine if this transaction can be refunded.
+         *
          * @param bool $iRemainder_ Will be set to the amount that can be refunded.
          * refunds are supported.
          * @return bool
@@ -667,7 +727,9 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * This method can be used to (partially) refund a transaction.
-         * @param int $iAmount_
+         *
+         * @param int|null $iAmount_ The amount to refund, null for a full refund.
+         * @param string|null $sDescription_ Optional refund description.
          * @return Transaction The new (refund) transaction.
          * @throws TransactionException
          */
@@ -706,6 +768,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * This method can be used to recur a transaction.
+         *
          * @param int $iAmount_
          * @param string $sReference_ Optional reference for the recurring transaction.
          * @param string $sDescription_ Optional description for the recurring transaction.
