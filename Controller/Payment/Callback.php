@@ -187,7 +187,8 @@ class Callback implements ActionInterface
 
                 // If the gateway is using a different payment method than us, update the payment method of our order to
                 // match the one from the gateway.
-                if (trim($payment->getCardgatePaymentmethod()) != $pmId) {
+
+                if ($payment->getCardgatePaymentmethod() != $pmId) {
                     $payment->setCardgatePaymentmethod($pmId);
                     $sText = "Callback received for transaction %1 with payment method '%2' but
                     payment method should be '%3'. Processing anyway.";
