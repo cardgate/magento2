@@ -24,7 +24,8 @@ $lastPage = $block->getLastPage();
         <select id="cg-sub-status" name="status" class="admin__control-select">
             <option value=""><?= $escaper->escapeHtml(__('All')) ?></option>
             <?php foreach ($statuses as $code => $label): ?>
-                <option value="<?= $escaper->escapeHtmlAttr($code) ?>"<?= $block->getStatusFilter() === $code ? ' selected' : '' ?>>
+                <option value="<?= $escaper->escapeHtmlAttr($code) ?>"<?=
+                    $block->getStatusFilter() === $code ? ' selected' : '' ?>>
                     <?= $escaper->escapeHtml($label) ?>
                 </option>
             <?php endforeach; ?>
@@ -68,18 +69,29 @@ $lastPage = $block->getLastPage();
                 <td><?= (int) $subscription->getId() ?></td>
                 <td>
                     <?php if ($orderUrl = $block->getOrderUrl($subscription)): ?>
-                        <a href="<?= $escaper->escapeUrl($orderUrl) ?>"><?= $escaper->escapeHtml($subscription->getIncrementId()) ?></a>
+                        <a href="<?= $escaper->escapeUrl($orderUrl) ?>"><?=
+                            $escaper->escapeHtml($subscription->getIncrementId()) ?></a>
                     <?php else: ?>
                         <?= $escaper->escapeHtml($subscription->getIncrementId()) ?>
                     <?php endif; ?>
                 </td>
                 <td><?= $escaper->escapeHtml($subscription->getCustomerId() ?: __('Guest')) ?></td>
-                <td><?= $escaper->escapeHtml($subscription->getName()) ?><br/><small><?= $escaper->escapeHtml($subscription->getSku()) ?></small></td>
+                <td><?= $escaper->escapeHtml($subscription->getName()) ?><br/><small><?=
+                    $escaper->escapeHtml($subscription->getSku()) ?></small></td>
                 <td><?= $escaper->escapeHtml((float) $subscription->getQty()) ?></td>
-                <td><?= $escaper->escapeHtml($block->formatCents($subscription->getCycleAmount(), $subscription->getCurrency())) ?></td>
-                <td><?= $escaper->escapeHtml(__('Every %1 %2', (int) $subscription->getIntervalCount(), $subscription->getIntervalUnit())) ?></td>
+                <td><?=
+                    $escaper->escapeHtml(
+                        $block->formatCents($subscription->getCycleAmount(), $subscription->getCurrency())
+                    ) ?></td>
+                <td><?=
+                    $escaper->escapeHtml(__(
+                        'Every %1 %2',
+                        (int) $subscription->getIntervalCount(),
+                        $subscription->getIntervalUnit()
+                    )) ?></td>
                 <td>
-                    <span class="grid-severity-<?= $status === 'active' ? 'notice' : ($status === 'paused' ? 'minor' : 'critical') ?>">
+                    <span class="grid-severity-<?=
+                        $status === 'active' ? 'notice' : ($status === 'paused' ? 'minor' : 'critical') ?>">
                         <span><?= $escaper->escapeHtml($statuses[$status] ?? $status) ?></span>
                     </span>
                     <?php if ((int) $subscription->getSkipNext()): ?>
@@ -89,7 +101,8 @@ $lastPage = $block->getLastPage();
                 <td><?= (int) $subscription->getCyclesBilled() ?></td>
                 <td><?= $escaper->escapeHtml($subscription->isCancelled() ? '-' : $subscription->getNextRunAt()) ?></td>
                 <td><?= $escaper->escapeHtml($subscription->getLastError()) ?></td>
-                <td><a href="<?= $escaper->escapeUrl($block->getEditUrl($subscription)) ?>"><?= $escaper->escapeHtml(__('Edit')) ?></a></td>
+                <td><a href="<?= $escaper->escapeUrl($block->getEditUrl($subscription)) ?>"><?=
+                    $escaper->escapeHtml(__('Edit')) ?></a></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -99,11 +112,14 @@ $lastPage = $block->getLastPage();
 <?php if ($lastPage > 1): ?>
     <div class="admin__data-grid-pager" style="margin-top:1rem;">
         <?php if ($page > 1): ?>
-            <a class="action-previous" href="<?= $escaper->escapeUrl($block->getListUrl(['p' => $page - 1])) ?>">&laquo; <?= $escaper->escapeHtml(__('Previous')) ?></a>
+            <a class="action-previous" href="<?=
+                $escaper->escapeUrl($block->getListUrl(['p' => $page - 1])) ?>">&laquo; <?=
+                $escaper->escapeHtml(__('Previous')) ?></a>
         <?php endif; ?>
         <span style="margin:0 1rem;"><?= $escaper->escapeHtml(__('Page %1 of %2', $page, $lastPage)) ?></span>
         <?php if ($page < $lastPage): ?>
-            <a class="action-next" href="<?= $escaper->escapeUrl($block->getListUrl(['p' => $page + 1])) ?>"><?= $escaper->escapeHtml(__('Next')) ?> &raquo;</a>
+            <a class="action-next" href="<?= $escaper->escapeUrl($block->getListUrl(['p' => $page + 1])) ?>"><?=
+                $escaper->escapeHtml(__('Next')) ?> &raquo;</a>
         <?php endif; ?>
     </div>
 <?php endif; ?>

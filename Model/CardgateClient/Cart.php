@@ -35,16 +35,19 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * The items in this cart.
+         *
          * @var Client
          */
         private $_aItems = [];
 
         /**
          * Add a cart item to the cart.
+         *
          * @param int $iType_ The cart item type.
          * @param string $sSKU_ The SKU of the cart item.
          * @param string $sName_ The name of the cart item (productname).
-         * @param string $iPrice_ The price of the cart item.
+         * @param int $iQuantity_ The quantity of the cart item.
+         * @param int $iPrice_ The price of the cart item.
          * @param string $sLink_ An optional link to the product.
          * @return Item Returns the item that was added.
          * @throws Exception|\ReflectionException
@@ -56,10 +59,21 @@ namespace Cardgate\Payment\Model\CardgateClient {
             return $oItem;
         }
 
+        /**
+         * Get all cart items.
+         *
+         * @return Item[]
+         */
         public function getAll()
         {
+            return $this->_aItems;
         }
 
+        /**
+         * Get the cart data.
+         *
+         * @return array
+         */
         public function getData()
         {
             $aData = [];

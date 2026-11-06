@@ -17,12 +17,14 @@ class GroupGlobal extends \Magento\Config\Block\System\Config\Form\Fieldset
 {
 
     /**
+     * The cardgate config.
      *
      * @var CardgateConfig
      */
     private $cardgateConfig;
 
     /**
+     * Constructor.
      *
      * @param \Magento\Backend\Block\Context $context
      * @param \Magento\Backend\Model\Auth\Session $authSession

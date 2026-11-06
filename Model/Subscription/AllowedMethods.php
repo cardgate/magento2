@@ -10,7 +10,7 @@ namespace Cardgate\Payment\Model\Subscription;
  * Defines which CardGate payment methods are allowed to be used for subscriptions.
  *
  * Per requirements only the following methods may carry a subscription:
- * Bancontact, Creditcard, Direct Debit, iDEAL, Przelewy24 and onlineueberweisen.
+ * Bancontact, Creditcard, Direct Debit, iDEAL or Przelewy24.
  */
 class AllowedMethods
 {
@@ -26,7 +26,6 @@ class AllowedMethods
         'cardgate_directdebit',
         'cardgate_ideal',
         'cardgate_przelewy24',
-        'cardgate_onlineueberweisen',
     ];
 
     /**

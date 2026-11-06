@@ -34,12 +34,18 @@ namespace Cardgate\Payment\Model\CardgateClient {
     {
 
         /**
+         * Entity data.
+         *
+         * @var array
          * @ignore
          * @internal The _aData property holds the data of the entity.
          */
         protected $_aData = [];
 
         /**
+         * Field name mapping.
+         *
+         * @var array
          * @ignore
          * @internal To make the data in an Entity available through magic functions (setName, getAmount, unsetName,
          * hasCart) populate the _aFields property below. To make autocompletion work in Zend, use the @method phpdoc
@@ -50,6 +56,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * This method can be used to retrieve all the data of the instance.
+         *
          * @param string $sPrefix_ Optionally prefix all the data entries.
          * @return array Returns an array with the data in the entity.
          */
@@ -67,10 +74,14 @@ namespace Cardgate\Payment\Model\CardgateClient {
         }
 
         /**
+         * Call.
+         *
+         * @param string $sMethod_ The called method name.
+         * @param array $aArgs_ The call arguments.
          * @ignore
          * @internal The __call method translates get-, set-, unset- and has-methods to their configured fields.
          * @return $this|mixed|bool Return $this on set and unset, mixed on get and bool on has
-         * @throws Exception|\ReflectionException
+         * @throws EntityException|\ReflectionException
          */
         public function __call($sMethod_, $aArgs_)
         {
@@ -96,10 +107,16 @@ namespace Cardgate\Payment\Model\CardgateClient {
                                 $this->_aData[static::$_aFields[$sKey]] = $aArgs_[0];
                                 return $this; // makes the call chainable
                             } else {
-                                throw new Exception("{$sClassName}.Invalid.Method", "invalid value for {$sMethod_}");
+                                throw new EntityException(
+                                    "{$sClassName}.Invalid.Method",
+                                    "invalid value for {$sMethod_}"
+                                );
                             }
                         } else {
-                            throw new Exception("{$sClassName}.Invalid.Method", "missing parameter 1 for {$sMethod_}");
+                            throw new EntityException(
+                                "{$sClassName}.Invalid.Method",
+                                "missing parameter 1 for {$sMethod_}"
+                            );
                         }
                     }
                     break;
@@ -117,7 +134,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
                     }
                     break;
             }
-            throw new Exception("{$sClassName}.Invalid.Method", "call to undefined method {$sMethod_}");
+            throw new EntityException("{$sClassName}.Invalid.Method", "call to undefined method {$sMethod_}");
         }
     }
 

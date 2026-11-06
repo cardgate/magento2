@@ -25,6 +25,8 @@ class Subscription extends AbstractModel
     public const UNIT_YEAR  = 'year';
 
     /**
+     * The event prefix.
+     *
      * @var string
      */
     protected $_eventPrefix = 'cardgate_subscription';

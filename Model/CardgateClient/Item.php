@@ -114,6 +114,9 @@ namespace Cardgate\Payment\Model\CardgateClient {
         public const TYPE_VAT_CORRECTION = 7;
 
         /**
+         * Field name mapping.
+         *
+         * @var array
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */
@@ -132,10 +135,11 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * The constructor.
+         *
          * @param int $iType_ The cart item type.
          * @param string $sSKU_ The SKU of the cart item.
          * @param string $sName_ The name of the cart item (productname).
-         * @param $iQuantity_
+         * @param int $iQuantity_ The quantity of the cart item.
          * @param int $iPrice_ The price of the cart item.
          * @param string $sLink_ An optional link to the product.
          * @throws ItemException|\ReflectionException
@@ -150,6 +154,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Sets the type (must be one of the {@link \Cardgate\Payment\Model\CardgateClient\Item::TYPE_*}} constants.
+         *
          * @param int $iType_ The cart item type to set.
          * @return Item Returns this, makes the call chainable.
          * @throws ItemException|\ReflectionException
@@ -159,7 +164,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
             if (! is_integer($iType_)
                 || ! in_array(
                     $iType_,
-                    ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Item') )->getConstants()
+                    ( new \ReflectionClass(Item::class) )->getConstants()
                 )
             ) {
                 throw new ItemException('Item.Type.Invalid', 'invalid cart item type: ' . $iType_);
@@ -169,6 +174,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Sets the vat.
+         *
          * @param float $fVat_ The vat to set.
          * @return Item Returns this, makes the call chainable.
          * @throws ItemException
@@ -183,6 +189,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Sets the vat included flag.
+         *
          * @param bool $bVatIncluded_ The vat included flag to set.
          * @return Item Returns this, makes the call chainable.
          */
@@ -193,6 +200,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Sets the vat amount.
+         *
          * @param float $fVatAmount_ The vat amount to set.
          * @return Item Returns this, makes the call chainable.
          * @throws ItemException
@@ -207,6 +215,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Sets the stock.
+         *
          * @param float $fStock_ The stock to set.
          * @return Item Returns this, makes the call chainable.
          * @throws ItemException

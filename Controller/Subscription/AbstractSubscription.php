@@ -24,26 +24,36 @@ use Magento\Framework\Controller\ResultFactory;
 abstract class AbstractSubscription extends Action
 {
     /**
+     * The customer session.
+     *
      * @var CustomerSession
      */
     protected $customerSession;
 
     /**
+     * The subscription factory.
+     *
      * @var SubscriptionFactory
      */
     protected $subscriptionFactory;
 
     /**
+     * The subscription resource.
+     *
      * @var SubscriptionResource
      */
     protected $subscriptionResource;
 
     /**
+     * The subscription manager.
+     *
      * @var SubscriptionManager
      */
     protected $subscriptionManager;
 
     /**
+     * Constructor.
+     *
      * @param Context $context
      * @param CustomerSession $customerSession
      * @param SubscriptionFactory $subscriptionFactory

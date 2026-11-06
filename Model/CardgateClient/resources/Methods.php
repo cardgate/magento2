@@ -35,6 +35,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to receive a {@link \Cardgate\Payment\Model\CardgateClient\Method} instance.
+         *
          * @param string $sId_ Method id to receive method instance for.
          * @return \Cardgate\Payment\Model\CardgateClient\Method
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
@@ -46,6 +47,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to retrieve a list of all available payment methods for a site.
+         *
          * @param int $iSiteId_ The site to retrieve payment methods for.
          * @return array
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception|\ReflectionException
@@ -71,7 +73,9 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
                 );
             }
 
-            $aValidMethods  = ( new \ReflectionClass('\Cardgate\Payment\Model\CardgateClient\Method') )->getConstants();
+            $aValidMethods  = ( new \ReflectionClass(
+                \Cardgate\Payment\Model\CardgateClient\Method::class
+            ) )->getConstants();
             $aMethods = [];
             foreach ($aResult['options'] as $aOption) {
 

@@ -33,46 +33,64 @@ class OrderCreator
     public const RENEWAL_FLAG = 'cardgate_subscription_id';
 
     /**
+     * The order repository.
+     *
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
 
     /**
+     * The product repository.
+     *
      * @var ProductRepositoryInterface
      */
     private $productRepository;
 
     /**
+     * The customer repository.
+     *
      * @var CustomerRepositoryInterface
      */
     private $customerRepository;
 
     /**
+     * The quote factory.
+     *
      * @var QuoteFactory
      */
     private $quoteFactory;
 
     /**
+     * The quote repository.
+     *
      * @var CartRepositoryInterface
      */
     private $quoteRepository;
 
     /**
+     * The quote management.
+     *
      * @var QuoteManagement
      */
     private $quoteManagement;
 
     /**
+     * The store manager.
+     *
      * @var StoreManagerInterface
      */
     private $storeManager;
 
     /**
+     * The logger.
+     *
      * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * Constructor.
+     *
      * @param OrderRepositoryInterface $orderRepository
      * @param ProductRepositoryInterface $productRepository
      * @param CustomerRepositoryInterface $customerRepository

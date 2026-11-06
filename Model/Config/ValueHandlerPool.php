@@ -16,12 +16,14 @@ class ValueHandlerPool implements ValueHandlerPoolInterface
 {
 
     /**
+     * The handler.
      *
      * @var ValueHandlerInterface
      */
     private $handler;
 
     /**
+     * Constructor.
      *
      * @param ValueHandlerInterface $handler
      */

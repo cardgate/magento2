@@ -54,6 +54,9 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
     {
 
         /**
+         * Field name mapping.
+         *
+         * @var array
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
          */

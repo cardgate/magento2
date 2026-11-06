@@ -17,6 +17,7 @@ class Fee extends \Magento\Sales\Model\Order\Creditmemo\Total\AbstractTotal
 {
 
     /**
+     * The order.
      *
      * @var \Magento\Sales\Model\Order
      */

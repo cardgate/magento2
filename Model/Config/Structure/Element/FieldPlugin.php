@@ -15,12 +15,14 @@ class FieldPlugin
 {
 
     /**
+     * The request.
      *
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_request;
 
     /**
+     * Constructor.
      *
      * @param \Magento\Framework\App\RequestInterface $request
      */

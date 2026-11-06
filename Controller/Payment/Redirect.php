@@ -23,36 +23,42 @@ class Redirect implements ActionInterface
 {
 
     /**
+     * The cardgate config.
      *
      * @var \Cardgate\Payment\Model\Config
      */
     private $_cardgateConfig;
 
     /**
+     * The checkout session.
      *
      * @var Session
      */
     protected $_checkoutSession;
 
     /**
+     * The result redirect.
      *
      * @var ResultRedirect
      */
     protected $resultRedirect;
 
     /**
+     * The request.
      *
      * @var Request
      */
     protected $request;
 
     /**
+     * The message manager.
      *
      * @var Manager
      */
     protected $messageManager;
 
     /**
+     * Constructor.
      *
      * @param ResultRedirect $resultRedirect
      * @param Request $request
@@ -92,7 +98,7 @@ class Redirect implements ActionInterface
                 || empty($code)
                 || empty($transactionId)
             ) {
-                throw new RedirectException(new \Magento\Framework\Phrase( __('Wrong parameters supplied.')));
+                throw new RedirectException(new \Magento\Framework\Phrase(__('Wrong parameters supplied.')));
             }
 
             // If the callback hasn't been received (yet) the most recent status is fetched from the gateway instead
@@ -114,10 +120,10 @@ class Redirect implements ActionInterface
                     $this->_checkoutSession->restoreQuote();
                     $this->resultRedirect->setPath('checkout');
                 } else {
-                    throw new RedirectException(new \Magento\Framework\Phrase( __('Transaction canceled.')));
+                    throw new RedirectException(new \Magento\Framework\Phrase(__('Transaction canceled.')));
                 }
             } else {
-                throw new RedirectException( new \Magento\Framework\Phrase( __('Payment not completed.')));
+                throw new RedirectException(new \Magento\Framework\Phrase(__('Payment not completed.')));
             }
         } catch (RedirectException $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));

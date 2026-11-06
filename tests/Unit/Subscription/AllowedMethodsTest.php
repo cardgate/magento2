@@ -38,7 +38,6 @@ class AllowedMethodsTest extends TestCase
         $this->assertContains('cardgate_bancontact', $aAllowed);
         $this->assertContains('cardgate_directdebit', $aAllowed);
         $this->assertContains('cardgate_przelewy24', $aAllowed);
-        $this->assertContains('cardgate_onlineueberweisen', $aAllowed);
     }
 
     #[DataProvider('allowedMethodProvider')]
@@ -56,7 +55,6 @@ class AllowedMethodsTest extends TestCase
             ['cardgate_directdebit'],
             ['cardgate_ideal'],
             ['cardgate_przelewy24'],
-            ['cardgate_onlineueberweisen'],
         ];
     }
 

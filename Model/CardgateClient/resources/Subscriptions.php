@@ -35,7 +35,8 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to retrieve subscription details.
-         * @param $sSubscriptionId_ The subscription identifier.
+         *
+         * @param string $sSubscriptionId_ The subscription identifier.
          * @param array $aDetails_ Array that gets filled with additional subscription details.
          * @return \Cardgate\Payment\Model\CardgateClient\Subscription
          * @throws \Cardgate\Payment\Model\CardgateClient\Exception
@@ -102,6 +103,7 @@ namespace Cardgate\Payment\Model\CardgateClient\resources {
 
         /**
          * This method can be used to create a new subscription.
+         *
          * @param int $iSiteId_ Site id to create the subscription for.
          * @param int $iPeriod_ The period length of the subscription.
          * @param string $sPeriodType_ The period type of the subscription (e.g. day, week, month, year).

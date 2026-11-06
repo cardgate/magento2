@@ -86,6 +86,8 @@ namespace Cardgate\Payment\Model\CardgateClient {
     {
 
         /**
+         * The a fields.
+         *
          * @var array
          * @ignore
          * @internal The methods these fields expose are configured in the class phpdoc.
@@ -106,48 +108,51 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Sets the gender.
+         *
          * @param string $sGender_ The gender to set.
          * @return Address Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws AddressException
          */
         public function setGender($sGender_)
         {
             if (! is_string($sGender_)
                 || strlen($sGender_) != 1
             ) {
-                throw new Exception('Address.Gender.Invalid', 'invalid gender: ' . $sGender_);
+                throw new AddressException('Address.Gender.Invalid', 'invalid gender: ' . $sGender_);
             }
             return parent::setGender($sGender_);
         }
 
         /**
          * Sets the day of birth.
+         *
          * @param string $sDayOfBirth_ The day of birth to set.
          * @return Address Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws AddressException
          */
         public function setDayOfBirth($sDayOfBirth_)
         {
             if (! is_string($sDayOfBirth_)
                 || false == ( $iDayOfBirthUnix = strtotime($sDayOfBirth_) )
             ) {
-                throw new Exception('Address.DayOfBirth.Invalid', 'invalid day of birth: ' . $sDayOfBirth_);
+                throw new AddressException('Address.DayOfBirth.Invalid', 'invalid day of birth: ' . $sDayOfBirth_);
             }
             return parent::setDayOfBirth(date('%m/%d/%Y', $iDayOfBirthUnix));
         }
 
         /**
          * Sets the country.
+         *
          * @param string $sCountry_ The country to set (ISO 3166-1 alpha-2).
          * @return Address Returns this, makes the call chainable.
-         * @throws Exception
+         * @throws AddressException
          */
         public function setCountry($sCountry_)
         {
             if (! is_string($sCountry_)
                 || strlen($sCountry_) != 2
             ) {
-                throw new Exception('Address.Country.Invalid', 'invalid country: ' . $sCountry_);
+                throw new AddressException('Address.Country.Invalid', 'invalid country: ' . $sCountry_);
             }
             return parent::setCountry($sCountry_);
         }

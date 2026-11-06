@@ -9,26 +9,36 @@ use Magento\Framework\App\ObjectManager;
 class Group implements \Magento\Framework\Option\ArrayInterface
 {
     /**
+     * The options.
+     *
      * @var array
      */
     protected $_options;
 
     /**
+     * The group management.
+     *
      * @var GroupManagementInterface
      */
     protected $_groupManagement;
 
     /**
+     * The converter.
+     *
      * @var \Magento\Framework\Convert\DataObject
      */
     protected $_converter;
 
     /**
+     * The group source logged in only.
+     *
      * @var GroupSourceLoggedInOnlyInterface
      */
     private $groupSourceLoggedInOnly;
 
     /**
+     * Constructor.
+     *
      * @param GroupManagementInterface $groupManagement
      * @param \Magento\Framework\Convert\DataObject $converter
      * @param GroupSourceLoggedInOnlyInterface $groupSourceForLoggedInCustomers

@@ -18,12 +18,15 @@ class LayoutProcessorPlugin
 {
 
     /**
+     * The master config.
      *
      * @var Master $_masterConfig
      */
     private $_masterConfig = null;
 
     /**
+     * Constructor.
+     *
      * @param Master $masterConfig
      */
     public function __construct(Master $masterConfig)

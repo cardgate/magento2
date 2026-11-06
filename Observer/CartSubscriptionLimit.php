@@ -19,16 +19,22 @@ use Magento\Quote\Model\Quote\Item;
 class CartSubscriptionLimit implements ObserverInterface
 {
     /**
+     * The product repository.
+     *
      * @var ProductRepositoryInterface
      */
     private $productRepository;
 
     /**
+     * The subscription flags.
+     *
      * @var array
      */
     private $subscriptionFlags = [];
 
     /**
+     * Constructor.
+     *
      * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(ProductRepositoryInterface $productRepository)
@@ -37,6 +43,8 @@ class CartSubscriptionLimit implements ObserverInterface
     }
 
     /**
+     * Execute.
+     *
      * @param Observer $observer
      * @return void
      * @throws LocalizedException
