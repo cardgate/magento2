@@ -23,20 +23,34 @@ class Edit extends Action implements HttpGetActionInterface
     public const REGISTRY_KEY = 'cardgate_current_subscription';
 
     /**
+     * The subscription factory.
+     *
      * @var SubscriptionFactory
      */
     private $subscriptionFactory;
 
     /**
+     * The subscription resource.
+     *
      * @var SubscriptionResource
      */
     private $subscriptionResource;
 
     /**
+     * The registry.
+     *
      * @var Registry
      */
     private $registry;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param SubscriptionFactory $subscriptionFactory
+     * @param SubscriptionResource $subscriptionResource
+     * @param Registry $registry
+     */
     public function __construct(
         Context $context,
         SubscriptionFactory $subscriptionFactory,
@@ -50,6 +64,8 @@ class Edit extends Action implements HttpGetActionInterface
     }
 
     /**
+     * Execute.
+     *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()

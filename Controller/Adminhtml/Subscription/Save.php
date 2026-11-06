@@ -22,20 +22,34 @@ class Save extends Action implements HttpPostActionInterface
     public const ADMIN_RESOURCE = 'Cardgate_Payment::subscriptions';
 
     /**
+     * The subscription factory.
+     *
      * @var SubscriptionFactory
      */
     private $subscriptionFactory;
 
     /**
+     * The subscription resource.
+     *
      * @var SubscriptionResource
      */
     private $subscriptionResource;
 
     /**
+     * The subscription manager.
+     *
      * @var SubscriptionManager
      */
     private $subscriptionManager;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param SubscriptionFactory $subscriptionFactory
+     * @param SubscriptionResource $subscriptionResource
+     * @param SubscriptionManager $subscriptionManager
+     */
     public function __construct(
         Context $context,
         SubscriptionFactory $subscriptionFactory,
@@ -49,6 +63,8 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Execute.
+     *
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     public function execute()

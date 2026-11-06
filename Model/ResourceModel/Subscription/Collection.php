@@ -14,6 +14,8 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 class Collection extends AbstractCollection
 {
     /**
+     * The id field name.
+     *
      * @var string
      */
     protected $_idFieldName = 'entity_id';

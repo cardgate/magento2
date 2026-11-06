@@ -18,10 +18,19 @@ use Magento\Framework\Registry;
 class Edit extends Template
 {
     /**
+     * The registry.
+     *
      * @var Registry
      */
     private $registry;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param Registry $registry
+     * @param array $data
+     */
     public function __construct(Context $context, Registry $registry, array $data = [])
     {
         parent::__construct($context, $data);
@@ -29,6 +38,8 @@ class Edit extends Template
     }
 
     /**
+     * Get subscription.
+     *
      * @return Subscription|null
      */
     public function getSubscription()
@@ -37,6 +48,8 @@ class Edit extends Template
     }
 
     /**
+     * Get status options.
+     *
      * @return string[]
      */
     public function getStatusOptions()
@@ -54,6 +67,8 @@ class Edit extends Template
     }
 
     /**
+     * Get unit options.
+     *
      * @return string[]
      */
     public function getUnitOptions()
@@ -67,6 +82,8 @@ class Edit extends Template
     }
 
     /**
+     * Cents to decimal.
+     *
      * @param int $cents
      * @return string
      */
@@ -76,6 +93,8 @@ class Edit extends Template
     }
 
     /**
+     * Get next run value.
+     *
      * @return string
      */
     public function getNextRunValue()
@@ -85,6 +104,8 @@ class Edit extends Template
     }
 
     /**
+     * Get save url.
+     *
      * @return string
      */
     public function getSaveUrl()
@@ -93,6 +114,8 @@ class Edit extends Template
     }
 
     /**
+     * Get back url.
+     *
      * @return string
      */
     public function getBackUrl()
@@ -101,6 +124,8 @@ class Edit extends Template
     }
 
     /**
+     * Get order url.
+     *
      * @param int|null $orderId
      * @return string
      */

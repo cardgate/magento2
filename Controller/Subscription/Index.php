@@ -15,6 +15,8 @@ use Magento\Framework\Controller\ResultFactory;
 class Index extends AbstractSubscription implements HttpGetActionInterface
 {
     /**
+     * Execute.
+     *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()

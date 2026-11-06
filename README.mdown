@@ -101,8 +101,8 @@ Example: count `3` + unit `month` = billed every three months.
 - **Mixed carts are allowed.** One-off products are billed only once by the initial order;
   only the subscription line-item is repeated.
 - **Allowed payment methods.** A subscription is only created when the order is paid with:
-  Bancontact (`cardgate_bancontact` / `cardgate_mistercash`), Creditcard, Direct Debit, iDEAL,
-  Przelewy24 or onlineueberweisen. Orders paid with any other method are processed as normal
+  Bancontact (`cardgate_bancontact` / `cardgate_mistercash`), Creditcard, Direct Debit, iDEAL or
+  Przelewy24. Orders paid with any other method are processed as normal
   orders without a subscription.
 
 ### 4. How a subscription is created

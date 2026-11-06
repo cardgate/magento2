@@ -150,28 +150,32 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * The client associated with this payment method.
+         *
          * @var Client
          */
         private $_oClient;
 
         /**
          * The payment method.
+         *
          * @var string
          */
         private $_sId;
 
         /**
          * The payment method name.
+         *
          * @var string
          */
         private $_sName;
 
         /**
          * The constructor.
+         *
          * @param Client $oClient_ The client associated with this transaction.
          * @param string $sId_ The payment method identifier to create a method instance for.
+         * @param string $sName_ The payment method name.
          * @throws MethodException|\ReflectionException
-         * @throws
          */
         public function __construct(Client $oClient_, $sId_, $sName_)
         {
@@ -179,7 +183,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
             if (! isset($aValidMethods)) {
                 $aValidMethods  = ( new \ReflectionClass(
-                    '\Cardgate\Payment\Model\CardgateClient\Method'
+                    Method::class
                 ) )->getConstants();
             }
             $this->_oClient = $oClient_;
@@ -189,6 +193,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the method id.
+         *
          * @param string $sId_ Method id to set.
          * @return $this
          * @throws MethodException
@@ -206,6 +211,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the payment method id.
+         *
          * @return string The payment method id for this instance.
          */
         public function getId()
@@ -215,6 +221,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Set the method name.
+         *
          * @param string $sName_ Method name to set.
          * @return $this
          * @throws MethodException
@@ -232,6 +239,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * Get the payment method name.
+         *
          * @return string The payment method name for this instance.
          */
         public function getName()
@@ -241,6 +249,7 @@ namespace Cardgate\Payment\Model\CardgateClient {
 
         /**
          * This method returns all the issuers available for the current payment method.
+         *
          * @return array An array with issuers
          * @throws MethodException
          */

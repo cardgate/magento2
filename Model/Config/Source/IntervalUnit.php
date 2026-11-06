@@ -16,6 +16,8 @@ use Magento\Framework\Data\OptionSourceInterface;
 class IntervalUnit extends AbstractSource implements OptionSourceInterface
 {
     /**
+     * Get all options.
+     *
      * @return array
      */
     public function getAllOptions()
@@ -32,6 +34,8 @@ class IntervalUnit extends AbstractSource implements OptionSourceInterface
     }
 
     /**
+     * To option array.
+     *
      * @return array
      */
     public function toOptionArray()

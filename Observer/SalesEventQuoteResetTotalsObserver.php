@@ -28,6 +28,7 @@ class SalesEventQuoteResetTotalsObserver implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         /**
+         * The quote.
          *
          * @var \Magento\Quote\Model\Quote $quote
          */
@@ -40,6 +41,7 @@ class SalesEventQuoteResetTotalsObserver implements ObserverInterface
         $quote->setBaseCardgatefeeInclTax(0);
 
         /**
+         * The quote.
          *
          * @var \Magento\Quote\Model\Quote\Address $address
          */

@@ -17,6 +17,7 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
 {
 
     /**
+     * The cardgate config.
      *
      * @var CardgateConfig
      */
@@ -45,6 +46,7 @@ class GroupPaymentMethod extends \Magento\Config\Block\System\Config\Form\Fields
     private $pm_active;
 
     /**
+     * Constructor.
      *
      * @param \Magento\Backend\Block\Context $context
      * @param \Magento\Backend\Model\Auth\Session $authSession

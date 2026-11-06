@@ -12,24 +12,29 @@ class Master
 {
 
     /**
+     * The payment method ids.
      *
      * @var array
      */
     private $paymentMethodIds = [];
 
     /**
+     * The payment method codes.
      *
      * @var array
      */
     private $paymentMethodCodes = [];
 
     /**
+     * The cache.
      *
      * @var \Magento\Framework\App\Cache\Type\Collection
      */
     private $cache;
 
     /**
+     * The filesystem.
+     *
      * @var \Magento\Framework\Filesystem
      */
     private $filesystem;
@@ -37,18 +42,22 @@ class Master
     private const CACHEKEY = "cgAllPM";
 
     /**
+     * The config.
      *
      * @var \Cardgate\Payment\Model\Config
      */
     private $config;
 
     /**
+     * The serializer.
      *
      * @var \Magento\Framework\Serialize\SerializerInterface
      */
     private $serializer;
 
     /**
+     * Constructor.
+     *
      * @param \Magento\Framework\App\Cache\Type\Collection $cache
      * @param \Magento\Framework\Filesystem $filesystem
      */
@@ -161,7 +170,6 @@ class Master
             'creditcard' => 'Creditcard',
             'paysafecard' => 'PaySafeCard',
             'paysafecash' => 'Paysafecash',
-            'sofortbanking' => 'SofortBanking',
             'paypal' => 'PayPal',
             'klarna' => 'Klarna',
             'clickandbuy' => 'ClickandBuy',
@@ -177,7 +185,6 @@ class Master
             'belfius' => 'Belfius',
             'billink' => 'Billink',
             'idealqr' => 'iDEAL QR',
-            'onlineueberweisen' => 'OnlineÜberweisen',
             'spraypay' =>'SprayPay'
         ];
         $this->cache->save($this->serializer->serialize($this->paymentMethodIds), self::CACHEKEY, [], 24 * 3600);

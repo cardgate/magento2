@@ -61,46 +61,64 @@ class SubscriptionManager
     public const MAX_RETRY_DELAY_MINUTES = 240;
 
     /**
+     * The subscription factory.
+     *
      * @var SubscriptionFactory
      */
     private $subscriptionFactory;
 
     /**
+     * The subscription resource.
+     *
      * @var SubscriptionResource
      */
     private $subscriptionResource;
 
     /**
+     * The collection factory.
+     *
      * @var CollectionFactory
      */
     private $collectionFactory;
 
     /**
+     * The gateway client.
+     *
      * @var GatewayClient
      */
     private $gatewayClient;
 
     /**
+     * The allowed methods.
+     *
      * @var AllowedMethods
      */
     private $allowedMethods;
 
     /**
+     * The order creator.
+     *
      * @var OrderCreator
      */
     private $orderCreator;
 
     /**
+     * The error guard.
+     *
      * @var NonFatalErrorGuard
      */
     private $errorGuard;
 
     /**
+     * The logger.
+     *
      * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * Constructor.
+     *
      * @param SubscriptionFactory $subscriptionFactory
      * @param SubscriptionResource $subscriptionResource
      * @param CollectionFactory $collectionFactory

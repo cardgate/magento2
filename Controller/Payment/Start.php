@@ -29,71 +29,84 @@ class Start implements ActionInterface
 {
 
     /**
+     * The customer session.
      *
      * @var \Magento\Customer\Model\Session
      */
     protected $customerSession;
 
     /**
+     * The checkout session.
      *
      * @var \Magento\Checkout\Model\Session
      */
     protected $checkoutSession;
 
     /**
+     * The url builder.
      *
      * @var \Magento\Framework\UrlInterface
      */
     protected $urlBuilder;
 
     /**
+     * The quote.
      *
      * @var \Magento\Quote\Model\Quote
      */
     protected $quote = false;
 
     /**
+     * The order repository.
      *
      * @var OrderRepository
      */
     protected $orderRepository;
 
     /**
+     * The payment helper.
      *
      * @var PaymentHelper
      */
     protected $_paymentHelper;
 
     /**
+     * The gateway client.
      *
      * @var GatewayClient
      */
     private $_gatewayClient;
 
     /**
+     * The cardgate config.
      *
      * @var \Cardgate\Payment\Model\Config
      */
     private $_cardgateConfig;
 
     /**
+     * The master config.
      *
      * @var \Cardgate\Payment\Model\Config\Master
      */
     private $_masterConfig;
 
     /**
+     * The stock registry interface.
      *
      * @var StockRegistryInterface
      */
     private $stockRegistryInterface;
 
     /**
+     * The redirect.
+     *
      * @var \Magento\Framework\Controller\Result\Redirect
      */
     private $redirect;
 
     /**
+     * Constructor.
      *
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -173,7 +186,7 @@ class Start implements ActionInterface
             $consumer = $transaction->getConsumer();
             $billingAddress = $order->getBillingAddress();
             if (!$billingAddress) {
-                throw new StartException(new \Magento\Framework\Phrase( 'missing or invalid billing address'));
+                throw new StartException(new \Magento\Framework\Phrase('missing or invalid billing address'));
             }
             $consumer->setEmail($billingAddress->getEmail());
             $telephone =$billingAddress->getTelephone();
@@ -199,7 +212,7 @@ class Start implements ActionInterface
                 $product = $item->getProduct();
                 // if it is a subscription product, set recurring flag.
                 if ($product && $product->hasData(SubscriptionManager::ATTR_IS_SUBSCRIPTION)) {
-                    if((int) $product->getData(SubscriptionManager::ATTR_IS_SUBSCRIPTION) === 1){
+                    if ((int) $product->getData(SubscriptionManager::ATTR_IS_SUBSCRIPTION) === 1) {
                         $transaction->setRecurring(true);
                     };
                 }
@@ -222,9 +235,8 @@ class Start implements ActionInterface
                 $oStock = null;
                 try {
                     $oStock = $this->stockRegistryInterface->getStockItem($product->getId());
-
                 } catch (StartException $e) {
-                    /* ignore */
+                    $oStock = null; // ignore
                 }
                 if (is_object($oStock) && $oStock->getManageStock()
                 ) {
@@ -344,7 +356,7 @@ class Start implements ActionInterface
                 return $this->redirect->setUrl($actionUrl);
             } else {
                 // Payment methods without user interaction are not yet supported.
-                throw new StartException( new \Magento\Framework\Phrase( 'unsupported payment action'));
+                throw new StartException(new \Magento\Framework\Phrase('unsupported payment action'));
             }
 
         } catch (StartException $e) {

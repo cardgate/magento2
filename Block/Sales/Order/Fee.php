@@ -22,18 +22,21 @@ class Fee extends \Magento\Framework\View\Element\Template
     protected $_config;
 
     /**
+     * The order.
      *
      * @var \Magento\Sales\Model\Order
      */
     protected $_order;
 
     /**
+     * The source.
      *
      * @var \Magento\Framework\DataObject
      */
     protected $_source;
 
     /**
+     * Constructor.
      *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Tax\Model\Config $taxConfig

@@ -23,6 +23,7 @@ class TestGateway extends \Magento\Config\Block\System\Config\Form\Field
     private $cardgateConfig;
 
     /**
+     * Constructor.
      *
      * @param \Magento\Backend\Block\Context $context
      * @param CardgateConfig $cardgateConfig

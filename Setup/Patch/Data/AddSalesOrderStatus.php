@@ -20,6 +20,8 @@ class AddSalesOrderStatus implements DataPatchInterface
     private $resourceConnection;
 
     /**
+     * Constructor.
+     *
      * @param ResourceConnection $resourceConnection
      */
     public function __construct(
@@ -36,7 +38,6 @@ class AddSalesOrderStatus implements DataPatchInterface
     public function apply()
     {
         $tablename  = $this->resourceConnection->getTableName('sales_order_status');
-        $query      = "DELETE FROM {$tablename} WHERE status LIKE 'cardgate%'";
         $data     = [];
         $statuses = [
             'cardgate_payment_pending' => __('CardGate Payment Pending'),
@@ -52,7 +53,7 @@ class AddSalesOrderStatus implements DataPatchInterface
 
         $connection = $this->resourceConnection->getConnection();
         $connection->startSetup();
-        $connection->query($query);
+        $connection->delete($tablename, ['status LIKE ?' => 'cardgate%']);
         $connection->insertArray($tablename, [
             'status',
             'label'

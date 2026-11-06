@@ -35,11 +35,15 @@ class NonFatalErrorGuard
         | E_USER_DEPRECATED;
 
     /**
+     * The logger.
+     *
      * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * Constructor.
+     *
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)

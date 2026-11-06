@@ -23,17 +23,22 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     public const CODE_FEE = 'cardgatefee';
 
     /**
+     * The quote validator.
+     *
      * @var \Magento\Quote\Model\QuoteValidator|null
      */
     protected $quoteValidator = null;
 
     /**
+     * The cardgate config.
      *
      * @var Master
      */
     protected $_cardgateConfig;
 
     /**
+     * Constructor.
+     *
      * @param \Magento\Quote\Model\QuoteValidator $quoteValidator
      * @param Master $cardgateConfig
      */
@@ -64,6 +69,7 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         }
 
         /**
+         * The fee.
          *
          * @var \Cardgate\Payment\Model\Total\FeeData $fee
          */
@@ -146,6 +152,7 @@ class Fee extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
     {
         /**
+         * The fee.
          *
          * @var \Cardgate\Payment\Model\Total\FeeData $fee
          */

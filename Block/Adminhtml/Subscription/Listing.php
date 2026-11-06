@@ -20,15 +20,26 @@ class Listing extends Template
     public const PAGE_SIZE = 20;
 
     /**
+     * The collection factory.
+     *
      * @var CollectionFactory
      */
     private $collectionFactory;
 
     /**
+     * The collection.
+     *
      * @var Collection|null
      */
     private $collection;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param CollectionFactory $collectionFactory
+     * @param array $data
+     */
     public function __construct(Context $context, CollectionFactory $collectionFactory, array $data = [])
     {
         parent::__construct($context, $data);
@@ -36,6 +47,8 @@ class Listing extends Template
     }
 
     /**
+     * Get status options.
+     *
      * @return string[]
      */
     public function getStatusOptions()
@@ -48,6 +61,8 @@ class Listing extends Template
     }
 
     /**
+     * Get status filter.
+     *
      * @return string
      */
     public function getStatusFilter()
@@ -57,6 +72,8 @@ class Listing extends Template
     }
 
     /**
+     * Get search.
+     *
      * @return string
      */
     public function getSearch()
@@ -65,6 +82,8 @@ class Listing extends Template
     }
 
     /**
+     * Get current page.
+     *
      * @return int
      */
     public function getCurrentPage()
@@ -73,6 +92,8 @@ class Listing extends Template
     }
 
     /**
+     * Get collection.
+     *
      * @return Collection
      */
     public function getCollection()
@@ -98,6 +119,8 @@ class Listing extends Template
     }
 
     /**
+     * Get last page.
+     *
      * @return int
      */
     public function getLastPage()
@@ -106,6 +129,8 @@ class Listing extends Template
     }
 
     /**
+     * Get list url.
+     *
      * @param array $params
      * @return string
      */
@@ -121,6 +146,8 @@ class Listing extends Template
     }
 
     /**
+     * Get edit url.
+     *
      * @param Subscription $subscription
      * @return string
      */
@@ -130,6 +157,8 @@ class Listing extends Template
     }
 
     /**
+     * Get order url.
+     *
      * @param Subscription $subscription
      * @return string
      */
@@ -141,6 +170,8 @@ class Listing extends Template
     }
 
     /**
+     * Format cents.
+     *
      * @param int $cents
      * @param string $currency
      * @return string
