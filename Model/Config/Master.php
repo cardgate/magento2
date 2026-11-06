@@ -170,7 +170,6 @@ class Master
             'creditcard' => 'Creditcard',
             'paysafecard' => 'PaySafeCard',
             'paysafecash' => 'Paysafecash',
-            'sofortbanking' => 'SofortBanking',
             'paypal' => 'PayPal',
             'klarna' => 'Klarna',
             'clickandbuy' => 'ClickandBuy',

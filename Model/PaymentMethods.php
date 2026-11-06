@@ -131,7 +131,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             'cardgatebancontact',
             'cardgatebanktransfer',
             'cardgatebillink',
-            'cardgatesofortbanking',
             'cardgatedirectdebit',
             'cardgatespraypay']);
         if ($strictly_euro && $currency != 'EUR') {
