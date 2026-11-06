@@ -186,7 +186,6 @@ class Master
             'belfius' => 'Belfius',
             'billink' => 'Billink',
             'idealqr' => 'iDEAL QR',
-            'onlineueberweisen' => 'OnlineÜberweisen',
             'spraypay' =>'SprayPay'
         ];
         $this->cache->save($this->serializer->serialize($this->paymentMethodIds), self::CACHEKEY, [], 24 * 3600);

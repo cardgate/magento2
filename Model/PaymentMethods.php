@@ -133,7 +133,6 @@ class PaymentMethods extends \Magento\Payment\Model\Method\Adapter
             'cardgatebillink',
             'cardgatesofortbanking',
             'cardgatedirectdebit',
-            'cardgateonlineueberweisen',
             'cardgatespraypay']);
         if ($strictly_euro && $currency != 'EUR') {
             return false;
